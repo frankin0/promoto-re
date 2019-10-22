@@ -8,6 +8,7 @@ import NavBar from '../../components/NavBar/NavBar';
 import { Container, Grid, CssBaseline, Typography, Paper } from '@material-ui/core';
 import CardEvents from '../../components/CardEvents/CardEvents';
 import video from '../../assets/videos/video1.mp4';
+import CategoryList from '../../components/CategoryList/CategoryList';
 
 const theme = createMuiTheme({
     palette: {
@@ -131,7 +132,7 @@ class Home extends Component{
                         <Grid container spacing={3} style={{marginTop: 60}}>
                             <Grid item xs={12}>
                                 <Paper className={classes.cardMediaVideo}>
-                                    <video autoplay="" className={classes.media} controlslist="nodownload" muted crossorigin="anonymous" loop playsinline="" preload="metadata" style={{objectFit: "cover"}}>
+                                    <video autoPlay className={classes.media} controlsList="nodownload" muted crossOrigin="anonymous" loop playsInline preload="metadata" style={{objectFit: "cover"}}>
                                         <source id="mp4" src={video} type="video/mp4" />
                                     </video>
                                 </Paper>
@@ -140,29 +141,39 @@ class Home extends Component{
                     </Container>
 
                     <Container fixed>
-                        <Grid container spacing={3} style={{marginTop: 60}}>
+                        <Grid container spacing={3} style={{marginTop: 60,position: 'relative',display: 'block'}}>
                             <Grid item xs={12}>
                                 <Typography variant="body1" component="div" className={classes.catname} color="secondary">I più popolari</Typography>
                             </Grid>
-                            {
+
+                            <Grid item xs={12}>
+                                <CategoryList type={"vetrina"} />
+                            </Grid>
+
+                            {/*
                                 [1, 2, 3, 4].map((index) =>{
 
                                     return (
-                                        <Grid item md={3}>
+                                        <Grid item md={3} xs={12}>
                                             <CardEvents key={index} type={"vetrina"} />
                                         </Grid>
                                     )
                                 })
-                            }
+                            */}
                         </Grid>
                     </Container>
 
                     <Container fixed>
-                        <Grid container spacing={3} style={{marginTop: 30}}>
+                    <Grid container spacing={3} style={{marginTop: 60,position: 'relative',display: 'block'}}>
                             <Grid item xs={12}>
                                 <Typography variant="body1" component="div" className={classes.catname} color="secondary">Nei prossimi giorni in Puglia</Typography>
                             </Grid>
-                            {
+
+                            <Grid item xs={12}>
+                                <CategoryList style={{height: 250}} />
+                            </Grid>
+
+                            {/*
                                 [1, 2, 3, 4, 5, 6].map((index) =>{
 
                                     return (
@@ -171,7 +182,7 @@ class Home extends Component{
                                         </Grid>
                                     )
                                 })
-                            }
+                            */}
                         </Grid>
                     </Container>
 
@@ -184,8 +195,8 @@ class Home extends Component{
                                 [1, 2, 3, 4, 5, 6,7,8,9,10,11,12,13,14,15,16,17,18].map((index) =>{
 
                                     return (
-                                        <Grid item md={4}>
-                                            <CardEvents key={index} height={300} />
+                                        <Grid item key={index} md={4} xs={12}>
+                                            <CardEvents key={index} type={"default"} style={{height: 300,  width: '100%', marginRight: 10}} />
                                         </Grid>
                                     )
                                 })

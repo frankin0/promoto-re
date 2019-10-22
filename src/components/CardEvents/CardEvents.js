@@ -21,6 +21,10 @@ const styles = theme => ({
         maxWidth: 300,
         borderRadius: '20px'
     },
+    cardDefault: {
+        width: '97%',
+        borderRadius: '20px'
+    },
     media: {
         height: 500,
     },
@@ -49,14 +53,14 @@ const styles = theme => ({
 class CardEvents extends Component{
 
     render(){
-        const { classes, type, height } = this.props;
+        const { classes, type, style } = this.props; console.log(type);
 
         return (
-            <Card className={type === "vetrina" ? classes.cardVetrina : classes.card}>
+            <Card className={type === "vetrina" ? classes.cardVetrina + " menu-item" : type === "default" ? classes.cardDefault + " menu-item" : classes.card + " menu-item"}>
                 <CardActionArea style={{position: 'relative', display: 'block'}}>
                     <CardMedia
                         className={type === "vetrina" ? classes.mediaVetrina : classes.media}
-                        style={{height: height}}
+                        style={style}
                         image="https://a0.muscache.com/im/pictures/lombard/MtTemplate-1185780-media_library/original/cd3d663c-ccca-425b-adf0-bd371417c8d9.jpeg?aki_policy=exp_xl"
                         title="Contemplative Reptile"
                     />
