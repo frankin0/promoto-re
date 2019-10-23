@@ -10,7 +10,6 @@ import { IconButton } from '@material-ui/core';
 // Important! add unique key
 export const Menu = (style) => [1,2,3,4,5,6,7,8,9].map(el => {
     const { index } = el;
-console.log(style);
     return <CardEvents key={el} type={style.type} style={style.style} />;
 });
 

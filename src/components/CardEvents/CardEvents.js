@@ -53,7 +53,7 @@ const styles = theme => ({
 class CardEvents extends Component{
 
     render(){
-        const { classes, type, style } = this.props; console.log(type);
+        const { classes, type, style } = this.props;
 
         return (
             <Card className={type === "vetrina" ? classes.cardVetrina + " menu-item" : type === "default" ? classes.cardDefault + " menu-item" : classes.card + " menu-item"}>

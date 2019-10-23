@@ -63,3 +63,25 @@ h1, h2, h3, h4, h5 ,h6, p, a, i{
     margin: 10px;
     color: #fff;
 }
+@media (max-width: 600px){
+    .MuiMenuItem-root {
+        min-height: auto !important;
+    }
+}
+
+.__kijd4::-webkit-scrollbar-track{
+	background-color: transparent;
+}
+.__kijd4::-webkit-scrollbar{
+	width: 5px;
+	background-color: transparent;
+}
+.__kijd4::-webkit-scrollbar-thumb{
+    background-color: rgba(0,0,0,0.08);
+    border-radius: 30px;
+    translate: .3s ease-in;
+}
+
+.__kijd4:hover::-webkit-scrollbar-thumb{
+    background-color: rgba(0,0,0,0.15);
+}

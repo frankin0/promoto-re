@@ -7,7 +7,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter, Route, Switch } from 'react-router-dom';
-import { setDefaultTranslations, setDefaultLanguage, getLanguage, setLanguage } from 'react-multi-lang'
+import { setDefaultTranslations, setDefaultLanguage } from 'react-multi-lang'
 import it from './translations/it.json';
 import './assets/css/style.css';
 import './assets/css/icofont.min.css';
@@ -30,7 +30,7 @@ if(cookies.get('lang') === null || cookies.get('lang') === undefined){
 } */
 
 
-console.log("%cPromoto version 1.0.55", "color: #fefefe; font-size: 1.3rem;");
+console.log("%cPromoto version 1.0.88", "color: #fefefe; font-size: 1.3rem;");
 
 /**
  * Set Application Routing
@@ -40,6 +40,7 @@ console.log("%cPromoto version 1.0.55", "color: #fefefe; font-size: 1.3rem;");
     <HashRouter>
         <Switch>
             <Route exact path="/" name="Home" component={Home} />
+            <Route path="*" component={Home} />
         </Switch>
     </HashRouter>
  );

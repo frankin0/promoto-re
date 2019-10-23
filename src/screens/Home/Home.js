@@ -9,6 +9,7 @@ import { Container, Grid, CssBaseline, Typography, Paper } from '@material-ui/co
 import CardEvents from '../../components/CardEvents/CardEvents';
 import video from '../../assets/videos/video1.mp4';
 import CategoryList from '../../components/CategoryList/CategoryList';
+import PanelLogin from '../../screens/Auth/Auth';
 
 const theme = createMuiTheme({
     palette: {
@@ -97,17 +98,24 @@ class Home extends Component{
         super(props);
 
         this.state = {
-
+            openLogin: false
         }
+    }
+
+    panelLogin = (e) =>{
+        this.setState({
+            openLogin: e
+        });
     }
 
     render(){
         const {classes } = this.props;
-
+        
         return (
             <ThemeProvider theme={theme}>
                 <div className={classes.root}>
-                    <NavBar />
+                    <NavBar login={this.panelLogin} />
+                    <PanelLogin open={this.state.openLogin} closed={this.panelLogin} />
 
                     <CssBaseline />
                     <Container fixed>
