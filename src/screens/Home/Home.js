@@ -76,7 +76,8 @@ const styles = theme => ({
         left: 25
     },
     catname:{
-        fontWeight: 700
+        fontWeight: 'initial',
+        marginLeft: 10
     },
     cardMediaVideo:{
         width: '100%',
@@ -106,6 +107,13 @@ class Home extends Component{
         this.setState({
             openLogin: e
         });
+
+        if(e){
+            document.body.classList.add("no-overflow");
+        }else{
+            document.body.classList.remove("no-overflow");
+        }
+        
     }
 
     render(){
@@ -151,7 +159,7 @@ class Home extends Component{
                     <Container fixed>
                         <Grid container spacing={3} style={{marginTop: 60,position: 'relative',display: 'block'}}>
                             <Grid item xs={12}>
-                                <Typography variant="body1" component="div" className={classes.catname} color="secondary">I più popolari</Typography>
+                                <Typography variant="body1" component="div" className={classes.catname} color="primary">I più popolari</Typography>
                             </Grid>
 
                             <Grid item xs={12}>
@@ -174,11 +182,11 @@ class Home extends Component{
                     <Container fixed>
                     <Grid container spacing={3} style={{marginTop: 60,position: 'relative',display: 'block'}}>
                             <Grid item xs={12}>
-                                <Typography variant="body1" component="div" className={classes.catname} color="secondary">Nei prossimi giorni in Puglia</Typography>
+                                <Typography variant="body1" component="div" className={classes.catname} color="primary">Nei prossimi giorni in Puglia</Typography>
                             </Grid>
 
                             <Grid item xs={12}>
-                                <CategoryList style={{height: 250}} />
+                                <CategoryList style={{height: 150}} />
                             </Grid>
 
                             {/*
@@ -197,14 +205,14 @@ class Home extends Component{
                     <Container fixed>
                         <Grid container spacing={3} style={{marginTop: 30}}>
                             <Grid item xs={12}>
-                                <Typography variant="body1" component="div" className={classes.catname} color="secondary">Altro</Typography>
+                                <Typography variant="body1" component="div" className={classes.catname} color="primary">Altro</Typography>
                             </Grid>
                             {
                                 [1, 2, 3, 4, 5, 6,7,8,9,10,11,12,13,14,15,16,17,18].map((index) =>{
 
                                     return (
                                         <Grid item key={index} md={4} xs={12}>
-                                            <CardEvents key={index} type={"default"} style={{height: 300,  width: '100%', marginRight: 10}} />
+                                            <CardEvents key={index} type={"default"} style={{height: 400,  width: '100%', marginRight: 10}} />
                                         </Grid>
                                     )
                                 })

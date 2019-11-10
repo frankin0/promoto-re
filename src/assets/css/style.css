@@ -85,3 +85,14 @@ h1, h2, h3, h4, h5 ,h6, p, a, i{
 .__kijd4:hover::-webkit-scrollbar-thumb{
     background-color: rgba(0,0,0,0.15);
 }
+.no-overflow{
+    overflow: hidden !important;
+}
+.item_list .menu-item{
+    transition: .22s ease-out;
+    height: 180px;
+    display: flex;
+}
+.item_list.active .menu-item{
+    height: inherit;
+}

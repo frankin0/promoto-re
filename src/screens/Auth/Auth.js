@@ -3,9 +3,11 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import { createMuiTheme, makeStyles, fade } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import red from '@material-ui/core/colors/red';
-import { Container, Grid, Typography, Box, AppBar, Toolbar, IconButton, Button, FormControlLabel, Checkbox,TextField, Link, List, ListItem, ListItemText, ListItemIcon } from '@material-ui/core';
+import { Box, AppBar, Toolbar, IconButton, Button, TextField, Fade,FormControlLabel, Switch,Paper } from '@material-ui/core';
 import CloseRounded from '@material-ui/icons/CloseRounded';
-import CheckRounded from '@material-ui/icons/CheckRounded';
+import LoginPanel from './Login';
+import RegistrationACQ from './RegistrationACQ';
+import RegistrationORG from './RegistrationORG';
 
 const theme = createMuiTheme({
     palette: {
@@ -64,7 +66,7 @@ const styles = theme => ({
         height: '100%',
         top: 0,
         margin: 0,
-        zIndex: 100,
+        zIndex: 999999,
         transition: 'all 0.5s cubic-bezier(0.77, 0, 0.175, 1)',
         boxShadow: '0 0 12px 0 rgba(0,0,0,0.1), 0 10px 30px 0 rgba(0,0,0,0.2)',
         flexGrow: 1,
@@ -80,15 +82,21 @@ const styles = theme => ({
         height: '100%',
         top: 0,
         margin: 0,
-        zIndex: 100,
+        zIndex: 999999,
         transition: 'all 0.5s cubic-bezier(0.77, 0, 0.175, 1)',
         boxShadow: '0 0 12px 0 rgba(0,0,0,0.1), 0 10px 30px 0 rgba(0,0,0,0.2)',
         flexGrow: 1,
-        transform: 'translateX(0%)'
+        transform: 'translateX(0%)',
+        [theme.breakpoints.down('sm')]: {
+            maxWidth: '100%'
+        }
     },
     expandPanel: {
         maxWidth: 'calc(100% - 130px)',
-        width: '100%'
+        width: '100%',
+        [theme.breakpoints.down('sm')]: {
+            maxWidth: '100%'
+        }
     },
     title: {
         flexGrow: 1,
@@ -144,7 +152,23 @@ const styles = theme => ({
         float: 'right',
         marginTop: 10
     }, 
-    
+    ShowPanel:{
+        opacity: 1,
+        transition: '.3s'
+    },
+    hiddenPanel:{
+        opacity: 0,
+        transition: '.3s'
+    },
+    maxContainer:{
+        width: '100%'
+    },
+    mw:{
+        [theme.breakpoints.up('sm')]: {
+            width: 550
+        },
+        width: '100%'
+    }
 });
 
 class Login extends Component{
@@ -157,12 +181,17 @@ class Login extends Component{
             password: '',
             remember: false,
             expandPanel: false,
+            truePanel: true,
+            checked_login: true,
+            checked_registration: false,
+            orgc: false
         };
     }
 
-    componentDidUpdate(){
-        console.log(this.props.open);
+    componentDidMount(){
+        
     }
+
 
     handleChange = e =>{
         var name = e.target.name;
@@ -184,219 +213,85 @@ class Login extends Component{
     }
     
     expandPanel = () => {
+        if(this.state.expandPanel){
+            this.setState({
+                expandPanel: !this.state.expandPanel,
+                checked_login: !this.state.checked_login,
+                checked_registration: !this.state.checked_registration,
+                orgc: false
+            });
+        }else{
+            this.closePanel();
+        }
+
+    }
+    
+    expandPanelL = () => {
+        //if(!this.state.expandPanel){
+            this.setState({
+                expandPanel: (this.state.expandPanel ? true : true),
+                checked_login: false,
+                checked_registration:  (this.state.checked_registration ? true : true),
+                orgc: !this.state.orgc
+            });
+        /*}else{
+
+        }*/
+    }
+    
+    regOrg = (e) =>{ 
         this.setState({
-            expandPanel: true
+            expandPanel: (this.state.expandPanel ? true : true),
+            checked_login: false,
+            checked_registration:  (this.state.checked_registration ? true : true),
+            orgc: false
         });
     }
 
     render(){
         const { classes, open } = this.props;
-        const { username, password, remember, expandPanel } = this.state;
+        const { expandPanel, checked_login, checked_registration, orgc } = this.state;
 
         return (
             <Box component="span" m={1} className={[(open ? classes.boxLOpened: classes.boxL), (expandPanel ? classes.expandPanel: "") , "__kijd4"].join(" ")}>
-                <AppBar position="static" color="transparent" className={classes.navBarBox}>
+                <AppBar position="static" color="inherit" className={classes.navBarBox}>
                     <Toolbar>
-                        <IconButton edge="start" className={classes.menuButton} onClick={this.closePanel} color="none" aria-label="menu">
+                        <IconButton edge="start" className={classes.menuButton} onClick={this.closePanel} aria-label="menu">
                             <CloseRounded />
                         </IconButton>
                         <div className={classes.lineButtons}>
-                            <Button size="small" color="inherit" className={classes.Button} onClick={this.closePanel}>Accedi</Button>
-                            <Button size="small" color="inherit" className={classes.Button} onClick={this.expandPanel}>Registrati come acquirente</Button>
+                            <Button size="small" color="inherit" className={classes.Button} onClick={this.expandPanel}>Accedi</Button>
+                            <Button size="small" color="inherit" className={classes.Button} onClick={this.expandPanelL}>{!orgc ? "Registrati come Acquirente" : "Registrati come Organizzatore"}</Button>
                         </div>
                     </Toolbar>
                 </AppBar>
+                    
+            
+                    <Fade in={checked_login} {...(checked_login ? { timeout: 1000 } : {})}>
+                        <Paper elevation={0} className={classes.paper}>
+                        {
+                            !expandPanel ? 
+                                <LoginPanel className={classes.maxContainer} regOrg={this.regOrg} />
+                            :
+                            ""
+                        }
+                        </Paper>
+                    </Fade>
+                
+                    <Fade in={checked_registration} {...(checked_registration ? { timeout: 1000 } : {})}>
+                        <Paper elevation={0} className={classes.paper}>
+                        {
+                            !expandPanel ? 
+                                ""
+                            :
+                                orgc ? 
+                                    <RegistrationACQ className={classes.mw} />
+                                :
+                                    <RegistrationORG className={classes.mw} />
 
-                {
-                    !expandPanel ? (
-                        <Container>
-                            <Grid container  direction="row"  justify="center"  alignItems="center" spacing={3} style={{ minHeight: 'calc(100vh - 118px)'}}>
-                                <Grid item xs={12}>
-                                    <Typography variant="body1" gutterBottom className={classes.textCenter}>
-                                        <Typography variant="h2" component="div" className={classes.title}>Promoto</Typography>
-                                        <Typography variant="h6" component="div">Registrati su Promoto, vivi la vita</Typography>
-
-                                        <Typography component="div" gutterBottom className={classes.boxSpacing}>
-
-                                            <RedditTextField
-                                                label="Nome Utente"
-                                                className={classes.margin}
-                                                onChange={this.handleChange}
-                                                className={classes.fieldText}
-                                                defaultValue="react-reddit"
-                                                variant="filled"
-                                                type="text"
-                                                value={username}
-                                                name="username"
-                                                id="reddit-input"
-                                            />
-                                            <RedditTextField
-                                                label="Password"
-                                                className={classes.margin}
-                                                onChange={this.handleChange}
-                                                className={classes.fieldText}
-                                                defaultValue="react-reddit"
-                                                type="password"
-                                                variant="filled"
-                                                value={password}
-                                                name="password"
-                                                id="reddit-input"
-                                            />
-                                            <Button variant="contained" size="large" color="primary" className={classes.ButtonBng}>Accedi</Button>
-                                        </Typography>
-                                        <Typography component="div" gutterBottom className={classes.lineBox}>
-                                            <FormControlLabel
-                                                control={
-                                                <Checkbox checked={remember} onChange={this.rememberMe} className={classes.mSize} value="remember" />
-                                                }
-                                                label="Ricordami"
-                                            />
-                                            <Link href="#/" className={classes.link}>Recupera Password</Link>
-                                        </Typography>
-                                    </Typography>
-                                </Grid>
-                                <Grid item md={6}>
-                                    <List dense={true} style={{marginTop: 30}}>
-                                        <ListItem>
-                                            <ListItemIcon style={{minWidth: 'auto', marginRight: 10}}>
-                                                <CheckRounded />
-                                            </ListItemIcon>
-                                            <ListItemText
-                                                primary="Pannello di controllo innovativo"
-                                            />
-                                        </ListItem>
-                                        <ListItem>
-                                            <ListItemIcon style={{minWidth: 'auto', marginRight: 10}}>
-                                                <CheckRounded />
-                                            </ListItemIcon>
-                                            <ListItemText
-                                                primary="Gestione account affiliati"
-                                            />
-                                        </ListItem>
-                                        <ListItem>
-                                            <ListItemIcon style={{minWidth: 'auto', marginRight: 10}}>
-                                                <CheckRounded />
-                                            </ListItemIcon>
-                                            <ListItemText
-                                                primary="Pagamenti automatici"
-                                            />
-                                        </ListItem>
-                                    </List>
-                                </Grid>
-                                <Grid item md={6} style={{marginTop: 30}}>
-                                    <List dense={true}>
-                                        <ListItem>
-                                            <ListItemIcon style={{minWidth: 'auto', marginRight: 10}}>
-                                                <CheckRounded />
-                                            </ListItemIcon>
-                                            <ListItemText
-                                                primary="Eventi adatti alle tue esigenze"
-                                            />
-                                        </ListItem>
-                                        <ListItem>
-                                            <ListItemIcon style={{minWidth: 'auto', marginRight: 10}}>
-                                                <CheckRounded />
-                                            </ListItemIcon>
-                                            <ListItemText
-                                                primary="Acquisto ticket online"
-                                            />
-                                        </ListItem>
-                                        <ListItem>
-                                            <ListItemIcon style={{minWidth: 'auto', marginRight: 10}}>
-                                                <CheckRounded />
-                                            </ListItemIcon>
-                                            <ListItemText
-                                                primary="Immortala i tuoi momenti migliori con i tuoi amici."
-                                            />
-                                        </ListItem>
-                                    </List>
-                                </Grid>
-                                <Grid item md={12} style={{textAlign: 'center'}}>
-                                    <Button variant="contained" color="secondary" size="large" className={classes.buttonLarge}>Pubblica un evento</Button>
-                                </Grid>
-                            </Grid>
-                            <Grid item md={12} style={{textAlign: 'left'}}>
-                                
-                                <AppBar position="static" color="transparent" className={[classes.navBarBox, classes.BottomNav].join(' ')}>
-                                    <Toolbar>
-                                        <div className={classes.leftButton}>
-                                            @ 2018 Copyright Promoto
-                                        </div>
-                                        <div className={classes.lineButtons}>
-                                            <Link href="#/" className={classes.linkBottom}>Come posso organizzare un evento?</Link>
-                                        </div>
-                                    </Toolbar>
-                                </AppBar>
-                            </Grid>
-                        </Container>
-                    ) : (
-                        <div>
-                            <Container style={{width: '800px'}}>
-                                <Grid container  direction="row"  justify="center"  alignItems="center" spacing={3} style={{ minHeight: 'calc(100vh - 118px)'}}>
-                                    <Grid item xs={12}>
-                                        <Typography variant="body1" gutterBottom className={classes.textCenter}>
-                                            <Typography variant="h2" component="div" className={classes.title}>Promoto</Typography>
-                                            <Typography variant="h6" component="div">Scopri i vantaggi con l'account Pro</Typography>
-
-                                            <Typography component="div" gutterBottom className={classes.boxSpacing}>
-
-                                                <RedditTextField
-                                                    label="Nome Utente"
-                                                    className={classes.margin}
-                                                    onChange={this.handleChange}
-                                                    className={classes.fieldText}
-                                                    defaultValue="react-reddit"
-                                                    variant="filled"
-                                                    type="text"
-                                                    value={username}
-                                                    name="username"
-                                                    id="reddit-input"
-                                                />
-                                                <RedditTextField
-                                                    label="Password"
-                                                    className={classes.margin}
-                                                    onChange={this.handleChange}
-                                                    className={classes.fieldText}
-                                                    defaultValue="react-reddit"
-                                                    type="password"
-                                                    variant="filled"
-                                                    value={password}
-                                                    name="password"
-                                                    id="reddit-input"
-                                                />
-                                                <Button variant="contained" size="large" color="primary" className={classes.ButtonBng}>Accedi</Button>
-                                            </Typography>
-                                            <Typography component="div" gutterBottom className={classes.lineBox}>
-                                                <FormControlLabel
-                                                    control={
-                                                    <Checkbox checked={remember} onChange={this.rememberMe} className={classes.mSize} value="remember" />
-                                                    }
-                                                    label="Ricordami"
-                                                />
-                                                <Link href="#/" className={classes.link}>Recupera Password</Link>
-                                            </Typography>
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
-                            </Container>
-                            <Container>
-                                <Grid item md={12} style={{textAlign: 'left'}}>
-                                    
-                                    <AppBar position="static" color="transparent" className={[classes.navBarBox, classes.BottomNav].join(' ')}>
-                                        <Toolbar>
-                                            <div className={classes.leftButton}>
-                                                @ 2018 Copyright Promoto
-                                            </div>
-                                            <div className={classes.lineButtons}>
-                                                <Link href="#/" className={classes.linkBottom}>Come posso organizzare un evento?</Link>
-                                            </div>
-                                        </Toolbar>
-                                    </AppBar>
-                                </Grid>
-                            </Container>
-                        </div>
-                    )
-                }
+                        }
+                        </Paper>
+                    </Fade>
                 
                 
             </Box>
@@ -405,4 +300,5 @@ class Login extends Component{
 
 }
 
+  
 export default withStyles(styles)(Login);

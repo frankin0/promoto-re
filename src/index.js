@@ -12,6 +12,7 @@ import it from './translations/it.json';
 import './assets/css/style.css';
 import './assets/css/icofont.min.css';
 import Home from './screens/Home/Home.js';
+import Event from './screens/Event/Event.js';
 
 
 setDefaultTranslations({it})
@@ -30,7 +31,7 @@ if(cookies.get('lang') === null || cookies.get('lang') === undefined){
 } */
 
 
-console.log("%cPromoto version 1.0.88", "color: #fefefe; font-size: 1.3rem;");
+console.log("%cPromoto version 1.1.22", "color: #fefefe; font-size: 1.3rem;");
 
 /**
  * Set Application Routing
@@ -40,6 +41,7 @@ console.log("%cPromoto version 1.0.88", "color: #fefefe; font-size: 1.3rem;");
     <HashRouter>
         <Switch>
             <Route exact path="/" name="Home" component={Home} />
+            <Route path="/Event/:id" name="Event" component={Event} />
             <Route path="*" component={Home} />
         </Switch>
     </HashRouter>

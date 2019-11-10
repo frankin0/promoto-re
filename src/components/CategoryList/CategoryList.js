@@ -68,12 +68,17 @@ class CategoryList extends Component {
                 arrowRight={ArrowRight}
                 selected={selected}
                 onSelect={this.onSelect}
-                wheel={true}
+                wheel={false}
                 hideArrows={true}
                 hideSingleArrow={true}
                 inertiaScrolling={true}
                 scrollToSelected={true}
-                alignCenter={false}
+                alignCenter={true}
+                dragging={true}
+                itemClassActive={"active"}
+                itemClass={"item_list"}
+                selected={-1}
+                scrollToSelected={true}
             />
         );
     }
