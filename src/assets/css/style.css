@@ -88,6 +88,7 @@ h1, h2, h3, h4, h5 ,h6, p, a, i{
 .no-overflow{
     overflow: hidden !important;
 }
+/*
 .item_list .menu-item{
     transition: .22s ease-out;
     height: 180px;
@@ -95,4 +96,4 @@ h1, h2, h3, h4, h5 ,h6, p, a, i{
 }
 .item_list.active .menu-item{
     height: inherit;
-}
+}*/

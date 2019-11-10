@@ -74,12 +74,12 @@ class CardEvents extends Component{
                         title="Contemplative Reptile"
                     />
                     
-                    <StarRounded fontSize="large" className={classes.buttonSave} />
+                    {/*<StarRounded fontSize="large" className={classes.buttonSave} />*/}
 
                     <Box className={classes.infoB}>
                         <Typography component="div" style={{fontWeight: 600, color: '#fff'}}>
                             <div style={{color: '#fff', fontSize: '.6rem',marginBottom: 2}}>
-                                <Badge badgeContent={"Limited"} color="secondary" className={classes.badgeB__} /> <Typography variant="small" component="small" style={{fontWeight: 500, color: '#fff', fontSize: '.65rem', position: 'relative', top: 2}}>Only 100 Tickets</Typography>
+                                <Badge badgeContent={"Limited"} color="secondary" className={classes.badgeB__} /> <Typography variant="small" component="small" style={{fontWeight: 600, color: '#fff', fontSize: '.65rem', position: 'relative', top: 2}}>Only 100 Tickets</Typography>
                             </div>
                             <Typography variant="p" component="div" style={{fontWeight: 600, color: '#fff'}}>Luxury Hotel</Typography>
                             <Typography variant="caption" component="div" style={{color: 'rgb(229, 229, 229)', fontSize: '.6rem',marginTop: 5}}>24 Dicembre 2019</Typography>
