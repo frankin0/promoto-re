@@ -5,7 +5,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import grey from '@material-ui/core/colors/grey';
 import red from '@material-ui/core/colors/red';
 import NavBar from '../../components/NavBar/NavBar';
-import { Container, Grid, CssBaseline, Typography, Paper, Avatar,Fab, Chip  } from '@material-ui/core';
+import { Container, Grid, CssBaseline, Typography, Paper, Avatar,Fab, Chip, Box, Link, Icon, Tooltip } from '@material-ui/core';
 import PanelLogin from '../../screens/Auth/Auth';
 import MyLocationTwoTone from '@material-ui/icons/MyLocationTwoTone';
 import CalendarTodayOutlined from '@material-ui/icons/CalendarTodayOutlined';
@@ -13,6 +13,12 @@ import TimeOutlined from '@material-ui/icons/TimerOutlined';
 import { LightgalleryProvider, LightgalleryItem } from "react-lightgallery";
 import "lightgallery.js/dist/css/lightgallery.css";
 import Maps from '../../components/Google/Maps';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebookF, faFacebookMessenger } from '@fortawesome/free-brands-svg-icons';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import Footer from '../../components/Footer/Footer';
+import CategoryList from '../../components/CategoryList/CategoryList';
+
 
 const theme = createMuiTheme({
     palette: {
@@ -80,6 +86,9 @@ const styles = theme => ({
     },
     chips:{
         marginRight: 10
+    },
+    iconBrands:{
+        fontSize: '1rem'
     }
 });
 
@@ -154,7 +163,7 @@ class Event extends Component{
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
                                 <Paper className={classes.paper}>
-                                    <Typography variant="h4" component="h1" className={classes.subtitle}><MyLocationTwoTone style={{marginRight: 10}} />Find Your Event</Typography>
+                                    <Typography variant="h4" component="h1" className={classes.subtitle}><MyLocationTwoTone style={{marginRight: 10}} />Nome Evento</Typography>
                                 </Paper>
                             </Grid>
                         </Grid>
@@ -218,13 +227,13 @@ class Event extends Component{
                                 </Grid>
                             </Grid>
                             <Grid item xs={12} >
-                                <Typography variant="subtitle1" component="div" className={classes.ltpText} style={{fontWeight: 600}}>Descrizione</Typography>
+                                <Typography variant="h6" component="div" className={classes.ltpText} style={{fontWeight: 600}}>Descrizione</Typography>
                                 <Typography variant="body1" component="p" className={classes.ltpText}>
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                                 </Typography>
                             </Grid>
                             <Grid item xs={12} >
-                                <Typography variant="subtitle1" component="div" className={classes.ltpText} style={{fontWeight: 600}}>Tags e Artisti</Typography>
+                                <Typography variant="h6" component="div" className={classes.ltpText} style={{fontWeight: 600}}>Tags e Artisti</Typography>
                                 <Chip size="small" label="Eventi a bari" className={classes.chips} />
                                 <Chip
                                     size="small"
@@ -234,17 +243,64 @@ class Event extends Component{
                                 />
                             </Grid>
                             <Grid item xs={12} >
-                                <Typography variant="subtitle1" component="div" className={classes.ltpText} style={{fontWeight: 600}}>Condividi con gli amici</Typography>
-                                
+                                <Typography variant="h6" component="div" className={classes.ltpText} style={{fontWeight: 600}}>Condividi con gli amici</Typography>
+                                <Box textAlign="center" style={{marginTop: 30}}>
+                                    <Link href="#" style={{margin: 10}} className={classes.iconBrands}>
+                                        <FontAwesomeIcon icon={faFacebookF} />
+                                    </Link>
+                                    <Link href="#" style={{margin: 10}} className={classes.iconBrands}>
+                                        <FontAwesomeIcon icon={faFacebookMessenger} />
+                                    </Link>
+                                    <Link href="#" style={{margin: 10}} className={classes.iconBrands}>
+                                        <FontAwesomeIcon icon={faEnvelope} />
+                                    </Link>
+                                </Box>
                             </Grid>
                             <Grid item xs={12} >
-                                <Typography variant="subtitle1" component="div" className={classes.ltpText} style={{fontWeight: 600}}>Località</Typography>
+                                <Typography variant="h6" component="div" className={classes.ltpText} style={{fontWeight: 600}}>Località</Typography>
                                 <Maps />
+
+                                <Typography variant="subtitle1" component="div" className={classes.ltpText} style={{fontWeight: 600, textAlign: 'center', marginTop: 35}}>Puoi trovarci in </Typography>
+                                <Typography variant="body1" component="div" className={classes.ltpText} style={{ textAlign: 'center'}}>Viale delle nazioni N° 123 Bari, Italia</Typography>
+
+                                <Box textAlign="center" style={{marginTop: 30}}>
+                                    <Tooltip title="In Auto" placement="top">
+                                        <Link href="#" style={{margin: 10}}>
+                                            <Icon color="primary">directions_car</Icon>
+                                        </Link>
+                                    </Tooltip>
+                                    <Tooltip title="In Bici" placement="top">
+                                        <Link href="#" style={{margin: 10}}>
+                                            <Icon color="primary">directions_bike</Icon>
+                                        </Link>
+                                    </Tooltip>
+                                    
+                                    <Tooltip title="Mezzi Pubblici" placement="top">
+                                        <Link href="#" style={{margin: 10}}>
+                                            <Icon color="primary">directions_bus</Icon>
+                                        </Link>
+                                    </Tooltip>
+                                    
+                                    <Tooltip title="A piedi" placement="top">
+                                        <Link href="#" style={{margin: 10}}>
+                                            <Icon color="primary">directions_walk</Icon>
+                                        </Link>
+                                    </Tooltip>
+                                </Box>
+                                
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography variant="h6" component="div" className={classes.ltpText} style={{fontWeight: 600, marginBottom: 20}}>I più ricercati</Typography>
+                                <div style={{position: 'relative'}}>
+                                    <CategoryList type={"vetrina"} style={{borderRadius: 6}} />
+                                </div>
                             </Grid>
                         </Grid>
+
                     </Container>
 
                 </div>
+                <Footer />
             </ThemeProvider>
         )
     }
