@@ -210,6 +210,12 @@ class Login extends Component{
 
     closePanel = () =>{
         this.props.closed(false);
+        /*this.setState({
+            expandPanel: !this.state.expandPanel,
+            checked_login: !this.state.checked_login,
+            checked_registration: !this.state.checked_registration,
+            orgc: false
+        });*/
     }
     
     expandPanel = () => {
