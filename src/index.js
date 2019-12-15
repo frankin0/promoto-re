@@ -31,7 +31,7 @@ if(cookies.get('lang') === null || cookies.get('lang') === undefined){
 } */
 
 
-console.log("%cPromoto version 1.1.25", "color: #fefefe; font-size: 1.3rem;");
+console.log("%cPromoto version 1.1.35", "color: #fefefe; font-size: 1.3rem;");
 
 /**
  * Set Application Routing

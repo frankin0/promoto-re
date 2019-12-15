@@ -5,6 +5,7 @@ import grey from '@material-ui/core/colors/grey';
 import red from '@material-ui/core/colors/red';
 import { Container, Grid, Typography, AppBar, Toolbar, Button, FormControlLabel, Checkbox,TextField, Link, List, ListItem, ListItemText, ListItemIcon } from '@material-ui/core';
 import CheckRounded from '@material-ui/icons/CheckRounded';
+import getAuth from '../../services/auth.js';
 
 const theme = createMuiTheme({
     palette: {
@@ -201,13 +202,27 @@ class Login extends Component{
         this.props.regOrg(true);
     }
 
+    handleClick = () => {
+        getAuth.Login({
+            email: 'meccanico@hotmail.it',
+            password: '1213e13'
+        })
+        .then((response) => {
+            console.log(response.text, response);
+        })
+        .catch((response) => {
+            console.log(response);
+        });
+        
+    }
+
     render(){
         const { classes, className } = this.props;
         const { username, password, remember } = this.state;
 
         return (
             <Container className={className}>
-                <Grid container  direction="row"  justify="center"  alignItems="center" spacing={3} style={{ minHeight: 'calc(100vh - 118px)'}}>
+                <Grid container direction="row"  justify="center"  alignItems="center" spacing={3} style={{ minHeight: 'calc(100vh - 118px)'}}>
                     <Grid item xs={12}>
                         <Typography variant="body1" gutterBottom className={classes.textCenter}>
                             <Typography variant="h2" component="div" className={classes.title}>Promoto</Typography>
@@ -239,7 +254,7 @@ class Login extends Component{
                                     name="password"
                                     id="reddit-input"
                                 />
-                                <Button variant="contained" size="large" color="primary" className={classes.ButtonBng}>Accedi</Button>
+                                <Button variant="contained" size="large" color="primary" onClick={this.handleClick} className={classes.ButtonBng}>Accedi</Button>
                             </Typography>
                             <Typography component="div" gutterBottom className={classes.lineBox}>
                                 <FormControlLabel
