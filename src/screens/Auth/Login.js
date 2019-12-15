@@ -204,11 +204,11 @@ class Login extends Component{
 
     handleClick = () => {
         getAuth.Login({
-            email: 'meccanico@hotmail.it',
-            password: '1213e13'
+            email: this.state.username,
+            password: this.state.password
         })
         .then((response) => {
-            console.log(response.text, response);
+            console.log(response.data);
         })
         .catch((response) => {
             console.log(response);
@@ -231,7 +231,7 @@ class Login extends Component{
                             <Typography component="div" gutterBottom className={classes.boxSpacing}>
 
                                 <RedditTextField
-                                    label="Nome Utente"
+                                    label="Email"
                                     className={classes.margin}
                                     onChange={this.handleChange}
                                     className={classes.fieldText}

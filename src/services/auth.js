@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {Configuration} from '../constants/Configuration';
 const superagent = require("superagent");
 
@@ -10,7 +11,7 @@ const superagent = require("superagent");
  */
 
 function Login({email, password}){
-    return superagent.post(Configuration.ENDPOINT + "api/login")
+    /*return superagent.post(Configuration.ENDPOINT + "api/login")
     .set('Content-Type', 'application/json')
     .set('accept', 'json')
     //.query({ action: 'edit', city: 'London' }) // query string
@@ -19,7 +20,11 @@ function Login({email, password}){
             email : email,
             password: password
         }
-    );
+    );*/
+    return axios.post('/api/login', {
+        email: email,
+        password: password
+    });
 }
 
 const getAuth = {
