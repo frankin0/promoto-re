@@ -11,6 +11,8 @@ import IconButton from '@material-ui/core/IconButton';
 import StarRounded from '@material-ui/icons/StarRounded';
 import Box from '@material-ui/core/Box';
 import Badge from '@material-ui/core/Badge';
+import {Configuration} from '../../constants/Configuration';
+import Link from '@material-ui/core/Link';
 
 const styles = theme => ({
     card: {
@@ -62,31 +64,38 @@ const styles = theme => ({
 class CardEvents extends Component{
 
     render(){
-        const { classes, type, style } = this.props;
+        const { classes, type, style, title, dateStart, ticket, copertine, id } = this.props;
+
+        const options = {'month': 'long', 'day': '2-digit', 'year' : 'numeric'};
+
 
         return (
-            <Card className={type === "vetrina" ? classes.cardVetrina + " menu-item" : type === "default" ? classes.cardDefault + " menu-item" : classes.card + " menu-item"}>
-                <CardActionArea style={{position: 'relative', display: 'block'}}>
-                    <CardMedia
-                        className={type === "vetrina" ? classes.mediaVetrina : classes.media}
-                        style={style}
-                        image="https://a0.muscache.com/im/pictures/lombard/MtTemplate-1185780-media_library/original/cd3d663c-ccca-425b-adf0-bd371417c8d9.jpeg"
-                        title="Contemplative Reptile"
-                    />
-                    
-                    {/*<StarRounded fontSize="large" className={classes.buttonSave} />*/}
+            <Link href={"#/Event/" + id}>
+                <Card className={type === "vetrina" ? classes.cardVetrina + " menu-item" : type === "default" ? classes.cardDefault + " menu-item" : classes.card + " menu-item"}>
+                    <CardActionArea style={{position: 'relative', display: 'block'}}>
+                        <CardMedia
+                            className={type === "vetrina" ? classes.mediaVetrina : classes.media}
+                            style={style}
+                            image={copertine === undefined ? "https://a0.muscache.com/im/pictures/lombard/MtTemplate-1185780-media_library/original/cd3d663c-ccca-425b-adf0-bd371417c8d9.jpeg" : Configuration.FILES + copertine}
+                            aspectRatio={(16/9)}
+                            component="image"
+                            title={title}
+                        />
+                        
+                        {/*<StarRounded fontSize="large" className={classes.buttonSave} />*/}
 
-                    <Box className={classes.infoB}>
-                        <Typography component="div" style={{fontWeight: 600, color: '#fff'}}>
-                            <div style={{color: '#fff', fontSize: '.6rem',marginBottom: 2}}>
-                                <Badge badgeContent={"Limited"} color="secondary" className={classes.badgeB__} /> <Typography variant="small" component="small" style={{fontWeight: 600, color: '#fff', fontSize: '.65rem', position: 'relative', top: 2}}>Only 100 Tickets</Typography>
-                            </div>
-                            <Typography variant="p" component="div" style={{fontWeight: 600, color: '#fff'}}>Luxury Hotel</Typography>
-                            <Typography variant="caption" component="div" style={{color: 'rgb(229, 229, 229)', fontSize: '.6rem',marginTop: 5}}>24 Dicembre 2019</Typography>
-                        </Typography>
-                    </Box>
-                </CardActionArea>
-            </Card>
+                        <Box className={classes.infoB}>
+                            <Typography component="div" style={{fontWeight: 600, color: '#fff'}}>
+                                <div style={{color: '#fff', fontSize: '.6rem',marginBottom: 2}}>
+                                    <Badge badgeContent={"Limited"} color="secondary" className={classes.badgeB__} /> <Typography variant="small" component="small" style={{fontWeight: 600, color: '#fff', fontSize: '.65rem', position: 'relative', top: 2}}>Only {ticket} Tickets</Typography>
+                                </div>
+                                <Typography variant="p" component="div" style={{fontWeight: 600, color: '#fff'}}>{title}</Typography>
+                                <Typography variant="caption" component="div" style={{color: 'rgb(229, 229, 229)', fontSize: '.6rem',marginTop: 5}}>{new Date(dateStart).toLocaleString('it-IT', options)}</Typography>
+                            </Typography>
+                        </Box>
+                    </CardActionArea>
+                </Card>
+            </Link>
         );
     }
 }

@@ -7,4 +7,11 @@ module.exports = function(app){
             changeOrigin: true
         })
     );
+
+    app.use(
+        proxy("/events/lists/**", {
+            target: "https://www.promo-to.it/v2",
+            changeOrigin: true
+        })
+    );
 }

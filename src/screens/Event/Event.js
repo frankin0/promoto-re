@@ -99,6 +99,7 @@ class Event extends Component{
 
         this.state = {
             openLogin: false,
+            id: 0,
             viewport: {
                 width: 400,
                 height: 400,
@@ -106,6 +107,20 @@ class Event extends Component{
                 longitude: -122.4376,
                 zoom: 8
             }
+        }
+    }
+
+    componentDidMount(){
+        window.scrollTo(0,0 );
+
+        this.setState({
+            id: this.props.match.params.id
+        });
+    }
+
+    componentDidUpdate(){
+        if(this.props.match.params.id !== this.state.id){
+            window.scrollTo(0,0 );
         }
     }
 

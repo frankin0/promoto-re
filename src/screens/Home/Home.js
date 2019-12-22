@@ -5,11 +5,12 @@ import { ThemeProvider } from '@material-ui/styles';
 import grey from '@material-ui/core/colors/grey';
 import red from '@material-ui/core/colors/red';
 import NavBar from '../../components/NavBar/NavBar';
-import { Container, Grid, CssBaseline, Typography, Paper } from '@material-ui/core';
+import { Container, Grid, CssBaseline, Typography, Paper, Link } from '@material-ui/core';
 import CardEvents from '../../components/CardEvents/CardEvents';
 import video from '../../assets/videos/video1.mp4';
 import CategoryList from '../../components/CategoryList/CategoryList';
 import PanelLogin from '../../screens/Auth/Auth';
+import GetAllEvents from '../../services/Events/GetAllEvents';
 
 const theme = createMuiTheme({
     palette: {
@@ -99,8 +100,22 @@ class Home extends Component{
         super(props);
 
         this.state = {
-            openLogin: false
+            openLogin: false,
+            allEvents: []
         }
+    }
+
+    componentDidMount(){
+
+        GetAllEvents.GetAllEvents(10000, 0)
+        .then((event) => {
+            console.log(event);
+            this.setState({
+                allEvents: event.data.lists
+            });
+        })
+        .catch((e) => console.error(e));
+
     }
 
     panelLogin = (e) =>{
@@ -118,6 +133,8 @@ class Home extends Component{
 
     render(){
         const {classes } = this.props;
+
+
         
         return (
             <ThemeProvider theme={theme}>
@@ -157,17 +174,17 @@ class Home extends Component{
                     </Container>
 
                     <Container fixed>
-                        <Grid container spacing={3} style={{marginTop: 60,position: 'relative',display: 'block'}}>
+                        <Grid container spacing={3} style={{marginTop: 60,position: 'relative'}}>
                             <Grid item xs={12}>
                                 <Typography variant="body1" component="div" className={classes.catname} color="primary">I più popolari</Typography>
                             </Grid>
 
-                            <Grid item xs={12}>
+                            {/*<Grid item xs={12}>
                                 <CategoryList type={"vetrina"} />
-                            </Grid>
+                            </Grid>*/}
 
-                            {/*
-                                [1, 2, 3, 4].map((index) =>{
+                            
+                            {    [1, 2, 3, 4].map((index) =>{
 
                                     return (
                                         <Grid item md={3} xs={12}>
@@ -175,30 +192,41 @@ class Home extends Component{
                                         </Grid>
                                     )
                                 })
-                            */}
+                            }
+
+                            <Grid item xs={12}>
+                                <Typography variant="body1" component="div" className={classes.catname} color="primary">
+                                    <Link href="#/" style={{color: 'red', fontWeight: 600}}>Mostra Altro</Link>    
+                                </Typography>
+                            </Grid>
                         </Grid>
                     </Container>
 
                     <Container fixed>
-                    <Grid container spacing={3} style={{marginTop: 60,position: 'relative',display: 'block'}}>
+                        <Grid container spacing={3} style={{marginTop: 60,position: 'relative'}}>
                             <Grid item xs={12}>
                                 <Typography variant="body1" component="div" className={classes.catname} color="primary">Nei prossimi giorni in Puglia</Typography>
                             </Grid>
 
-                            <Grid item xs={12}>
+                            {/*<Grid item xs={12}>
                                 <CategoryList style={{height: 150}} />
+                            </Grid>*/}
+
+                            
+                            {[1, 2, 3, 4].map((index) =>{
+
+                                return (
+                                    <Grid item md={3} xs={12}>
+                                        <CardEvents key={index} type={"vetrina"} />
+                                    </Grid>
+                                )
+                            })}
+                            
+                            <Grid item xs={12}>
+                                <Typography variant="body1" component="div" className={classes.catname} color="primary">
+                                    <Link href="#/" style={{color: 'red', fontWeight: 600}}>Mostra Altro</Link>    
+                                </Typography>
                             </Grid>
-
-                            {/*
-                                [1, 2, 3, 4, 5, 6].map((index) =>{
-
-                                    return (
-                                        <Grid item md={2}>
-                                            <CardEvents key={index} height={250} />
-                                        </Grid>
-                                    )
-                                })
-                            */}
                         </Grid>
                     </Container>
 
@@ -208,11 +236,11 @@ class Home extends Component{
                                 <Typography variant="body1" component="div" className={classes.catname} color="primary">Altro</Typography>
                             </Grid>
                             {
-                                [1, 2, 3, 4, 5, 6,7,8,9,10,11,12,13,14,15,16,17,18].map((index) =>{
-
+                                Object.values(this.state.allEvents).map((item, index) =>{
+                                    console.log(item);
                                     return (
                                         <Grid item key={index} md={4} xs={12}>
-                                            <CardEvents key={index} type={"default"} style={{height: 400,  width: '100%', marginRight: 10}} />
+                                            <CardEvents key={index} id={item.ticketPublicID} type={"default"} copertine={item.ticketCopertine} title={item.ticketSimple} dateStart={item.ticketDateStart} ticket={item.ticket} style={{height: 400,  width: '100%', marginRight: 10}} />
                                         </Grid>
                                     )
                                 })
