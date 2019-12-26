@@ -3,7 +3,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import { createMuiTheme, makeStyles, fade } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import red from '@material-ui/core/colors/red';
-import { Container, Grid, Typography, AppBar, Toolbar, Button, FormControlLabel, Checkbox,TextField, Link, List, ListItem, ListItemText, ListItemIcon } from '@material-ui/core';
+import { Container, Grid, Typography, AppBar, Toolbar, Button, FormControlLabel, Checkbox,TextField, Link, List, ListItem, ListItemText, ListItemIcon, Tooltip, Zoom } from '@material-ui/core';
 import CheckRounded from '@material-ui/icons/CheckRounded';
 import getAuth from '../../services/auth.js';
 
@@ -166,19 +166,35 @@ class Login extends Component{
             password: '',
             remember: false,
             expandPanel: false,
+            usernameError: false,
+            passwordError:false,
+            open: false
         };
     }
 
     componentDidUpdate(){
-        console.log(this.props.open);
+        //console.log(this.props.open);
     }
 
     handleChange = e =>{
         var name = e.target.name;
         var value = e.target.value;
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        if(name == "username"){
+            this.setState({
+                usernameError: name == "username" && value.length === 0 ? true : (re.test(String(value).toLowerCase()) ? false : true)
+            });
+        }
+
+        if(name == "password"){
+            this.setState({
+                passwordError: name == "password" && value.length < 6 ? true : false,
+            });
+        }
 
         this.setState({
-            [name]: value
+            [name]: value,
         });
     }
 
@@ -203,18 +219,51 @@ class Login extends Component{
     }
 
     handleClick = () => {
-        getAuth.Login({
-            email: this.state.username,
-            password: this.state.password
-        })
-        .then((response) => {
-            console.log(response.data);
-        })
-        .catch((response) => {
-            console.log(response);
-        });
+
+        const { username, password } = this.state;
+        var hErr = false;
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+
+        if(!re.test(String(username).toLowerCase())){
+            this.setState({
+                usernameError: true
+            });
+            hErr = true;
+        }
+
+        if(password.length < 6){
+            this.setState({
+                passwordError: true
+            });
+            hErr = true;
+        }
+
+        if(hErr === false){
+            getAuth.Login({
+                email: this.state.username,
+                password: this.state.password
+            })
+            .then((response) => {
+                console.log(response.data);
+                this.setState({
+                    usernameError: false,
+                    passwordError: false
+                });
+            })
+            .catch((response) => {
+                console.log(response);
+            });
+        }
         
     }
+
+    handleTooltipClose = () => {
+        this.setState({
+            usernameError: false
+        });
+    };
+    
 
     render(){
         const { classes, className } = this.props;
@@ -229,31 +278,64 @@ class Login extends Component{
                             <Typography variant="h6" component="div">Registrati su Promoto, vivi la vita</Typography>
 
                             <Typography component="div" gutterBottom className={classes.boxSpacing}>
+                                <Tooltip
+                                    PopperProps={{
+                                        disablePortal: true,
+                                    }}
+                                    //onClose={this.handleTooltipClose}
+                                    open={this.state.usernameError}
+                                    //disableFocusListener
+                                    disableHoverListener
+                                    disableTouchListener
+                                    arrow
+                                    interactive
+                                    TransitionComponent={Zoom} 
+                                    title="Inserisci una mail valida!"
+                                    placement="top"
+                                >
+                                    <RedditTextField
+                                        label="Email"
+                                        className={classes.margin}
+                                        onChange={this.handleChange}
+                                        className={[classes.fieldText, this.state.usernameError ? "filedError" : ""]}
+                                        defaultValue="react-reddit"
+                                        variant="filled"
+                                        type="text"
+                                        value={username}
+                                        name="username"
+                                        id="reddit-input"
+                                        color=""
+                                    />
+                                </Tooltip>
 
-                                <RedditTextField
-                                    label="Email"
-                                    className={classes.margin}
-                                    onChange={this.handleChange}
-                                    className={classes.fieldText}
-                                    defaultValue="react-reddit"
-                                    variant="filled"
-                                    type="text"
-                                    value={username}
-                                    name="username"
-                                    id="reddit-input"
-                                />
-                                <RedditTextField
-                                    label="Password"
-                                    className={classes.margin}
-                                    onChange={this.handleChange}
-                                    className={classes.fieldText}
-                                    defaultValue="react-reddit"
-                                    type="password"
-                                    variant="filled"
-                                    value={password}
-                                    name="password"
-                                    id="reddit-input"
-                                />
+                                <Tooltip
+                                    PopperProps={{
+                                        disablePortal: true,
+                                    }}
+                                    //onClose={this.handleTooltipClose}
+                                    open={this.state.passwordError}
+                                    //disableFocusListener
+                                    disableHoverListener
+                                    disableTouchListener
+                                    arrow
+                                    title="Inserisci una password valida!"
+                                    placement="top"
+                                    interactive
+                                    TransitionComponent={Zoom} 
+                                >
+                                    <RedditTextField
+                                        label="Password"
+                                        className={classes.margin}
+                                        onChange={this.handleChange}
+                                        className={[classes.fieldText, this.state.passwordError ? "filedError" : ""]}
+                                        defaultValue="react-reddit"
+                                        type="password"
+                                        variant="filled"
+                                        value={password}
+                                        name="password"
+                                        id="reddit-input"
+                                    />
+                                </Tooltip>
                                 <Button variant="contained" size="large" color="primary" onClick={this.handleClick} className={classes.ButtonBng}>Accedi</Button>
                             </Typography>
                             <Typography component="div" gutterBottom className={classes.lineBox}>

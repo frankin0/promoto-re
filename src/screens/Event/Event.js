@@ -18,6 +18,7 @@ import { faFacebookF, faFacebookMessenger } from '@fortawesome/free-brands-svg-i
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import Footer from '../../components/Footer/Footer';
 import CategoryList from '../../components/CategoryList/CategoryList';
+import ThisEvent from '../../services/Events/GetEvent';
 
 
 const theme = createMuiTheme({
@@ -54,7 +55,7 @@ const styles = theme => ({
     paper:{
         border: 'none',
         boxShadow: 'none',
-        marginTop: 40,
+        marginTop: 0,
         backgroundColor: 'transparent'
     },
     ltp:{
@@ -106,7 +107,8 @@ class Event extends Component{
                 latitude: 37.7577,
                 longitude: -122.4376,
                 zoom: 8
-            }
+            },
+            event: {}
         }
     }
 
@@ -116,6 +118,16 @@ class Event extends Component{
         this.setState({
             id: this.props.match.params.id
         });
+
+        ThisEvent.GetEvent(this.props.match.params.id)
+            .then((data) => {
+                this.setState({
+                    event: data.data.event
+                });
+            })
+            .catch((e) => {
+                console.log(e);
+            });
     }
 
     componentDidUpdate(){
@@ -133,6 +145,7 @@ class Event extends Component{
 
     render(){
         const {classes } = this.props;
+        const {event} = this.state;
 
         const PhotoItem = ({ image, group }) => {
             const imageonerror = (ev) => {
@@ -178,7 +191,7 @@ class Event extends Component{
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
                                 <Paper className={classes.paper}>
-                                    <Typography variant="h4" component="h1" className={classes.subtitle}><MyLocationTwoTone style={{marginRight: 10}} />Nome Evento</Typography>
+                                    <Typography variant="h4" component="h1" className={classes.subtitle}><MyLocationTwoTone style={{marginRight: 10}} />{event.ticketSimple}</Typography>
                                 </Paper>
                             </Grid>
                         </Grid>

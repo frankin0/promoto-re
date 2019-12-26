@@ -133,8 +133,6 @@ class Home extends Component{
 
     render(){
         const {classes } = this.props;
-
-
         
         return (
             <ThemeProvider theme={theme}>
@@ -237,7 +235,6 @@ class Home extends Component{
                             </Grid>
                             {
                                 Object.values(this.state.allEvents).map((item, index) =>{
-                                    console.log(item);
                                     return (
                                         <Grid item key={index} md={4} xs={12}>
                                             <CardEvents key={index} id={item.ticketPublicID} type={"default"} copertine={item.ticketCopertine} title={item.ticketSimple} dateStart={item.ticketDateStart} ticket={item.ticket} style={{height: 400,  width: '100%', marginRight: 10}} />

@@ -5,7 +5,7 @@
 }
 body, html{
     font-family: 'Montserrat', sans-serif;
-    background-color: #f9fbfc !important;
+    /*background-color: #f9fbfc !important;*/
     color: #404a52;
 }
 
@@ -252,6 +252,15 @@ h1, h2, h3, h4, h5 ,h6, p, a, i{
     border-left: 0px;
     border-right: 0px;
     border-top: 0px;
+}
+
+.filedError div{
+    border-color: #fd4747 !important;
+    color: #fd4747 !important;
+    box-shadow: rgba(253, 71, 71, .25) 0 0 0 2px !important;
+}
+.filedError label{
+    color: #fd4747 !important;
 }
 
 @media (min-height:700px) and (min-width: 1128px){

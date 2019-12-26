@@ -14,4 +14,11 @@ module.exports = function(app){
             changeOrigin: true
         })
     );
+
+    app.use(
+        proxy("/event/**", {
+            target: "https://www.promo-to.it/v2",
+            changeOrigin: true
+        })
+    );
 }
