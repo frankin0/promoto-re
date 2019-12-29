@@ -13,7 +13,7 @@ import './assets/css/style.css';
 import './assets/css/icofont.min.css';
 import Home from './screens/Home/Home.js';
 import Event from './screens/Event/Event.js';
-
+import { SnackbarProvider } from 'notistack';
 
 setDefaultTranslations({it})
 setDefaultLanguage('it')
@@ -38,13 +38,15 @@ console.log("%cPromoto version 1.1.55", "color: #fefefe; font-size: 1.3rem;");
  */
 
  const RouteApp = (
-    <HashRouter>
-        <Switch>
-            <Route exact path="/" name="Home" component={Home} />
-            <Route path="/Event/:id" name="Event" component={Event} />
-            <Route path="*" component={Home} />
-        </Switch>
-    </HashRouter>
+    <SnackbarProvider maxSnack={3}>
+        <HashRouter>
+            <Switch>
+                <Route exact path="/" name="Home" component={Home} />
+                <Route path="/Event/:id" name="Event" component={Event} />
+                <Route path="*" component={Home} />
+            </Switch>
+        </HashRouter>
+    </SnackbarProvider>
  );
 
  ReactDOM.render(RouteApp, document.getElementById('root'));

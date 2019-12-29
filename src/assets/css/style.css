@@ -32,7 +32,7 @@ h1, h2, h3, h4, h5 ,h6, p, a, i{
     font-size: .9rem;
 }
 .menu-item {
-    width: 300px;
+    /*width: 300px;*/
     margin: 5px 10px;
     user-select: none;
     cursor: pointer;
@@ -288,3 +288,8 @@ h1, h2, h3, h4, h5 ,h6, p, a, i{
         height: 100%;
     }
 }
+
+.leaflet-container {
+    height: 400px;
+    width: 100%;
+  }

@@ -17,8 +17,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faFacebookMessenger } from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import Footer from '../../components/Footer/Footer';
-import CategoryList from '../../components/CategoryList/CategoryList';
+import CardEvents from '../../components/CardEvents/CardEvents';
 import ThisEvent from '../../services/Events/GetEvent';
+import {Configuration} from '../../constants/Configuration';
 
 
 const theme = createMuiTheme({
@@ -108,7 +109,8 @@ class Event extends Component{
                 longitude: -122.4376,
                 zoom: 8
             },
-            event: {}
+            event: {},
+            gallery: Array()
         }
     }
 
@@ -122,8 +124,28 @@ class Event extends Component{
         ThisEvent.GetEvent(this.props.match.params.id)
             .then((data) => {
                 this.setState({
-                    event: data.data.event
+                    event: data.data.event,
                 });
+
+                if( data.data.event.ticketCopertine){
+                    this.setState({ 
+                        gallery: this.state.gallery.concat([ Configuration.FILES + data.data.event.ticketCopertine])
+                    });
+                }
+
+                if(data.data.event.gallery.length > 0){
+                    var n = 1;
+                    data.data.event.gallery.forEach(element => {
+
+                        this.setState({ 
+                            gallery: this.state.gallery.concat([
+                                (element.GalleryImage.indexOf("http://") == 0 || element.GalleryImage.indexOf("https://") == 0 ? element.GalleryImage : Configuration.FILES + element.GalleryImage)
+                            ])
+                        });
+
+                        n++;
+                    });
+                }
             })
             .catch((e) => {
                 console.log(e);
@@ -136,6 +158,7 @@ class Event extends Component{
         }
     }
 
+
     panelLogin = (e) =>{
         this.setState({
             openLogin: e
@@ -145,7 +168,7 @@ class Event extends Component{
 
     render(){
         const {classes } = this.props;
-        const {event} = this.state;
+        const {event, gallery} = this.state;
 
         const PhotoItem = ({ image, group }) => {
             const imageonerror = (ev) => {
@@ -162,12 +185,7 @@ class Event extends Component{
             );
         };
 
-        const GROUP2 = [
-            "https://espoweb.it/demo/imgCreate/?txt=404&size=40&w=1440&h=1024",
-            "https://espoweb.it/demo/imgCreate/?txt=404&size=40&w=1440&h=1024",
-            "https://espoweb.it/demo/imgCreate/?txt=404&size=40&w=1440&h=1024",
-            "https://espoweb.it/demo/imgCreate/?txt=404&size=40&w=1440&h=1024",
-        ];
+        const GROUP2 = gallery;
 
         var imageG = 0;
         /*if(this.state.imageG === 0){
@@ -177,7 +195,7 @@ class Event extends Component{
         }*/
 
         const center = { lat: 0, lng: 0 };
-        
+        const options = {'month': 'long', 'day': '2-digit', 'year' : 'numeric'};
 
         return (
             <ThemeProvider theme={theme}>
@@ -239,11 +257,11 @@ class Event extends Component{
                     <Container fixed>
                         <Grid container spacing={3}>
                             <Grid item xs={12} >
-                                <Typography variant="h6" component="h2" className={classes.subtitle}>UserName</Typography>
+                                <Typography variant="h6" component="h2" className={classes.subtitle}>{event.Author ? event.Author.UserRealName && event.Author.UserRealSurname ? event.Author.UserRealName + " " + event.Author.UserRealSurname : event.Author.userName : "..."}</Typography>
                             </Grid>
-                            <Grid item xs={12} md={6} >
-                                <Typography variant="body1" component="div" className={classes.ltp}><MyLocationTwoTone style={{marginRight: 10}} /> <span className={classes.ltpText}>Rome, Italy</span></Typography>
-                                <Typography variant="body1" component="div" className={classes.ltp}><CalendarTodayOutlined style={{marginRight: 10}} /> <span className={classes.ltpText}>15 Sept 2019</span> <TimeOutlined style={{marginRight: 5, marginLeft: 10}} /> <span className={classes.ltpText}>19:22 - 22:00</span> </Typography>
+                            <Grid item xs={12} md={6} > 
+                                <Typography variant="body1" component="div" className={classes.ltp}><MyLocationTwoTone style={{marginRight: 10}} /> <span className={classes.ltpText}>{event.ticketCountry ? event.ticketCountry : "..."} in {event.ticketLocation ? event.ticketLocation : "..."}</span></Typography>
+                                <Typography variant="body1" component="div" className={classes.ltp}><CalendarTodayOutlined style={{marginRight: 10}} /> <span className={classes.ltpText}>{new Date(event.ticketDateStart).toLocaleString('it-IT', options)} - {new Date(event.ticketDateEnd).toLocaleString('it-IT', options)}</span> <TimeOutlined style={{marginRight: 5, marginLeft: 10}} /> <span className={classes.ltpText}>{event.ticketDateStart ? event.ticketDateStart.substr(11, 5) : "..."} - {event.ticketDateEnd ? event.ticketDateEnd.substr(11, 5) : "..."}</span> </Typography>
                             </Grid>
                             <Grid item md={6} xs={12} >
                                 <Grid container justify="center" alignItems="center">
@@ -256,19 +274,33 @@ class Event extends Component{
                             </Grid>
                             <Grid item xs={12} >
                                 <Typography variant="h6" component="div" className={classes.ltpText} style={{fontWeight: 600}}>Descrizione</Typography>
-                                <Typography variant="body1" component="p" className={classes.ltpText}>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                </Typography>
+                                <Typography variant="body1" component="p" className={classes.ltpText} dangerouslySetInnerHTML={{ __html: event.ticketDesc ? event.ticketDesc : "..." }}></Typography>
                             </Grid>
                             <Grid item xs={12} >
                                 <Typography variant="h6" component="div" className={classes.ltpText} style={{fontWeight: 600}}>Tags e Artisti</Typography>
-                                <Chip size="small" label="Eventi a bari" className={classes.chips} />
+                                {/*<Chip size="small" label="Eventi a bari" className={classes.chips} />
                                 <Chip
                                     size="small"
                                     avatar={<Avatar alt="Natacha" src="https://material-ui.com/static/images/avatar/1.jpg" />}
                                     className={classes.chips}
                                     label="Jon Chena"
-                                />
+                                    />*/}
+                                {
+                                    event.ticketTags ? 
+                                        event.ticketTags.map(element => {
+                                            if(element.tag) {
+                                                return <Chip size="small" label={element.tag} className={classes.chips} />
+                                            }else{
+                                                return <Chip
+                                                            size="small"
+                                                            avatar={<Avatar alt={element.name} src={element.avatar} />}
+                                                            className={classes.chips}
+                                                            label={element.name}
+                                                        />
+                                            }
+                                        })
+                                    : "..."
+                                }
                             </Grid>
                             <Grid item xs={12} >
                                 <Typography variant="h6" component="div" className={classes.ltpText} style={{fontWeight: 600}}>Condividi con gli amici</Typography>
@@ -286,43 +318,58 @@ class Event extends Component{
                             </Grid>
                             <Grid item xs={12} >
                                 <Typography variant="h6" component="div" className={classes.ltpText} style={{fontWeight: 600}}>Località</Typography>
-                                <Maps />
+                                {
+                                    event.ticketCountry ? <Maps label={Configuration.OFFICES[event.ticketOffice] + " " + event.ticketLocation} query={event.ticketCountry} /> : "Loading..."
+                                }
 
-                                <Typography variant="subtitle1" component="div" className={classes.ltpText} style={{fontWeight: 600, textAlign: 'center', marginTop: 35}}>Puoi trovarci in </Typography>
-                                <Typography variant="body1" component="div" className={classes.ltpText} style={{ textAlign: 'center'}}>Viale delle nazioni N° 123 Bari, Italia</Typography>
+                                <Typography variant="subtitle1" component="div" className={classes.ltpText} style={{fontWeight: 600, textAlign: 'center', marginTop: 35}}>Puoi trovarci in</Typography>
+                                <Typography variant="body1" component="div" className={classes.ltpText} style={{ textAlign: 'center'}}>{event.ticketCountry} {Configuration.OFFICES_STRING[event.ticketOffice]} <strong>{event.ticketLocation}</strong></Typography>
 
                                 <Box textAlign="center" style={{marginTop: 30}}>
-                                    <Tooltip title="In Auto" placement="top">
-                                        <Link href="#" style={{margin: 10}}>
+                                    <Tooltip title="Calcola percorso in auto" placement="top">
+                                        <Link href={"https://maps.google.com/?saddr=My+Location&daddr="+event.ticketCountry+"&driving"} target="_blank" style={{margin: 10}}>
                                             <Icon color="primary">directions_car</Icon>
                                         </Link>
                                     </Tooltip>
-                                    <Tooltip title="In Bici" placement="top">
-                                        <Link href="#" style={{margin: 10}}>
+                                    <Tooltip title="Calcola percorso in bici" placement="top">
+                                        <Link href={"https://maps.google.com/?saddr=My+Location&daddr="+event.ticketCountry+"&dirflg=b&mode=bicycling"} target="_blank" style={{margin: 10}}>
                                             <Icon color="primary">directions_bike</Icon>
                                         </Link>
                                     </Tooltip>
                                     
                                     <Tooltip title="Mezzi Pubblici" placement="top">
-                                        <Link href="#" style={{margin: 10}}>
+                                        <Link href={"https://maps.google.com/?saddr=My+Location&daddr="+event.ticketCountry+"&dirflg=r&mode=transit"} target="_blank" style={{margin: 10}}>
                                             <Icon color="primary">directions_bus</Icon>
                                         </Link>
                                     </Tooltip>
                                     
-                                    <Tooltip title="A piedi" placement="top">
-                                        <Link href="#" style={{margin: 10}}>
+                                    <Tooltip title="Calcola percorso a piedi" placement="top">
+                                        <Link href={"https://maps.google.com/?saddr=My+Location&daddr="+event.ticketCountry+"&dirflg=w&mode=walk"} target="_blank" style={{margin: 10}}>
                                             <Icon color="primary">directions_walk</Icon>
                                         </Link>
                                     </Tooltip>
                                 </Box>
                                 
                             </Grid>
-                            <Grid item xs={12}>
-                                <Typography variant="h6" component="div" className={classes.ltpText} style={{fontWeight: 600, marginBottom: 20}}>I più ricercati</Typography>
-                                <div style={{position: 'relative'}}>
-                                    <CategoryList type={"vetrina"} style={{borderRadius: 6}} />
-                                </div>
+                            <Grid item  xs={12}>
+                                <Grid container xs={12}>
+                                    <Grid item xs={12}>
+                                        <Typography variant="h6" component="div" className={classes.ltpText} style={{fontWeight: 600, marginBottom: 20}}>I più ricercati</Typography>
+                                    </Grid>
+                                        {[1, 2, 3, 4].map((index) =>{
+
+                                            return (
+                                                <Grid item lg={3} md={4} sm={6} spacing={3} xs={12}>
+                                                    <CardEvents key={index} style={{width: '100%', height: 200}} />
+                                                </Grid>
+                                            )
+                                        })}
+                                    {/*<div style={{position: 'relative'}}>
+                                        <CategoryList type={"vetrina"} style={{borderRadius: 6}} />
+                                    </div>*/}
+                                </Grid>
                             </Grid>
+                            
                         </Grid>
 
                     </Container>

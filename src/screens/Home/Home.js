@@ -185,8 +185,8 @@ class Home extends Component{
                             {    [1, 2, 3, 4].map((index) =>{
 
                                     return (
-                                        <Grid item md={3} xs={12}>
-                                            <CardEvents key={index} type={"vetrina"} />
+                                        <Grid item lg={3} md={4} sm={6} spacing={3} xs={12} style={{padding: 0}}>
+                                            <CardEvents key={index} type={"vetrina_"} style={{width: '100%', height: 200}} />
                                         </Grid>
                                     )
                                 })
@@ -214,8 +214,8 @@ class Home extends Component{
                             {[1, 2, 3, 4].map((index) =>{
 
                                 return (
-                                    <Grid item md={3} xs={12}>
-                                        <CardEvents key={index} type={"vetrina"} />
+                                    <Grid item lg={3} md={4} sm={6} spacing={3} xs={12} style={{padding: 0}}>
+                                        <CardEvents key={index} type={"vetrina_"} style={{width: '100%', height: 200}} />
                                     </Grid>
                                 )
                             })}
