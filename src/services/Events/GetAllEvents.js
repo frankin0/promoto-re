@@ -10,8 +10,13 @@ function GetAllEvents(limit, page){
     return axios.get('/events/lists/'+limit+'/' + page);
 }
 
+function GetMostEvents(limit, page){
+    return axios.get('/events/most_lists/'+limit+'/' + page);
+}
+
 const event__ = {
-    GetAllEvents
+    GetAllEvents,
+    GetMostEvents
 }
 
 export default event__;

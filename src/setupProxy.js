@@ -9,7 +9,7 @@ module.exports = function(app){
     );
 
     app.use(
-        proxy("/events/lists/**", {
+        proxy("/events/**", {
             target: "https://www.promo-to.it/v2",
             changeOrigin: true
         })
@@ -21,4 +21,12 @@ module.exports = function(app){
             changeOrigin: true
         })
     );
+
+    app.use(
+        proxy("/user", {
+            target: "https://www.promo-to.it/v2",
+            changeOrigin: true
+        })
+    );
+
 }

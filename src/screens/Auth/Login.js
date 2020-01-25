@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import withStyles from '@material-ui/core/styles/withStyles'; 
-import { createMuiTheme, makeStyles, fade } from '@material-ui/core/styles';
+import { AppBar, Button, Checkbox, Container, FormControlLabel, Grid, Link, List, ListItem, ListItemIcon, ListItemText, TextField, Toolbar, Tooltip, Typography, Zoom } from '@material-ui/core';
 import grey from '@material-ui/core/colors/grey';
 import red from '@material-ui/core/colors/red';
-import { Container, Grid, Typography, AppBar, Toolbar, Button, FormControlLabel, Checkbox,TextField, Link, List, ListItem, ListItemText, ListItemIcon, Tooltip, Zoom } from '@material-ui/core';
+import { createMuiTheme, fade, makeStyles } from '@material-ui/core/styles';
+import withStyles from '@material-ui/core/styles/withStyles';
 import CheckRounded from '@material-ui/icons/CheckRounded';
+import React, { Component } from 'react';
 import getAuth from '../../services/auth.js';
 
 const theme = createMuiTheme({
@@ -245,11 +245,22 @@ class Login extends Component{
                 password: this.state.password
             })
             .then((response) => {
-                console.log(response.data);
+                //console.log(response.data.status.token);
                 this.setState({
                     usernameError: false,
                     passwordError: false
                 });
+
+                if(response.data.status != "_false_"){
+                    localStorage.setItem("user", response.data.status.token);
+                    window.location.reload();
+                }else{
+                    this.setState({
+                        usernameError: true,
+                        passwordError: true
+                    });
+                }
+
             })
             .catch((response) => {
                 console.log(response);

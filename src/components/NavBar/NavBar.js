@@ -1,12 +1,13 @@
-import React, {Component} from 'react';
-import withStyles from '@material-ui/core/styles/withStyles'; 
-
-import { AppBar, Toolbar, Typography, IconButton, Menu, Tooltip , Button, MenuItem, Avatar } from '@material-ui/core';
-import logo from '../../assets/img/logo.png';
+import { AppBar, Avatar, Button, IconButton, Link, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@material-ui/core';
+import withStyles from '@material-ui/core/styles/withStyles';
+import FilterListRounded from '@material-ui/icons/FilterListRounded';
 import HelpRounded from '@material-ui/icons/HelpRounded';
 import NotificationsRounded from '@material-ui/icons/NotificationsRounded';
 import ShoppingCartRounded from '@material-ui/icons/ShoppingCartRounded';
-import FilterListRounded from '@material-ui/icons/FilterListRounded';
+import React, { Component } from 'react';
+import { withRouter } from "react-router-dom";
+import logo from '../../assets/img/logo.png';
+
 
 const styles = theme => ({
     root: {
@@ -60,6 +61,14 @@ class MenuAppBar extends Component {
         }
     }
 
+    componentDidMount(){
+        if(localStorage.getItem("user") !== null){
+            this.setState({
+                auth: true
+            });
+        }
+    }
+
     handleChange = event => {
         this.setState({
             auth: !this.state.auth
@@ -76,10 +85,16 @@ class MenuAppBar extends Component {
         this.setState({
             anchorEl: null
         });
+
     };
 
     openLoginPanel = () =>{
         this.props.login(true);
+    }
+
+    logout = () => {
+        localStorage.removeItem("user");
+        window.location.reload();
     }
 
     render (){
@@ -96,7 +111,9 @@ class MenuAppBar extends Component {
                             <Menu />
                         </IconButton>
                         <Typography variant="h6" className={classes.title}>
-                            <img src={logo} height="35px" alt="Promo-to" className={classes.logo} rel="romo-to" />
+                            <Link href="#/">
+                                <img src={logo} height="35px" alt="Promo-to" className={classes.logo} rel="romo-to" />
+                            </Link>
                         </Typography>
     
                         {this.state.auth ? (
@@ -147,13 +164,14 @@ class MenuAppBar extends Component {
                                     <MenuItem onClick={this.handleClose}>Profilo</MenuItem>
                                     <MenuItem onClick={this.handleClose}>Impostazioni</MenuItem>
                                     <MenuItem disabled><hr className={classes.hrDivide} /></MenuItem>
-                                    <MenuItem onClick={this.handleClose}>Esci</MenuItem>
+                                    <MenuItem onClick={this.logout}>Esci</MenuItem>
                                 </Menu>
                             </span>
                         ) : (
-                            <span>
-                                <Button size="small" onClick={this.openLoginPanel} className={classes.margin}>Accedi</Button>
-                            </span>
+                            <React.Fragment>
+                                <Button size="small" onClick={this.openLoginPanel} className={classes.margin} style={{marginRight: 10}}>Accedi</Button>
+                                <Button size="small" onClick={this.openLoginPanel} color="secondary" variant="contained" disableElevation className={classes.margin}>Provalo Gratis</Button>
+                            </React.Fragment>
                         )}
                     </Toolbar>
                 </AppBar>
@@ -162,4 +180,6 @@ class MenuAppBar extends Component {
     }
 }
 
-export default withStyles(styles)(MenuAppBar);
+export default withStyles(styles)(
+    withRouter(MenuAppBar)
+);

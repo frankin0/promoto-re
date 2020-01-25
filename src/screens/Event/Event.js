@@ -19,7 +19,9 @@ import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import Footer from '../../components/Footer/Footer';
 import CardEvents from '../../components/CardEvents/CardEvents';
 import ThisEvent from '../../services/Events/GetEvent';
+import GetEventLists from '../../services/Events/GetAllEvents';
 import {Configuration} from '../../constants/Configuration';
+import GetAllTickets from '../../components/Dialogs/GetAllTickets';
 
 
 const theme = createMuiTheme({
@@ -28,7 +30,8 @@ const theme = createMuiTheme({
         primary: { 
             main: grey[600]
         },
-        secondary: { main: red[400] }
+        secondary: { main: red[400] },
+        textPrimary: '#39364f'
     },
     typography: {
         fontFamily: [
@@ -110,7 +113,9 @@ class Event extends Component{
                 zoom: 8
             },
             event: {},
-            gallery: Array()
+            gallery: Array(),
+            mostEvents: [],
+            ticketShow: false
         }
     }
 
@@ -150,11 +155,71 @@ class Event extends Component{
             .catch((e) => {
                 console.log(e);
             });
+
+        GetEventLists.GetMostEvents(4, 0)
+            .then(data => { 
+                this.setState({
+                    mostEvents: data.data.lists
+                });
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    }
+
+    componentWillUnmount(){
+
     }
 
     componentDidUpdate(){
         if(this.props.match.params.id !== this.state.id){
             window.scrollTo(0,0 );
+            //window.location.reload();
+            this.setState({
+                id: this.props.match.params.id,
+                gallery: Array(),
+
+            });
+    
+            ThisEvent.GetEvent(this.props.match.params.id)
+                .then((data) => {
+                    this.setState({
+                        event: data.data.event,
+                    });
+    
+                    if( data.data.event.ticketCopertine){
+                        this.setState({ 
+                            gallery: this.state.gallery.concat([ Configuration.FILES + data.data.event.ticketCopertine])
+                        });
+                    }
+    
+                    if(data.data.event.gallery.length > 0){
+                        var n = 1;
+                        data.data.event.gallery.forEach(element => {
+    
+                            this.setState({ 
+                                gallery: this.state.gallery.concat([
+                                    (element.GalleryImage.indexOf("http://") == 0 || element.GalleryImage.indexOf("https://") == 0 ? element.GalleryImage : Configuration.FILES + element.GalleryImage)
+                                ])
+                            });
+    
+                            n++;
+                        });
+                    }
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
+    
+            GetEventLists.GetMostEvents(4, 0)
+                .then(data => { 
+                    this.setState({
+                        mostEvents: data.data.lists
+                    });
+                })
+                .catch(e => {
+                    console.log(e);
+                });
         }
     }
 
@@ -164,6 +229,18 @@ class Event extends Component{
             openLogin: e
         });
         
+    }
+
+    handleModalTicketSow = () => {
+        this.setState({
+            ticketShow: true
+        });
+    }
+
+    closeModal = () => {
+        this.setState({
+            ticketShow: false
+        });
     }
 
     render(){
@@ -269,7 +346,8 @@ class Event extends Component{
                                     <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg" className={classes.avatar} />
                                     <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg" className={classes.avatar} />
                                     <Avatar className={classes.avatarlpb}>9+</Avatar>
-                                    <Fab variant="contained" color="secondary" className={classes.button}>Get Tickets</Fab>
+                                    <Fab variant="contained" color="secondary" className={classes.button} onClick={ this.handleModalTicketSow}>Get Tickets</Fab>
+                                    <GetAllTickets copertine={GROUP2[0]} title={event.ticketSimple} date={new Date(event.ticketDateStart).toLocaleString('it-IT', options) + " - " + new Date(event.ticketDateEnd).toLocaleString('it-IT', options)} show={this.state.ticketShow} closeModal={this.closeModal} />
                                 </Grid>
                             </Grid>
                             <Grid item xs={12} >
@@ -356,14 +434,16 @@ class Event extends Component{
                                     <Grid item xs={12}>
                                         <Typography variant="h6" component="div" className={classes.ltpText} style={{fontWeight: 600, marginBottom: 20}}>I più ricercati</Typography>
                                     </Grid>
-                                        {[1, 2, 3, 4].map((index) =>{
-
-                                            return (
-                                                <Grid item lg={3} md={4} sm={6} spacing={3} xs={12}>
-                                                    <CardEvents key={index} style={{width: '100%', height: 200}} />
-                                                </Grid>
-                                            )
-                                        })}
+                                        
+                                        { this.state.mostEvents ? 
+                                            Object.values(this.state.mostEvents).map((item, index) => {
+                                                return (
+                                                    <Grid item lg={3} md={4} sm={6} spacing={3} xs={12}>
+                                                        <CardEvents key={index} id={item.ticketPublicID} type={"default"} copertine={item.ticketCopertine} title={item.ticketSimple} dateStart={item.ticketDateStart} style={{width: '100%', height: 200}} />
+                                                    </Grid>
+                                                );
+                                            }) : ""
+                                        }
                                     {/*<div style={{position: 'relative'}}>
                                         <CategoryList type={"vetrina"} style={{borderRadius: 6}} />
                                     </div>*/}

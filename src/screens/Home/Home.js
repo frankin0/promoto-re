@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import withStyles from '@material-ui/core/styles/withStyles'; 
-import { createMuiTheme } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/styles';
+import { Container, CssBaseline, Grid, Link, Paper, Typography } from '@material-ui/core';
 import grey from '@material-ui/core/colors/grey';
 import red from '@material-ui/core/colors/red';
-import NavBar from '../../components/NavBar/NavBar';
-import { Container, Grid, CssBaseline, Typography, Paper, Link } from '@material-ui/core';
-import CardEvents from '../../components/CardEvents/CardEvents';
+import { createMuiTheme } from '@material-ui/core/styles';
+import withStyles from '@material-ui/core/styles/withStyles';
+import { ThemeProvider } from '@material-ui/styles';
+import React, { Component } from 'react';
 import video from '../../assets/videos/video1.mp4';
-import CategoryList from '../../components/CategoryList/CategoryList';
+import CardEvents from '../../components/CardEvents/CardEvents';
+import NavBar from '../../components/NavBar/NavBar';
 import PanelLogin from '../../screens/Auth/Auth';
 import GetAllEvents from '../../services/Events/GetAllEvents';
+import User from '../../services/User/User';
 
 const theme = createMuiTheme({
     palette: {
@@ -101,7 +101,8 @@ class Home extends Component{
 
         this.state = {
             openLogin: false,
-            allEvents: []
+            allEvents: [],
+            user: {}
         }
     }
 
@@ -115,6 +116,15 @@ class Home extends Component{
             });
         })
         .catch((e) => console.error(e));
+
+
+        User.postUser(localStorage.getItem('user'))
+        .then((data) => {
+            this.setState({
+                user: data.data.status
+            });
+        })
+        .catch((e) => console.log(e));
 
     }
 
