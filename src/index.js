@@ -15,7 +15,12 @@ import './assets/css/style.css';
 import Event from './screens/Event/Event.js';
 import Home from './screens/Home/Home.js';
 import it from './translations/it.json';
+import Settings from './screens/User/Settings';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 
+import grey from '@material-ui/core/colors/grey';
+import red from '@material-ui/core/colors/red';
 setDefaultTranslations({it})
 setDefaultLanguage('it')
 /*
@@ -48,17 +53,43 @@ const RouteApp = (
     </BrowserRouter>
 )*/
 
+const theme = createMuiTheme({
+    palette: {
+        type: 'dark',
+        primary: { 
+            main: grey[600]
+        },
+        secondary: { main: red[400] },
+        textPrimary: '#39364f'
+    },
+    typography: {
+        fontFamily: [
+            "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen-Sans,Ubuntu,Cantarell,'Helvetica Neue',sans-serif"
+        ].join(",")
+    }
+});
+
 
  const RouteApp = (
-    <SnackbarProvider maxSnack={3}>
-        <HashRouter >
-            <Switch>
-                <Route exact path="/" name="Home" component={Home} />
-                <Route path="/Event/:id" name="Event" component={Event} />
-                <Route path="*" component={Home} />
-            </Switch>
-        </HashRouter>
-    </SnackbarProvider>
+    <ThemeProvider theme={theme}>
+        <SnackbarProvider maxSnack={3}>
+            <HashRouter >
+                <Switch>
+                    <Route exact path="/" name="Home" component={Home} />
+                    <Route path="/Event/:id" name="Event" component={Event} />
+                    <Route path="/Settings" name="Settings" component={Settings} />
+                    <Route path="/Settings/Notifics" name="Notifics" component={Settings} />
+                    <Route path="/Settings/Privacy" name="Privacy" component={Settings} />
+                    <Route path="/Settings/Devices" name="Devices" component={Settings} />
+                    <Route path="/Settings/Protected" name="Protected" component={Settings} />
+                    <Route path="/Settings/Promoto" name="Promoto" component={Settings} />
+                    <Route path="/Settings/Partners" name="Partners" component={Settings} />
+                    <Route path="/Settings/AddPartner" name="Add partener" component={Settings} />
+                    <Route path="*" component={Home} />
+                </Switch>
+            </HashRouter>
+        </SnackbarProvider>
+    </ThemeProvider>
  );
 
  ReactDOM.render(RouteApp, document.getElementById('root'));

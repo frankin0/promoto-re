@@ -24,22 +24,6 @@ import {Configuration} from '../../constants/Configuration';
 import GetAllTickets from '../../components/Dialogs/GetAllTickets';
 
 
-const theme = createMuiTheme({
-    palette: {
-        type: 'light',
-        primary: { 
-            main: grey[600]
-        },
-        secondary: { main: red[400] },
-        textPrimary: '#39364f'
-    },
-    typography: {
-        fontFamily: [
-            '"Montserrat"', 'sans-serif'
-        ].join(",")
-    }
-});
-
 
 const styles = theme => ({
     root: {
@@ -115,7 +99,8 @@ class Event extends Component{
             event: {},
             gallery: Array(),
             mostEvents: [],
-            ticketShow: false
+            ticketShow: false,
+            imageG: 0
         }
     }
 
@@ -134,18 +119,21 @@ class Event extends Component{
 
                 if( data.data.event.ticketCopertine){
                     this.setState({ 
-                        gallery: this.state.gallery.concat([ Configuration.FILES + data.data.event.ticketCopertine])
+                        gallery: this.state.gallery.concat([ Configuration.FILES + data.data.event.ticketCopertine]),
+                        imageG: this.state.imageG + 1
                     });
+
                 }
 
                 if(data.data.event.gallery.length > 0){
                     var n = 1;
                     data.data.event.gallery.forEach(element => {
-
+                        console.log(element);
                         this.setState({ 
                             gallery: this.state.gallery.concat([
                                 (element.GalleryImage.indexOf("http://") == 0 || element.GalleryImage.indexOf("https://") == 0 ? element.GalleryImage : Configuration.FILES + element.GalleryImage)
-                            ])
+                            ]),
+                            imageG: this.state.imageG + 1
                         });
 
                         n++;
@@ -265,17 +253,17 @@ class Event extends Component{
         const GROUP2 = gallery;
 
         var imageG = 0;
-        /*if(this.state.imageG === 0){
+        if(this.state.imageG === 0){
             imageG = 1;
         }else{
             imageG = this.state.imageG;
-        }*/
+        }
 
         const center = { lat: 0, lng: 0 };
         const options = {'month': 'long', 'day': '2-digit', 'year' : 'numeric'};
 
         return (
-            <ThemeProvider theme={theme}>
+            <React.Fragment>
                 <div className={classes.root}>
                     <NavBar login={this.panelLogin} />
                     <PanelLogin open={this.state.openLogin} closed={this.panelLogin} />
@@ -456,7 +444,7 @@ class Event extends Component{
 
                 </div>
                 <Footer />
-            </ThemeProvider>
+            </React.Fragment>
         )
     }
 

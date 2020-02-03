@@ -57,15 +57,18 @@ class MenuAppBar extends Component {
 
         this.state = {
             auth: false,
-            anchorEl: null
+            anchorEl: null,
+            userInfo: []
         }
     }
 
     componentDidMount(){
         if(localStorage.getItem("user") !== null){
             this.setState({
-                auth: true
+                auth: true,
+                userInfo: JSON.parse(localStorage.getItem("user_info"))
             });
+            
         }
     }
 
@@ -142,7 +145,7 @@ class MenuAppBar extends Component {
                                     </IconButton>
                                 </Tooltip>
     
-                                <Avatar alt="Remy Sharp" ref={this.state.anchorRef} aria-controls="menu-appbar" aria-haspopup="true" src="https://material-ui.com/static/images/avatar/1.jpg" onClick={this.handleMenu} className={classes.avatar} />
+                                <Avatar alt="Remy Sharp" ref={this.state.anchorRef} aria-controls="menu-appbar" aria-haspopup="true" src={this.state.userInfo ? this.state.userInfo.UserProfilePic : ""} onClick={this.handleMenu} className={classes.avatar} />
     
                                 <Menu
                                     id="menu-appbar"
@@ -162,7 +165,7 @@ class MenuAppBar extends Component {
                                     className={classes.menu}
                                 >
                                     <MenuItem onClick={this.handleClose}>Profilo</MenuItem>
-                                    <MenuItem onClick={this.handleClose}>Impostazioni</MenuItem>
+                                    <MenuItem onClick={this.handleClose}><Link style={{color: 'initial', textDecoration: 'none'}} href="#/Settings">Impostazioni</Link></MenuItem>
                                     <MenuItem disabled><hr className={classes.hrDivide} /></MenuItem>
                                     <MenuItem onClick={this.logout}>Esci</MenuItem>
                                 </Menu>

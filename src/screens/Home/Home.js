@@ -12,21 +12,6 @@ import PanelLogin from '../../screens/Auth/Auth';
 import GetAllEvents from '../../services/Events/GetAllEvents';
 import User from '../../services/User/User';
 
-const theme = createMuiTheme({
-    palette: {
-        type: 'light',
-        primary: { 
-            main: grey[600]
-        },
-        secondary: { main: red[400] }
-    },
-    typography: {
-        fontFamily: [
-            '"Montserrat"', 'sans-serif'
-        ].join(",")
-    }
-});
-
 
 const styles = theme => ({
     root: {
@@ -119,10 +104,18 @@ class Home extends Component{
 
 
         User.postUser(localStorage.getItem('user'))
-        .then((data) => {
-            this.setState({
-                user: data.data.status
-            });
+        .then((data) => { 
+            
+            if(typeof data.data.status === "object"){            
+                this.setState({
+                    user: data.data.status
+                });
+                localStorage.setItem("user_info", JSON.stringify(data.data.status));
+            }else{
+                localStorage.removeItem("user");
+                localStorage.removeItem("user_info");
+                //window.location.reload();
+            }
         })
         .catch((e) => console.log(e));
 
@@ -145,117 +138,115 @@ class Home extends Component{
         const {classes } = this.props;
         
         return (
-            <ThemeProvider theme={theme}>
-                <div className={classes.root}>
-                    <NavBar login={this.panelLogin} />
-                    <PanelLogin open={this.state.openLogin} closed={this.panelLogin} />
+            <div className={classes.root}>
+                <NavBar login={this.panelLogin} />
+                <PanelLogin open={this.state.openLogin} closed={this.panelLogin} />
 
-                    <CssBaseline />
-                    <Container fixed>
-                        <Grid container spacing={3}>
-                            <Grid item xs={12}>
-                                <Paper className={classes.paper}>
-                                    <Typography variant="h4" component="h1" className={classes.title}>Welcome Frankin0,</Typography>
-                                    <Typography variant="h4" component="h2" className={classes.subtitle}>Find Your Event</Typography>
-                                </Paper>
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <Paper className={classes.paper2}>
-                                    <i className={`${"icofont-search"} ${classes.iconSearch}`}></i>
-                                    <input type="text" className={classes.searchNav} placeholder="Cerca Eventi, Locali, Personaggi pubblici" />
-                                </Paper>
-                            </Grid>
+                <CssBaseline />
+                <Container fixed>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12}>
+                            <Paper className={classes.paper}>
+                                <Typography variant="h4" component="h1" className={classes.title}>Welcome Frankin0,</Typography>
+                                <Typography variant="h4" component="h2" className={classes.subtitle}>Find Your Event</Typography>
+                            </Paper>
                         </Grid>
-                    </Container>
 
-                    <Container fixed>
-                        <Grid container spacing={3} style={{marginTop: 60}}>
-                            <Grid item xs={12}>
-                                <Paper className={classes.cardMediaVideo}>
-                                    <video autoPlay className={classes.media} controlsList="nodownload" muted crossOrigin="anonymous" loop playsInline preload="metadata" style={{objectFit: "cover"}}>
-                                        <source id="mp4" src={video} type="video/mp4" />
-                                    </video>
-                                </Paper>
-                            </Grid>
+                        <Grid item xs={12}>
+                            <Paper className={classes.paper2}>
+                                <i className={`${"icofont-search"} ${classes.iconSearch}`}></i>
+                                <input type="text" className={classes.searchNav} placeholder="Cerca Eventi, Locali, Personaggi pubblici" />
+                            </Paper>
                         </Grid>
-                    </Container>
+                    </Grid>
+                </Container>
 
-                    <Container fixed>
-                        <Grid container spacing={3} style={{marginTop: 60,position: 'relative'}}>
-                            <Grid item xs={12}>
-                                <Typography variant="body1" component="div" className={classes.catname} color="primary">I più popolari</Typography>
-                            </Grid>
-
-                            {/*<Grid item xs={12}>
-                                <CategoryList type={"vetrina"} />
-                            </Grid>*/}
-
-                            
-                            {    [1, 2, 3, 4].map((index) =>{
-
-                                    return (
-                                        <Grid item lg={3} md={4} sm={6} spacing={3} xs={12} style={{padding: 0}}>
-                                            <CardEvents key={index} type={"vetrina_"} style={{width: '100%', height: 200}} />
-                                        </Grid>
-                                    )
-                                })
-                            }
-
-                            <Grid item xs={12}>
-                                <Typography variant="body1" component="div" className={classes.catname} color="primary">
-                                    <Link href="#/" style={{color: 'red', fontWeight: 600}}>Mostra Altro</Link>    
-                                </Typography>
-                            </Grid>
+                <Container fixed>
+                    <Grid container spacing={3} style={{marginTop: 60}}>
+                        <Grid item xs={12}>
+                            <Paper className={classes.cardMediaVideo}>
+                                <video autoPlay className={classes.media} controlsList="nodownload" muted crossOrigin="anonymous" loop playsInline preload="metadata" style={{objectFit: "cover"}}>
+                                    <source id="mp4" src={video} type="video/mp4" />
+                                </video>
+                            </Paper>
                         </Grid>
-                    </Container>
+                    </Grid>
+                </Container>
 
-                    <Container fixed>
-                        <Grid container spacing={3} style={{marginTop: 60,position: 'relative'}}>
-                            <Grid item xs={12}>
-                                <Typography variant="body1" component="div" className={classes.catname} color="primary">Nei prossimi giorni in Puglia</Typography>
-                            </Grid>
+                <Container fixed>
+                    <Grid container spacing={3} style={{marginTop: 60,position: 'relative'}}>
+                        <Grid item xs={12}>
+                            <Typography variant="body1" component="div" className={classes.catname} color="primary">I più popolari</Typography>
+                        </Grid>
 
-                            {/*<Grid item xs={12}>
-                                <CategoryList style={{height: 150}} />
-                            </Grid>*/}
+                        {/*<Grid item xs={12}>
+                            <CategoryList type={"vetrina"} />
+                        </Grid>*/}
 
-                            
-                            {[1, 2, 3, 4].map((index) =>{
+                        
+                        {    [1, 2, 3, 4].map((index) =>{
 
                                 return (
                                     <Grid item lg={3} md={4} sm={6} spacing={3} xs={12} style={{padding: 0}}>
                                         <CardEvents key={index} type={"vetrina_"} style={{width: '100%', height: 200}} />
                                     </Grid>
                                 )
-                            })}
-                            
-                            <Grid item xs={12}>
-                                <Typography variant="body1" component="div" className={classes.catname} color="primary">
-                                    <Link href="#/" style={{color: 'red', fontWeight: 600}}>Mostra Altro</Link>    
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                    </Container>
+                            })
+                        }
 
-                    <Container fixed>
-                        <Grid container spacing={3} style={{marginTop: 30}}>
-                            <Grid item xs={12}>
-                                <Typography variant="body1" component="div" className={classes.catname} color="primary">Altro</Typography>
-                            </Grid>
-                            {
-                                Object.values(this.state.allEvents).map((item, index) =>{
-                                    return (
-                                        <Grid item key={index} md={4} xs={12}>
-                                            <CardEvents key={index} id={item.ticketPublicID} type={"default"} copertine={item.ticketCopertine} title={item.ticketSimple} dateStart={item.ticketDateStart} ticket={item.ticket} style={{height: 400,  width: '100%', marginRight: 10}} />
-                                        </Grid>
-                                    )
-                                })
-                            }
+                        <Grid item xs={12}>
+                            <Typography variant="body1" component="div" className={classes.catname} color="primary">
+                                <Link href="#/" style={{color: 'red', fontWeight: 600}}>Mostra Altro</Link>    
+                            </Typography>
                         </Grid>
-                    </Container>
-                </div>
-            </ThemeProvider>
+                    </Grid>
+                </Container>
+
+                <Container fixed>
+                    <Grid container spacing={3} style={{marginTop: 60,position: 'relative'}}>
+                        <Grid item xs={12}>
+                            <Typography variant="body1" component="div" className={classes.catname} color="primary">Nei prossimi giorni in Puglia</Typography>
+                        </Grid>
+
+                        {/*<Grid item xs={12}>
+                            <CategoryList style={{height: 150}} />
+                        </Grid>*/}
+
+                        
+                        {[1, 2, 3, 4].map((index) =>{
+
+                            return (
+                                <Grid item lg={3} md={4} sm={6} spacing={3} xs={12} style={{padding: 0}}>
+                                    <CardEvents key={index} type={"vetrina_"} style={{width: '100%', height: 200}} />
+                                </Grid>
+                            )
+                        })}
+                        
+                        <Grid item xs={12}>
+                            <Typography variant="body1" component="div" className={classes.catname} color="primary">
+                                <Link href="#/" style={{color: 'red', fontWeight: 600}}>Mostra Altro</Link>    
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                </Container>
+
+                <Container fixed>
+                    <Grid container spacing={3} style={{marginTop: 30}}>
+                        <Grid item xs={12}>
+                            <Typography variant="body1" component="div" className={classes.catname} color="primary">Altro</Typography>
+                        </Grid>
+                        {
+                            Object.values(this.state.allEvents).map((item, index) =>{
+                                return (
+                                    <Grid item key={index} md={4} xs={12}>
+                                        <CardEvents key={index} id={item.ticketPublicID} type={"default"} copertine={item.ticketCopertine} title={item.ticketSimple} dateStart={item.ticketDateStart} ticket={item.ticket} style={{height: 400,  width: '100%', marginRight: 10}} />
+                                    </Grid>
+                                )
+                            })
+                        }
+                    </Grid>
+                </Container>
+            </div>
         )
     }
 
