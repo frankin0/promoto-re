@@ -7,20 +7,6 @@ import CheckRounded from '@material-ui/icons/CheckRounded';
 import React, { Component } from 'react';
 import getAuth from '../../services/auth.js';
 
-const theme = createMuiTheme({
-    palette: {
-        type: 'light',
-        primary: { 
-            main: grey[600]
-        },
-        secondary: { main: red[400] }
-    },
-    typography: {
-        fontFamily: [
-            '"Montserrat"', 'sans-serif'
-        ].join(",")
-    }
-});
 
 const useStylesReddit = makeStyles(theme => ({
     root: {
@@ -93,7 +79,6 @@ const styles = theme => ({
     title: {
         flexGrow: 1,
         fontWeight: 600,
-        color: '#404a52',
         marginBottom: 10
     },
     Button:{
@@ -285,8 +270,8 @@ class Login extends Component{
                 <Grid container direction="row"  justify="center"  alignItems="center" spacing={3} style={{ minHeight: 'calc(100vh - 118px)'}}>
                     <Grid item xs={12}>
                         <Typography variant="body1" gutterBottom className={classes.textCenter}>
-                            <Typography variant="h2" component="div" className={classes.title}>Promoto</Typography>
-                            <Typography variant="h6" component="div">Registrati su Promoto, vivi la vita</Typography>
+                            <Typography variant="h2" color="textSecondary" component="div" className={classes.title}>Promoto</Typography>
+                            <Typography variant="h6" color="textSecondary" component="div" style={{fontWeight: 100}}>Registrati su Promoto e promuovi la vita</Typography>
 
                             <Typography component="div" gutterBottom className={classes.boxSpacing}>
                                 <Tooltip
@@ -315,7 +300,7 @@ class Login extends Component{
                                         value={username}
                                         name="username"
                                         id="reddit-input"
-                                        color=""
+                                        color="textSecondary"
                                     />
                                 </Tooltip>
 
@@ -354,15 +339,16 @@ class Login extends Component{
                                     control={
                                     <Checkbox checked={remember} onChange={this.rememberMe} className={classes.mSize} value="remember" />
                                     }
+                                    color="textSecondary"
                                     label="Ricordami"
                                 />
-                                <Link href="#/" className={classes.link}>Recupera Password</Link>
+                                <Link href="#/" color="textSecondary" className={classes.link}>Recupera Password</Link>
                             </Typography>
                         </Typography>
                     </Grid>
                     <Grid item md={6} xs={12} style={{width: '100%'}}>
                         <List dense={true} style={{marginTop: 30}}>
-                            <ListItem>
+                            <ListItem color="textSecondary">
                                 <ListItemIcon style={{minWidth: 'auto', marginRight: 10}}>
                                     <CheckRounded />
                                 </ListItemIcon>
@@ -407,10 +393,11 @@ class Login extends Component{
                                 />
                             </ListItem>
                             <ListItem>
-                                <ListItemIcon style={{minWidth: 'auto', marginRight: 10}}>
+                                <ListItemIcon color="textSecondary" style={{minWidth: 'auto', marginRight: 10}}>
                                     <CheckRounded />
                                 </ListItemIcon>
                                 <ListItemText
+                                    color="textSecondary"
                                     primary="Immortala i tuoi momenti migliori con i tuoi amici."
                                 />
                             </ListItem>
@@ -422,13 +409,13 @@ class Login extends Component{
                 </Grid>
                 <Grid item md={12} style={{textAlign: 'left'}}>
                     
-                    <AppBar position="static" color="inherit" className={[classes.navBarBox, classes.BottomNav].join(' ')}>
-                        <Toolbar>
-                            <div className={classes.leftButton}>
+                    <AppBar position="static" color="transparent" className={[classes.navBarBox, classes.BottomNav, 'border-dark-color'].join(' ')}>
+                        <Toolbar color="textSecondary">
+                            <div className={[classes.leftButton, 'dark-color'].join(" ")}>
                                 @ 2018 Copyright Promoto
                             </div>
                             <div className={classes.lineButtons}>
-                                <Link href="#/" className={classes.linkBottom}>Come posso organizzare un evento?</Link>
+                                <Link href="#/" color="textSecondary" className={classes.linkBottom}>Come posso organizzare un evento?</Link>
                             </div>
                         </Toolbar>
                     </AppBar>

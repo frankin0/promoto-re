@@ -25,7 +25,6 @@ const styles = theme => ({
     },
     navbar:{
         backgroundColor: 'transparent',
-        color: '#898999',
         border: 'none',
         boxShadow: 'none',
         padding: 20
@@ -110,10 +109,10 @@ class MenuAppBar extends Component {
             <div className={classes.root}>
                 <AppBar position="static" className={classes.navbar}>
                     <Toolbar>
-                        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                        <IconButton edge="start" className={classes.menuButton} color="textSecondary" aria-label="menu">
                             <Menu />
                         </IconButton>
-                        <Typography variant="h6" className={classes.title}>
+                        <Typography variant="h6" className={classes.title} color="textSecondary">
                             <Link href="#/">
                                 <img src={logo} height="35px" alt="Promo-to" className={classes.logo} rel="romo-to" />
                             </Link>
@@ -122,25 +121,25 @@ class MenuAppBar extends Component {
                         {this.state.auth ? (
                             <span style={{display: 'contents'}}>
                                 <Tooltip title="Crea evento" aria-label="add">
-                                    <Button size="small" className={classes.margin} onClick={this.handleChange}>Crea</Button>
+                                    <Button size="small" color="primary" className={classes.margin} onClick={this.handleChange}>Crea</Button>
                                 </Tooltip>
     
                                 <Tooltip title="Storico eventi" aria-label="add">
-                                    <IconButton aria-label="delete" className={classes.margin}>
-                                        <FilterListRounded />
+                                    <IconButton aria-label="delete"  color="primary" className={classes.margin}>
+                                        <FilterListRounded  color="textSecondary" />
                                     </IconButton>
                                 </Tooltip>
     
-                                <IconButton aria-label="delete" className={classes.margin}>
+                                <IconButton aria-label="delete"  color="primary" className={classes.margin}>
                                     <NotificationsRounded />
                                 </IconButton>
     
-                                <IconButton aria-label="delete" className={classes.margin}>
+                                <IconButton aria-label="delete" color="primary"  className={classes.margin}>
                                     <ShoppingCartRounded />
                                 </IconButton>
     
                                 <Tooltip title="Hai bisogno d'aiuto?" aria-label="add">
-                                    <IconButton aria-label="delete" className={classes.margin}>
+                                    <IconButton aria-label="delete" color="primary" className={classes.margin}>
                                         <HelpRounded />
                                     </IconButton>
                                 </Tooltip>
@@ -164,16 +163,16 @@ class MenuAppBar extends Component {
                                     onClose={this.handleClose}
                                     className={classes.menu}
                                 >
-                                    <MenuItem onClick={this.handleClose}>Profilo</MenuItem>
-                                    <MenuItem onClick={this.handleClose}><Link style={{color: 'initial', textDecoration: 'none'}} href="#/Settings">Impostazioni</Link></MenuItem>
+                                    <MenuItem onClick={this.handleClose} color="textSecondary"><Link color="textSecondary" style={{ textDecoration: 'none'}} href="#/Settings">Profilo</Link></MenuItem>
+                                    <MenuItem onClick={this.handleClose}><Link color="textSecondary" style={{ textDecoration: 'none'}} href="#/Settings">Impostazioni</Link></MenuItem>
                                     <MenuItem disabled><hr className={classes.hrDivide} /></MenuItem>
-                                    <MenuItem onClick={this.logout}>Esci</MenuItem>
+                                    <MenuItem ><Link color="textSecondary" onClick={this.logout} style={{ textDecoration: 'none'}} href="#/">Esci</Link></MenuItem>
                                 </Menu>
                             </span>
                         ) : (
                             <React.Fragment>
                                 <Button size="small" onClick={this.openLoginPanel} className={classes.margin} style={{marginRight: 10}}>Accedi</Button>
-                                <Button size="small" onClick={this.openLoginPanel} color="secondary" variant="contained" disableElevation className={classes.margin}>Provalo Gratis</Button>
+                                <Button size="small" onClick={this.openLoginPanel} color="primary" variant="contained" disableElevation className={classes.margin}>Provalo Gratis</Button>
                             </React.Fragment>
                         )}
                     </Toolbar>

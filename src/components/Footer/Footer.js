@@ -43,47 +43,47 @@ class Footer extends Component{
             <Container className={classes.footer}>
             <Grid container className={classes.root} spacing={2} justify="center">
                     <Grid item md={3} spacing-xs-6>
-                        <Typography variant="h6" className={classes.subtitleFooter}>Lavora con noi</Typography>
+                        <Typography variant="h6" color="textSecondary" className={classes.subtitleFooter}>Lavora con noi</Typography>
                         <List dense={true}>
                             <ListItem style={{paddingLeft: 0}}>
-                                <ListItemText primary="Jobs" />
+                                <ListItemText color="textSecondary" primary="Jobs" />
                             </ListItem>
                             <ListItem style={{paddingLeft: 0}}>
-                                <ListItemText primary="Sponsor" />
+                                <ListItemText color="textSecondary" primary="Sponsor" />
                             </ListItem>
                             <ListItem style={{paddingLeft: 0}}>
-                                <ListItemText primary="Crea Annuncio" />
+                                <ListItemText color="textSecondary" primary="Crea Annuncio" />
                             </ListItem>
                         </List>
                     </Grid>
                     <Grid item md={3}>
-                        <Typography variant="h6" className={classes.subtitleFooter}>Condizioni Generali</Typography>
+                        <Typography variant="h6" color="textSecondary" className={classes.subtitleFooter}>Condizioni Generali</Typography>
                         <List dense={true}>
                             <ListItem style={{paddingLeft: 0}}>
-                                <ListItemText primary="Condizioni Help" />
+                                <ListItemText color="textSecondary" primary="Condizioni Help" />
                             </ListItem>
                             <ListItem style={{paddingLeft: 0}}>
-                                <ListItemText primary="Privacy & Copyright" />
+                                <ListItemText color="textSecondary" primary="Privacy & Copyright" />
                             </ListItem>
                         </List>
                     </Grid>
                     <Grid item md={6}>
-                        <Typography variant="h6" className={classes.subtitleFooter}>Promoto Inc.</Typography>
+                        <Typography variant="h6" color="textSecondary" className={classes.subtitleFooter}>Promoto Inc.</Typography>
                         <List dense={true}>
                             <ListItem style={{paddingLeft: 0}}>
-                                <ListItemText primary="support@promo-to.it" />
+                                <ListItemText color="textSecondary" primary="support@promo-to.it" />
                             </ListItem>
                             <ListItem style={{paddingLeft: 0}}>
-                                <ListItemText primary="Chi siamo" />
+                                <ListItemText color="textSecondary" primary="Chi siamo" />
                             </ListItem>
                             <ListItem style={{paddingLeft: 0}}>
-                                <ListItemText primary="Supporto LiveChat dal Lunedì al Venerdì 9:00 / 13:00" />
+                                <ListItemText color="textSecondary" primary="Supporto LiveChat dal Lunedì al Venerdì 9:00 / 13:00" />
                             </ListItem>
                         </List>
                     </Grid>
                     
                     <Grid item xs={12}>
-                        <Typography variant="body1" component="p" className={classes.subtitle}>&copy; 2019 Promo-to.it</Typography>
+                        <Typography variant="body1" color="textSecondary" component="p" className={classes.subtitle}>&copy; 2019 Promo-to.it</Typography>
                     </Grid>
                 </Grid>
             </Container>

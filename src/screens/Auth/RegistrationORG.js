@@ -92,7 +92,6 @@ const styles = theme => ({
     title: {
         flexGrow: 1,
         fontWeight: 600,
-        color: '#404a52',
         marginBottom: 10
     },
     Button:{
@@ -214,8 +213,8 @@ class RegistrationORG extends Component{
                     <Grid container  direction="row"  justify="center"  alignItems="center" spacing={3} style={{ minHeight: 'calc(100vh - 118px)'}}>
                         <Grid item xs={12}>
                             <Typography variant="body1" gutterBottom className={classes.textCenter}>
-                                <Typography variant="h2" component="div" className={classes.title}>Promoto</Typography>
-                                <Typography variant="h6" component="div">Scopri i vantaggi con l'account Pro</Typography>
+                                <Typography variant="h2" component="div" color="textSecondary" className={classes.title}>Promoto</Typography>
+                                <Typography variant="h6" component="div" color="textSecondary" style={{fontWeight: 100}}>Scopri i vantaggi con l'account Pro</Typography>
 
                                 <Typography component="div" gutterBottom className={classes.boxSpacing}>
 
@@ -286,13 +285,13 @@ class RegistrationORG extends Component{
                 <Container className={className}>
                     <Grid item md={12} style={{textAlign: 'left'}}>
                         
-                        <AppBar position="static" color="transparent" className={[classes.navBarBox, classes.BottomNav].join(' ')}>
-                            <Toolbar>
-                                <div className={classes.leftButton}>
+                        <AppBar position="static" color="transparent" className={[classes.navBarBox, classes.BottomNav, 'border-dark-color'].join(' ')}>
+                            <Toolbar color="textSecondary">
+                                <div className={[classes.leftButton, 'dark-color'].join(" ")}>
                                     @ 2018 Copyright Promoto
                                 </div>
                                 <div className={classes.lineButtons}>
-                                    <Link href="#/" className={classes.linkBottom}>Come posso organizzare un evento?</Link>
+                                    <Link href="#/" color="textSecondary" className={classes.linkBottom}>Come posso organizzare un evento?</Link>
                                 </div>
                             </Toolbar>
                         </AppBar>

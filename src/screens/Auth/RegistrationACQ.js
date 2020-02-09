@@ -6,20 +6,6 @@ import red from '@material-ui/core/colors/red';
 import { Container, Pape, Grid, Typography, AppBar, Toolbar, Button, FormControlLabel, Checkbox,TextField, Link, List, ListItem, ListItemText, ListItemIcon } from '@material-ui/core';
 import CheckRounded from '@material-ui/icons/CheckRounded';
 
-const theme = createMuiTheme({
-    palette: {
-        type: 'light',
-        primary: { 
-            main: grey[600]
-        },
-        secondary: { main: red[400] }
-    },
-    typography: {
-        fontFamily: [
-            '"Montserrat"', 'sans-serif'
-        ].join(",")
-    }
-});
 
 const useStylesReddit = makeStyles(theme => ({
     root: {
@@ -92,7 +78,6 @@ const styles = theme => ({
     title: {
         flexGrow: 1,
         fontWeight: 600,
-        color: '#404a52',
         marginBottom: 10
     },
     Button:{
@@ -214,8 +199,8 @@ class RegistrationACQ extends Component{
                     <Grid container  direction="row"  justify="center"  alignItems="center" spacing={3} style={{ minHeight: 'calc(100vh - 118px)'}}>
                         <Grid item xs={12}>
                             <Typography variant="body1" gutterBottom className={classes.textCenter}>
-                                <Typography variant="h2" component="div" className={classes.title}>Promoto</Typography>
-                                <Typography variant="h6" component="div">Scopri i vantaggi con l'account Pro</Typography>
+                                <Typography variant="h2" color="textSecondary" component="div" className={classes.title}>Promoto</Typography>
+                                <Typography variant="h6" color="textSecondary" style={{fontWeight: 100}} component="div">Scopri i vantaggi con l'account Pro</Typography>
 
                                 <Typography component="div" gutterBottom className={classes.boxSpacing}>
 
@@ -261,7 +246,7 @@ class RegistrationACQ extends Component{
                                             control={
                                                 <Checkbox checked={accept} onChange={this.accept} value="accept" />
                                             }
-                                            label={<span style={{fontSize: '.8rem',position: 'relative',top: -2 }}>Accetto i <a href='#'>termini di servizio</a></span>}
+                                            label={<span className="dark-color" style={{fontSize: '.8rem',position: 'relative',top: -2 }}>Accetto i <a href='#'>termini di servizio</a></span>}
                                         />
                                     </Typography>
 
@@ -274,13 +259,13 @@ class RegistrationACQ extends Component{
                 <Container className={className}>
                     <Grid item md={12} style={{textAlign: 'left'}}>
                         
-                        <AppBar position="static" color="transparent" className={[classes.navBarBox, classes.BottomNav].join(' ')}>
-                            <Toolbar>
-                                <div className={classes.leftButton}>
+                        <AppBar position="static" color="transparent" className={[classes.navBarBox, classes.BottomNav, 'border-dark-color'].join(' ')}>
+                            <Toolbar color="textSecondary">
+                                <div className={[classes.leftButton, 'dark-color'].join(" ")}>
                                     @ 2018 Copyright Promoto
                                 </div>
                                 <div className={classes.lineButtons}>
-                                    <Link href="#/" className={classes.linkBottom}>Come posso organizzare un evento?</Link>
+                                    <Link href="#/" color="textSecondary" className={classes.linkBottom}>Come posso organizzare un evento?</Link>
                                 </div>
                             </Toolbar>
                         </AppBar>

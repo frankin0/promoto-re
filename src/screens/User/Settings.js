@@ -42,14 +42,14 @@ const styles = theme => ({
       },
       drawer: {
         [theme.breakpoints.up('sm')]: {
-          width: 240,
+          width: 275,
           flexShrink: 0,
         },
       },
       appBar: {
         [theme.breakpoints.up('sm')]: {
-          width: `calc(100% - ${240}px)`,
-          marginLeft: 240,
+          width: `calc(100% - ${275}px)`,
+          marginLeft: 275,
         },
       },
       menuButton: {
@@ -60,7 +60,7 @@ const styles = theme => ({
       },
       toolbar: theme.mixins.toolbar,
       drawerPaper: {
-        width: 240,
+        width: 275,
         borderRight: 0,
         /*backgroundColor: '#fafafc'*/
       },
@@ -69,7 +69,6 @@ const styles = theme => ({
         padding: theme.spacing(6),
       },
       subtitle:{
-        color: '#6a6f85',
         padding: '0 8px',
         fontSize: 12,
         fontWeight: 600,
@@ -78,7 +77,6 @@ const styles = theme => ({
       },
       listM:{
         borderRadius: 4,
-        color: '#262a3e',
         alignItems: 'center',
         padding: '4px 8px',
         display: 'flex',
@@ -232,26 +230,26 @@ class Settings extends Component{
                 <Button href="#/" startIcon={<ArrowRightAltRoundedIcon style={{ transform: 'rotate(180deg)'}} />} style={{textTransform: 'none', fontWeight: 400, marginBottom: 30}}>Indietro</Button>
 
 
-                <Typography variant="caption" display="block" className={classes.subtitle} gutterBottom>Impostazioni personali</Typography>
+                <Typography variant="caption" display="block" color="textSecondary" className={classes.subtitle} gutterBottom>Impostazioni personali</Typography>
                 <List>
-                    <ListItem className={classes.listM} button>
+                    <ListItem className={classes.listM} button color="textSecondary">
                         <ListItemAvatar style={{minWidth: 32}}>
                             <Avatar alt="Remy Sharp" style={{width: "24px", height: 24}} src="https://material-ui.com/static/images/avatar/1.jpg" />
                         </ListItemAvatar>
-                        <ListItemText className={classes.listMFont} primary={"Nome Cognome"} />
+                        <ListItemText className={classes.listMFont} color="textSecondary" primary={"Nome Cognome"} />
                     </ListItem>
                     {['Notifiche', 'Privacy', 'Dispositivi connessi', 'I miei conti', 'Promoto'].map((text, index) => (
                         <ListItem className={classes.listM} button key={text}>
-                            <ListItemText className={classes.listMFont} primary={text} />
+                            <ListItemText color="textSecondary" className={classes.listMFont} primary={text} />
                         </ListItem>
                     ))}
                 </List>
 
-                <Typography variant="caption" display="block" className={classes.subtitle} style={{marginTop: 20}} gutterBottom>Affiliati & Partners</Typography>
+                <Typography variant="caption" color="textSecondary" display="block" className={classes.subtitle} style={{marginTop: 20}} gutterBottom>Affiliati & Partners</Typography>
                 <List>
                     {['Lista Partners', 'Aggiungi partner'].map((text, index) => (
                         <ListItem className={classes.listM} button key={text}>
-                            <ListItemText className={classes.listMFont} primary={text} />
+                            <ListItemText color="textSecondary" className={classes.listMFont} primary={text} />
                         </ListItem>
                     ))}
                 </List>
@@ -293,7 +291,7 @@ class Settings extends Component{
                     </Hidden>
                 </nav>
                 <main className={classes.content}>
-                    <Typography variant="h5" component="h2" style={{marginBottom: 10}}>
+                    <Typography variant="h5" component="h2" color="textSecondary" style={{marginBottom: 10}}>
                         <b>Il mio profilo</b>
                     </Typography>
 
@@ -307,14 +305,14 @@ class Settings extends Component{
                             <Button variant="contained" className={classes.btnCnt} disableElevation>Carica un'immagine</Button>
                             <Button variant="contained" color="secondary" disableElevation className={classes.buttonTrush}><DeleteForeverRoundedIcon /></Button>
 
-                            <Typography variant="caption" component="p" style={{marginBottom: 10}}>
+                            <Typography variant="caption"color="textSecondary" component="p" style={{marginBottom: 10}}>
                                 Accettiamo i file in formato PDF, JPG, PNG e GIF, fino a 5 MB
                             </Typography>
                         </div>
                     </div>
                     
                     
-                    <Typography variant="h6" component="div">
+                    <Typography variant="h6" component="div" color="textSecondary">
                         Indirizzo email
                     </Typography>
 
@@ -341,12 +339,12 @@ class Settings extends Component{
                             name="username"
                             id="reddit-input"
 
-                            color=""
+                            color="textSecondary"
                         />
                         <Button variant="contained" color="secondary" className={classes.saveButton} disableElevation>Aggiorna</Button>
                     </div>
 
-                    <Typography variant="h6" component="div">
+                    <Typography variant="h6" component="div" color="textSecondary">
                         Numero di telefono cellulare
                     </Typography>
 
@@ -375,7 +373,7 @@ class Settings extends Component{
                         </div>
                     </div>
 
-                    <Typography variant="h6" component="div">
+                    <Typography variant="h6" component="div" color="textSecondary">
                         Informazioni personali
                     </Typography>
 
@@ -422,7 +420,7 @@ class Settings extends Component{
                                     value={""}
                                     name="username"
                                     id="reddit-input"
-                                    color=""
+                                    color="textSecondary"
                                 />
                             </Grid>
                             <Grid item xs={12}>

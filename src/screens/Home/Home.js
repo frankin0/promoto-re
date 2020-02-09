@@ -1,4 +1,4 @@
-import { Container, CssBaseline, Grid, Link, Paper, Typography } from '@material-ui/core';
+import { Container, CssBaseline, Grid, Link, Paper, Typography, Input } from '@material-ui/core';
 import grey from '@material-ui/core/colors/grey';
 import red from '@material-ui/core/colors/red';
 import { createMuiTheme } from '@material-ui/core/styles';
@@ -22,11 +22,9 @@ const styles = theme => ({
     },
     title:{
         fontWeight: 200,
-        color: '#404a52'
     },
     subtitle: {
         fontWeight: 600,
-        color: '#404a52'
     },
     paper:{
         border: 'none',
@@ -50,20 +48,17 @@ const styles = theme => ({
         borderRadius: 50,
         padding: '10px 40px',
         fontSize: '1.1rem',
-        color: '#404a52',
         outline: 'none',
         paddingLeft: 65
     },
     iconSearch:{
         position: 'absolute',
-        color: '#dbdbdb',
         top: 22,
         fontSize: '1.4rem',
         left: 25
     },
     catname:{
         fontWeight: 'initial',
-        marginLeft: 10
     },
     cardMediaVideo:{
         width: '100%',
@@ -136,6 +131,8 @@ class Home extends Component{
 
     render(){
         const {classes } = this.props;
+
+        
         
         return (
             <div className={classes.root}>
@@ -147,15 +144,15 @@ class Home extends Component{
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
                             <Paper className={classes.paper}>
-                                <Typography variant="h4" component="h1" className={classes.title}>Welcome Frankin0,</Typography>
-                                <Typography variant="h4" component="h2" className={classes.subtitle}>Find Your Event</Typography>
+                                <Typography variant="h4" component="h1" color="textSecondary" className={classes.title}>Welcome Frankin0,</Typography>
+                                <Typography variant="h4" component="h2" color="textSecondary" className={classes.subtitle}>Find Your Event</Typography>
                             </Paper>
                         </Grid>
 
                         <Grid item xs={12}>
                             <Paper className={classes.paper2}>
                                 <i className={`${"icofont-search"} ${classes.iconSearch}`}></i>
-                                <input type="text" className={classes.searchNav} placeholder="Cerca Eventi, Locali, Personaggi pubblici" />
+                                <input type="text" className={[classes.searchNav, "loadThemeProvider"].join(" ")} placeholder="Cerca Eventi, Locali, Personaggi pubblici" />
                             </Paper>
                         </Grid>
                     </Grid>
@@ -176,7 +173,7 @@ class Home extends Component{
                 <Container fixed>
                     <Grid container spacing={3} style={{marginTop: 60,position: 'relative'}}>
                         <Grid item xs={12}>
-                            <Typography variant="body1" component="div" className={classes.catname} color="primary">I più popolari</Typography>
+                            <Typography variant="body1" component="div" className={classes.catname} color="textSecondary">I più popolari</Typography>
                         </Grid>
 
                         {/*<Grid item xs={12}>
@@ -195,7 +192,7 @@ class Home extends Component{
                         }
 
                         <Grid item xs={12}>
-                            <Typography variant="body1" component="div" className={classes.catname} color="primary">
+                            <Typography variant="body1" component="div" className={classes.catname} color="textSecondary">
                                 <Link href="#/" style={{color: 'red', fontWeight: 600}}>Mostra Altro</Link>    
                             </Typography>
                         </Grid>
@@ -205,7 +202,7 @@ class Home extends Component{
                 <Container fixed>
                     <Grid container spacing={3} style={{marginTop: 60,position: 'relative'}}>
                         <Grid item xs={12}>
-                            <Typography variant="body1" component="div" className={classes.catname} color="primary">Nei prossimi giorni in Puglia</Typography>
+                            <Typography variant="body1" component="div" className={classes.catname} color="textSecondary">Nei prossimi giorni in Puglia</Typography>
                         </Grid>
 
                         {/*<Grid item xs={12}>
@@ -223,7 +220,7 @@ class Home extends Component{
                         })}
                         
                         <Grid item xs={12}>
-                            <Typography variant="body1" component="div" className={classes.catname} color="primary">
+                            <Typography variant="body1" component="div" className={classes.catname} color="textSecondary">
                                 <Link href="#/" style={{color: 'red', fontWeight: 600}}>Mostra Altro</Link>    
                             </Typography>
                         </Grid>
@@ -233,7 +230,7 @@ class Home extends Component{
                 <Container fixed>
                     <Grid container spacing={3} style={{marginTop: 30}}>
                         <Grid item xs={12}>
-                            <Typography variant="body1" component="div" className={classes.catname} color="primary">Altro</Typography>
+                            <Typography variant="body1" component="div" className={classes.catname} color="textSecondary">Altro</Typography>
                         </Grid>
                         {
                             Object.values(this.state.allEvents).map((item, index) =>{

@@ -33,12 +33,10 @@ const styles = theme => ({
         width: "100%",
     },
     title:{
-        fontWeight: 200,
-        color: '#404a52'
+        fontWeight: 200
     },
     subtitle: {
-        fontWeight: 600,
-        color: '#404a52'
+        fontWeight: 600
     },
     paper:{
         border: 'none',
@@ -49,7 +47,6 @@ const styles = theme => ({
     ltp:{
         margin: '10px 0' ,
         fontSize: '.8rem',
-        color: '#4f4f4f'
     },
     ltpText:{
         position: 'relative',
@@ -119,7 +116,7 @@ class Event extends Component{
 
                 if( data.data.event.ticketCopertine){
                     this.setState({ 
-                        gallery: this.state.gallery.concat([ Configuration.FILES + data.data.event.ticketCopertine]),
+                        gallery: this.state.gallery.concat([ data.data.event.ticketCopertine]),
                         imageG: this.state.imageG + 1
                     });
 
@@ -177,7 +174,7 @@ class Event extends Component{
     
                     if( data.data.event.ticketCopertine){
                         this.setState({ 
-                            gallery: this.state.gallery.concat([ Configuration.FILES + data.data.event.ticketCopertine])
+                            gallery: this.state.gallery.concat([ data.data.event.ticketCopertine])
                         });
                     }
     
@@ -274,7 +271,7 @@ class Event extends Component{
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
                                 <Paper className={classes.paper}>
-                                    <Typography variant="h4" component="h1" className={classes.subtitle}><MyLocationTwoTone style={{marginRight: 10}} />{event.ticketSimple}</Typography>
+                                    <Typography variant="h4" component="h1" color="textSecondary" className={classes.subtitle}><MyLocationTwoTone style={{marginRight: 10}} />{event.ticketSimple}</Typography>
                                 </Paper>
                             </Grid>
                         </Grid>
@@ -322,11 +319,11 @@ class Event extends Component{
                     <Container fixed>
                         <Grid container spacing={3}>
                             <Grid item xs={12} >
-                                <Typography variant="h6" component="h2" className={classes.subtitle}>{event.Author ? event.Author.UserRealName && event.Author.UserRealSurname ? event.Author.UserRealName + " " + event.Author.UserRealSurname : event.Author.userName : "..."}</Typography>
+                                <Typography variant="h6" component="h2"  color="textSecondary" className={classes.subtitle}>{event.Author ? event.Author.UserRealName && event.Author.UserRealSurname ? event.Author.UserRealName + " " + event.Author.UserRealSurname : event.Author.userName : "..."}</Typography>
                             </Grid>
                             <Grid item xs={12} md={6} > 
-                                <Typography variant="body1" component="div" className={classes.ltp}><MyLocationTwoTone style={{marginRight: 10}} /> <span className={classes.ltpText}>{event.ticketCountry ? event.ticketCountry : "..."} in {event.ticketLocation ? event.ticketLocation : "..."}</span></Typography>
-                                <Typography variant="body1" component="div" className={classes.ltp}><CalendarTodayOutlined style={{marginRight: 10}} /> <span className={classes.ltpText}>{new Date(event.ticketDateStart).toLocaleString('it-IT', options)} - {new Date(event.ticketDateEnd).toLocaleString('it-IT', options)}</span> <TimeOutlined style={{marginRight: 5, marginLeft: 10}} /> <span className={classes.ltpText}>{event.ticketDateStart ? event.ticketDateStart.substr(11, 5) : "..."} - {event.ticketDateEnd ? event.ticketDateEnd.substr(11, 5) : "..."}</span> </Typography>
+                                <Typography variant="body1" component="div"  color="textSecondary" className={classes.ltp}><MyLocationTwoTone style={{marginRight: 10}} /> <span className={classes.ltpText}>{event.ticketCountry ? event.ticketCountry : "..."} in {event.ticketLocation ? event.ticketLocation : "..."}</span></Typography>
+                                <Typography variant="body1" component="div" color="textSecondary" className={classes.ltp}><CalendarTodayOutlined style={{marginRight: 10}} /> <span className={classes.ltpText}>{new Date(event.ticketDateStart).toLocaleString('it-IT', options)} - {new Date(event.ticketDateEnd).toLocaleString('it-IT', options)}</span> <TimeOutlined style={{marginRight: 5, marginLeft: 10}} /> <span className={classes.ltpText}>{event.ticketDateStart ? event.ticketDateStart.substr(11, 5) : "..."} - {event.ticketDateEnd ? event.ticketDateEnd.substr(11, 5) : "..."}</span> </Typography>
                             </Grid>
                             <Grid item md={6} xs={12} >
                                 <Grid container justify="center" alignItems="center">
@@ -339,11 +336,11 @@ class Event extends Component{
                                 </Grid>
                             </Grid>
                             <Grid item xs={12} >
-                                <Typography variant="h6" component="div" className={classes.ltpText} style={{fontWeight: 600}}>Descrizione</Typography>
-                                <Typography variant="body1" component="p" className={classes.ltpText} dangerouslySetInnerHTML={{ __html: event.ticketDesc ? event.ticketDesc : "..." }}></Typography>
+                                <Typography variant="h6" component="div" color="textSecondary" className={classes.ltpText} style={{fontWeight: 600}}>Descrizione</Typography>
+                                <Typography variant="body1" component="p" color="textSecondary" className={classes.ltpText} dangerouslySetInnerHTML={{ __html: event.ticketDesc ? event.ticketDesc : "..." }}></Typography>
                             </Grid>
                             <Grid item xs={12} >
-                                <Typography variant="h6" component="div" className={classes.ltpText} style={{fontWeight: 600}}>Tags e Artisti</Typography>
+                                <Typography variant="h6" component="div"  color="textSecondary" className={classes.ltpText} style={{fontWeight: 600}}>Tags e Artisti</Typography>
                                 {/*<Chip size="small" label="Eventi a bari" className={classes.chips} />
                                 <Chip
                                     size="small"
@@ -369,10 +366,10 @@ class Event extends Component{
                                 }
                             </Grid>
                             <Grid item xs={12} >
-                                <Typography variant="h6" component="div" className={classes.ltpText} style={{fontWeight: 600}}>Condividi con gli amici</Typography>
+                                <Typography variant="h6" component="div" color="textSecondary" className={classes.ltpText} style={{fontWeight: 600}}>Condividi con gli amici</Typography>
                                 <Box textAlign="center" style={{marginTop: 30}}>
                                     <Link href="#" style={{margin: 10}} className={classes.iconBrands}>
-                                        <FontAwesomeIcon icon={faFacebookF} />
+                                        <FontAwesomeIcon  icon={faFacebookF} />
                                     </Link>
                                     <Link href="#" style={{margin: 10}} className={classes.iconBrands}>
                                         <FontAwesomeIcon icon={faFacebookMessenger} />
@@ -383,35 +380,35 @@ class Event extends Component{
                                 </Box>
                             </Grid>
                             <Grid item xs={12} >
-                                <Typography variant="h6" component="div" className={classes.ltpText} style={{fontWeight: 600}}>Località</Typography>
+                                <Typography variant="h6" component="div" color="textSecondary" className={classes.ltpText} style={{fontWeight: 600}}>Località</Typography>
                                 {
                                     event.ticketCountry ? <Maps label={Configuration.OFFICES[event.ticketOffice] + " " + event.ticketLocation} query={event.ticketCountry} /> : "Loading..."
                                 }
 
-                                <Typography variant="subtitle1" component="div" className={classes.ltpText} style={{fontWeight: 600, textAlign: 'center', marginTop: 35}}>Puoi trovarci in</Typography>
-                                <Typography variant="body1" component="div" className={classes.ltpText} style={{ textAlign: 'center'}}>{event.ticketCountry} {Configuration.OFFICES_STRING[event.ticketOffice]} <strong>{event.ticketLocation}</strong></Typography>
+                                <Typography variant="subtitle1" color="textSecondary" component="div" className={classes.ltpText} style={{fontWeight: 600, textAlign: 'center', marginTop: 35}}>Puoi trovarci in</Typography>
+                                <Typography variant="body1" color="textSecondary" component="div" className={classes.ltpText} style={{ textAlign: 'center'}}>{event.ticketCountry} {Configuration.OFFICES_STRING[event.ticketOffice]} <strong>{event.ticketLocation}</strong></Typography>
 
                                 <Box textAlign="center" style={{marginTop: 30}}>
                                     <Tooltip title="Calcola percorso in auto" placement="top">
                                         <Link href={"https://maps.google.com/?saddr=My+Location&daddr="+event.ticketCountry+"&driving"} target="_blank" style={{margin: 10}}>
-                                            <Icon color="primary">directions_car</Icon>
+                                            <Icon color="textSecondary">directions_car</Icon>
                                         </Link>
                                     </Tooltip>
                                     <Tooltip title="Calcola percorso in bici" placement="top">
                                         <Link href={"https://maps.google.com/?saddr=My+Location&daddr="+event.ticketCountry+"&dirflg=b&mode=bicycling"} target="_blank" style={{margin: 10}}>
-                                            <Icon color="primary">directions_bike</Icon>
+                                            <Icon color="textSecondary">directions_bike</Icon>
                                         </Link>
                                     </Tooltip>
                                     
                                     <Tooltip title="Mezzi Pubblici" placement="top">
                                         <Link href={"https://maps.google.com/?saddr=My+Location&daddr="+event.ticketCountry+"&dirflg=r&mode=transit"} target="_blank" style={{margin: 10}}>
-                                            <Icon color="primary">directions_bus</Icon>
+                                            <Icon color="textSecondary">directions_bus</Icon>
                                         </Link>
                                     </Tooltip>
                                     
                                     <Tooltip title="Calcola percorso a piedi" placement="top">
                                         <Link href={"https://maps.google.com/?saddr=My+Location&daddr="+event.ticketCountry+"&dirflg=w&mode=walk"} target="_blank" style={{margin: 10}}>
-                                            <Icon color="primary">directions_walk</Icon>
+                                            <Icon color="textSecondary">directions_walk</Icon>
                                         </Link>
                                     </Tooltip>
                                 </Box>
@@ -420,7 +417,7 @@ class Event extends Component{
                             <Grid item  xs={12}>
                                 <Grid container xs={12}>
                                     <Grid item xs={12}>
-                                        <Typography variant="h6" component="div" className={classes.ltpText} style={{fontWeight: 600, marginBottom: 20}}>I più ricercati</Typography>
+                                        <Typography variant="h6" color="textSecondary" component="div" className={classes.ltpText} style={{fontWeight: 600, marginBottom: 20}}>I più ricercati</Typography>
                                     </Grid>
                                         
                                         { this.state.mostEvents ? 

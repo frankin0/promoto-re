@@ -268,7 +268,6 @@ h1, h2, h3, h4, h5 ,h6, p, a, i{
 }
 .Settings-listMFont-10 span{
     font-size: .9rem;
-    color: #262a3e;
 }
 
 .filedError div{
@@ -305,7 +304,42 @@ h1, h2, h3, h4, h5 ,h6, p, a, i{
         height: 100%;
     }
 }
-
+@media (prefers-color-scheme: dark) {
+    .loadThemeProvider, .MuiInputBase-formControl{
+        color: #fff;
+        background-color: rgba(255, 255, 255, 0.08) !important;
+        border-color: #515151 !important;
+    }
+    .MuiPaper-elevation8:after{
+        border-color: transparent transparent #424242 transparent !important;
+    }
+    .dark-color{
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+    .border-dark-color{
+        border-color:  #515151 !important;
+    }
+}
+@media (prefers-color-scheme: light) {
+    .loadThemeProvider{
+        color: #404a52;
+        background-color: #fff !important;
+    }
+    .loadThemeProvider-mtext .MuiTypography-colorTextSecondary{
+        color: #fff;
+    }
+}
+.MuiDrawer-paperAnchorDockedLeft::-webkit-scrollbar {
+    width: 6px;
+    background-color: transparent;
+}
+.MuiDrawer-paperAnchorDockedLeft::-webkit-scrollbar-track {
+}
+.MuiDrawer-paperAnchorDockedLeft::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+  border-radius: 3px;
+}
 .leaflet-container {
     height: 400px;
     width: 100%;

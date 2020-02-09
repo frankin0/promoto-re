@@ -260,14 +260,14 @@ class Login extends Component{
 
         return (
             <Box component="span" m={1} className={[(open ? classes.boxLOpened: classes.boxL), (expandPanel ? classes.expandPanel: "") , "__kijd4"].join(" ")}>
-                <AppBar position="static" color="inherit" className={classes.navBarBox}>
+                <AppBar position="static" color="textSecondary" className={[classes.navBarBox, 'border-dark-color'].join(" ")}>
                     <Toolbar>
                         <IconButton edge="start" className={classes.menuButton} onClick={this.closePanel} aria-label="menu">
                             <CloseRounded />
                         </IconButton>
                         <div className={classes.lineButtons}>
-                            <Button size="small" color="inherit" className={classes.Button} onClick={this.expandPanel}>Accedi</Button>
-                            <Button size="small" color="inherit" className={classes.Button} onClick={this.expandPanelL}>{!orgc ? "Registrati come Acquirente" : "Registrati come Organizzatore"}</Button>
+                            <Button size="small" color="textSecondary" className={classes.Button} onClick={this.expandPanel}>Accedi</Button>
+                            <Button size="small" variant="text" color="textSecondary" className={classes.Button} onClick={this.expandPanelL}>{!orgc ? "Registrati come Acquirente" : "Registrati come Organizzatore"}</Button>
                         </div>
                     </Toolbar>
                 </AppBar>
