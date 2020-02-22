@@ -12,7 +12,7 @@ import StarRounded from '@material-ui/icons/StarRounded';
 import Box from '@material-ui/core/Box';
 import Badge from '@material-ui/core/Badge';
 import {Configuration} from '../../constants/Configuration';
-import Link from '@material-ui/core/Link';
+import {Link} from 'react-router-dom';
 
 const styles = theme => ({
     card: {
@@ -70,7 +70,7 @@ class CardEvents extends Component{
 
 
         return (
-            <Link href={"#/Event/" + id}>
+            <Link to={"/Event/" + id}>
                 <Card className={type === "vetrina" ? classes.cardVetrina + " menu-item" : type === "default" ? classes.cardDefault + " menu-item" : classes.card + " menu-item"}>
                     <CardActionArea style={{position: 'relative', display: 'block'}}>
                         <CardMedia

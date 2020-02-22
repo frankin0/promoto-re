@@ -8,7 +8,14 @@ import { SnackbarProvider } from 'notistack';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { setDefaultLanguage, setDefaultTranslations } from 'react-multi-lang';
-import { HashRouter, Route, Switch } from 'react-router-dom';
+//import { HashRouter, Route, Switch } from 'react-router-dom';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    useParams
+  } from "react-router-dom";
 //import { BrowserRouter, Route } from 'react-router-dom';
 import './assets/css/icofont.min.css';
 import './assets/css/style.css';
@@ -16,6 +23,7 @@ import Event from './screens/Event/Event.js';
 import Home from './screens/Home/Home.js';
 import it from './translations/it.json';
 import Settings from './screens/User/Settings';
+import Notifics from './screens/User/Notifics';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -73,25 +81,25 @@ function App(){
             ].join(",")
         }
     }),[prefersDarkMode],);
-    
+
     return (
         <ThemeProvider theme={theme}>
             <SnackbarProvider maxSnack={3}>
-                <HashRouter >
+                <Router >
                     <Switch>
                         <Route exact path="/" name="Home" component={Home} />
                         <Route path="/Event/:id" name="Event" component={Event} />
-                        <Route path="/Settings" name="Settings" component={Settings} />
-                        <Route path="/Settings/Notifics" name="Notifics" component={Settings} />
-                        <Route path="/Settings/Privacy" name="Privacy" component={Settings} />
-                        <Route path="/Settings/Devices" name="Devices" component={Settings} />
-                        <Route path="/Settings/Protected" name="Protected" component={Settings} />
-                        <Route path="/Settings/Promoto" name="Promoto" component={Settings} />
-                        <Route path="/Settings/Partners" name="Partners" component={Settings} />
-                        <Route path="/Settings/AddPartner" name="Add partener" component={Settings} />
+                        <Route exact path="/Settings" name="Settings" component={Settings} />
+                        <Route exact path="/Settings/Notifics" name="Notifics" component={Notifics} />
+                        <Route exact path="/Settings/Privacy" name="Privacy" component={Settings} />
+                        <Route exact path="/Settings/Devices" name="Devices" component={Settings} />
+                        <Route exact path="/Settings/Protected" name="Protected" component={Settings} />
+                        <Route exact path="/Settings/Promoto" name="Promoto" component={Settings} />
+                        <Route exact path="/Settings/Partners" name="Partners" component={Settings} />
+                        <Route exact path="/Settings/AddPartner" name="Add partener" component={Settings} />
                         <Route path="*" component={Home} />
                     </Switch>
-                </HashRouter>
+                </Router>
             </SnackbarProvider>
         </ThemeProvider>
     );

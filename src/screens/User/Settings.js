@@ -4,20 +4,20 @@ import { createMuiTheme, fade, makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import grey from '@material-ui/core/colors/grey';
 import red from '@material-ui/core/colors/red';
-import { Drawer, ListItemAvatar, Avatar, FormControl, Select, CssBaseline,  Button, List, InputLabel, ListItem, ListItemText, Grid, Hidden, Fade, Input, TextField, Typography } from '@material-ui/core';
+import { Drawer, ListItemAvatar, Avatar, FormControl, Link, Select, CssBaseline,  Button, List, InputLabel, ListItem, ListItemText, Grid, Hidden, Fade, Input, TextField, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
-import ArrowRightAltRoundedIcon from '@material-ui/icons/ArrowRightAltRounded';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import MaskedInput from 'react-text-mask';
 import DateFnsUtils from '@date-io/date-fns';
+import ListSettings from '../../components/ListSettings/ListSettings';
 import {
     MuiPickersUtilsProvider,
     KeyboardTimePicker,
     KeyboardDatePicker,
   } from '@material-ui/pickers';
 
-const theme = createMuiTheme({
+  const theme = createMuiTheme({
     palette: {
         type: 'dark',
         primary: { 
@@ -33,6 +33,7 @@ const theme = createMuiTheme({
         color: '#262a3e'
     }
 });
+
 
 
 const styles = theme => ({
@@ -83,6 +84,7 @@ const styles = theme => ({
         textDecoration: 'none',
         fontWeight: 400,
         justifyContent: 'flex-start',
+        marginBottom: 5
       },
       listMFont:{
         fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen-Sans,Ubuntu,Cantarell,'Helvetica Neue',sans-serif",
@@ -224,37 +226,6 @@ class Settings extends Component{
 
         const {classes, container } = this.props;
 
-
-        const drawer = (
-            <div style={{padding: '40px 32px'}}>
-                <Button href="#/" startIcon={<ArrowRightAltRoundedIcon style={{ transform: 'rotate(180deg)'}} />} style={{textTransform: 'none', fontWeight: 400, marginBottom: 30}}>Indietro</Button>
-
-
-                <Typography variant="caption" display="block" color="textSecondary" className={classes.subtitle} gutterBottom>Impostazioni personali</Typography>
-                <List>
-                    <ListItem className={classes.listM} button color="textSecondary">
-                        <ListItemAvatar style={{minWidth: 32}}>
-                            <Avatar alt="Remy Sharp" style={{width: "24px", height: 24}} src="https://material-ui.com/static/images/avatar/1.jpg" />
-                        </ListItemAvatar>
-                        <ListItemText className={classes.listMFont} color="textSecondary" primary={"Nome Cognome"} />
-                    </ListItem>
-                    {['Notifiche', 'Privacy', 'Dispositivi connessi', 'I miei conti', 'Promoto'].map((text, index) => (
-                        <ListItem className={classes.listM} button key={text}>
-                            <ListItemText color="textSecondary" className={classes.listMFont} primary={text} />
-                        </ListItem>
-                    ))}
-                </List>
-
-                <Typography variant="caption" color="textSecondary" display="block" className={classes.subtitle} style={{marginTop: 20}} gutterBottom>Affiliati & Partners</Typography>
-                <List>
-                    {['Lista Partners', 'Aggiungi partner'].map((text, index) => (
-                        <ListItem className={classes.listM} button key={text}>
-                            <ListItemText color="textSecondary" className={classes.listMFont} primary={text} />
-                        </ListItem>
-                    ))}
-                </List>
-            </div>
-          );
         
         return (
             <div className={classes.root}>
@@ -265,7 +236,7 @@ class Settings extends Component{
                         <Drawer
                             container={container}
                             variant="temporary"
-                            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+                            anchor={'left'}
                             open={this.state.mobileOpen}
                             onClose={this.handleDrawerToggle}
                             classes={{
@@ -275,7 +246,7 @@ class Settings extends Component{
                                 keepMounted: true, // Better open performance on mobile.
                             }}
                         >
-                            {drawer}
+                            {<ListSettings classes={classes} {...this.props} />}
                         </Drawer>
                     </Hidden>
                     <Hidden xsDown implementation="css">
@@ -286,7 +257,7 @@ class Settings extends Component{
                             variant="permanent"
                             open
                         >
-                            {drawer}
+                            {<ListSettings classes={classes} {...this.props} />}
                         </Drawer>
                     </Hidden>
                 </nav>
@@ -331,7 +302,7 @@ class Settings extends Component{
                         <RedditTextField
                             label="Email"
                             onChange={this.handleChange}
-                            className={[classes.fieldText, this.state.usernameError ? "filedError" : ""]}
+                            className={[classes.fieldText, this.state.usernameError ? "filedError" : ""].join(" ")}
                             defaultValue="react-reddit"
                             variant="filled"
                             type="text"
@@ -349,7 +320,7 @@ class Settings extends Component{
                     </Typography>
 
                     <div style={{maxWidth: 424, marginBottom: 50}}>
-                        <Typography variant="caption" component="p" style={{marginBottom: 10,maxWidth: 424, marginTop: 16}} >
+                        <Typography variant="caption" style={{marginBottom: 10,maxWidth: 424, marginTop: 16}} >
                             <div className={classes.boxF} style={{marginBottom: 10}}>
                                 <div>
                                     <InfoOutlinedIcon style={{fontSize: '.955rem'}} /> 
@@ -381,8 +352,7 @@ class Settings extends Component{
                         <Grid container  spacing={3}>
                             <Grid item xs={6}>
 
-                                <ThemeProvider theme={theme}>
-
+                                <ThemeProvider theme={theme}> 
                                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 
                                         <KeyboardDatePicker
@@ -413,7 +383,7 @@ class Settings extends Component{
                                 <RedditTextField
                                     label="Città di nascita"
                                     onChange={this.handleChange}
-                                    className={[classes.fieldText, this.state.usernameError ? "filedError" : ""]}
+                                    className={[classes.fieldText, this.state.usernameError ? "filedError" : ""].join(" ")}
                                     defaultValue="react-reddit"
                                     variant="filled"
                                     type="text"

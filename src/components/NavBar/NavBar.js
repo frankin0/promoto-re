@@ -1,4 +1,5 @@
-import { AppBar, Avatar, Button, IconButton, Link, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@material-ui/core';
+import { AppBar, Avatar, Button, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@material-ui/core';
+import {Link} from 'react-router-dom';
 import withStyles from '@material-ui/core/styles/withStyles';
 import FilterListRounded from '@material-ui/icons/FilterListRounded';
 import HelpRounded from '@material-ui/icons/HelpRounded';
@@ -113,7 +114,7 @@ class MenuAppBar extends Component {
                             <Menu />
                         </IconButton>
                         <Typography variant="h6" className={classes.title} color="textSecondary">
-                            <Link href="#/">
+                            <Link to="/" className={"MuiTypography-colorTextSecondary"}>
                                 <img src={logo} height="35px" alt="Promo-to" className={classes.logo} rel="romo-to" />
                             </Link>
                         </Typography>
@@ -163,10 +164,10 @@ class MenuAppBar extends Component {
                                     onClose={this.handleClose}
                                     className={classes.menu}
                                 >
-                                    <MenuItem onClick={this.handleClose} color="textSecondary"><Link color="textSecondary" style={{ textDecoration: 'none'}} href="#/Settings">Profilo</Link></MenuItem>
-                                    <MenuItem onClick={this.handleClose}><Link color="textSecondary" style={{ textDecoration: 'none'}} href="#/Settings">Impostazioni</Link></MenuItem>
+                                    <MenuItem onClick={this.handleClose} color="textSecondary"><Link className={"MuiTypography-colorTextSecondary"} style={{ textDecoration: 'none'}} to="/Settings">Profilo</Link></MenuItem>
+                                    <MenuItem onClick={this.handleClose}><Link className={"MuiTypography-colorTextSecondary"} style={{ textDecoration: 'none'}} to="/Settings">Impostazioni</Link></MenuItem>
                                     <MenuItem disabled><hr className={classes.hrDivide} /></MenuItem>
-                                    <MenuItem ><Link color="textSecondary" onClick={this.logout} style={{ textDecoration: 'none'}} href="#/">Esci</Link></MenuItem>
+                                    <MenuItem ><Link className={"MuiTypography-colorTextSecondary"} onClick={this.logout} style={{ textDecoration: 'none'}} to="/">Esci</Link></MenuItem>
                                 </Menu>
                             </span>
                         ) : (
