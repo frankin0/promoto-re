@@ -24,10 +24,15 @@ import Home from './screens/Home/Home.js';
 import it from './translations/it.json';
 import Settings from './screens/User/Settings';
 import Notifics from './screens/User/Notifics';
+import Devices from './screens/User/Devices';
+import Protected from './screens/User/Protected';
+import Partners from './screens/User/Partners';
+import AddPartner from './screens/User/AddPartner';
+import Security from './screens/User/Security';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-
+import User from './services/User/User'
 import grey from '@material-ui/core/colors/grey';
 import red from '@material-ui/core/colors/red';
 setDefaultTranslations({it})
@@ -48,6 +53,7 @@ if(cookies.get('lang') === null || cookies.get('lang') === undefined){
 
 console.log("%cPromoto version 1.1.77", "color: #fefefe; font-size: 1.3rem;");
 
+
 /**
  * Set Application Routing
  */
@@ -63,6 +69,7 @@ const RouteApp = (
 )*/
 
 function App(){
+
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
     const theme = React.useMemo(() => createMuiTheme({
@@ -91,12 +98,12 @@ function App(){
                         <Route path="/Event/:id" name="Event" component={Event} />
                         <Route exact path="/Settings" name="Settings" component={Settings} />
                         <Route exact path="/Settings/Notifics" name="Notifics" component={Notifics} />
+                        <Route exact path="/Settings/Security" name="Security" component={Security} />
                         <Route exact path="/Settings/Privacy" name="Privacy" component={Settings} />
-                        <Route exact path="/Settings/Devices" name="Devices" component={Settings} />
-                        <Route exact path="/Settings/Protected" name="Protected" component={Settings} />
-                        <Route exact path="/Settings/Promoto" name="Promoto" component={Settings} />
-                        <Route exact path="/Settings/Partners" name="Partners" component={Settings} />
-                        <Route exact path="/Settings/AddPartner" name="Add partener" component={Settings} />
+                        <Route exact path="/Settings/Devices" name="Devices" component={Devices} />
+                        <Route exact path="/Settings/Paycard" name="Protected" component={Protected} />
+                        <Route exact path="/Settings/Partners" name="Partners" component={Partners} />
+                        <Route exact path="/Settings/Partners/Add" name="Add Partner" component={AddPartner} />
                         <Route path="*" component={Home} />
                     </Switch>
                 </Router>

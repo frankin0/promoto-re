@@ -184,7 +184,7 @@ function RedditMaskedInput(props) {
         />;
 }
 
-class Settings extends Component{
+class Security extends Component{
 
     constructor(props){
         super(props);
@@ -193,7 +193,11 @@ class Settings extends Component{
             mobileOpen: false,
             age: 1,//new Date(),
             typeU: '',
-            user: JSON.parse(localStorage.getItem('user_info'))
+            user: JSON.parse(localStorage.getItem('user_info')),
+            oldPassword: '',
+            newPassword: '',
+            repeatPassword: '',
+            conferme: true
         }
     }
 
@@ -239,7 +243,7 @@ class Settings extends Component{
     render(){
 
         const {classes, container } = this.props;
-        const { user } = this.state;
+        const { oldPassword, newPassword, repeatPassword, conferme } = this.state;
 
         
         return (
@@ -278,28 +282,11 @@ class Settings extends Component{
                 </nav>
                 <main className={classes.content}>
                     <Typography variant="h5" component="h2" color="textSecondary" style={{marginBottom: 10}}>
-                        <b>Il mio profilo</b>
+                        <b>Sicurezza</b>
                     </Typography>
-
-                    <div className={classes.boxF}>
-                        <div>
-                            <Avatar variant="rounded" className={classes.rounded}>
-                                {user.UserRealName.toUpperCase().substr(0,1)}{user.UserRealSurname.toUpperCase().substr(0,1)}
-                            </Avatar>
-                        </div>
-                        <div style={{marginLeft: 15}}>
-                            <Button variant="contained" className={classes.btnCnt} disableElevation>Carica un'immagine</Button>
-                            <Button variant="contained" color="secondary" disableElevation className={classes.buttonTrush}><DeleteForeverRoundedIcon /></Button>
-
-                            <Typography variant="caption"color="textSecondary" component="p" style={{marginBottom: 10}}>
-                                Accettiamo i file in formato PDF, JPG, PNG e GIF, fino a 5 MB
-                            </Typography>
-                        </div>
-                    </div>
-                    
-                    
+                    <br />
                     <Typography variant="h6" component="div" color="textSecondary">
-                        Indirizzo email
+                        Aggiornamento Password
                     </Typography>
 
                     <div style={{maxWidth: 424, marginBottom: 50}}>
@@ -309,125 +296,54 @@ class Settings extends Component{
                                     <InfoOutlinedIcon style={{fontSize: '.955rem'}} /> 
                                 </div>
                                 <div style={{marginLeft: 10, color: '#6a6f85'}}>
-                                    Il tuo indirizzo email verrà utilizzato per tutte le comunicazioni ed aggiornamenti. 
+                                    Inserisci una nuova password, ma ricorda di inserire prima la vecchia password.
                                 </div>
                             </div>
                         </Typography>
 
                         <RedditTextField
-                            label="Email"
+                            label="Vecchia Password"
                             onChange={this.handleChange}
                             className={[classes.fieldText, this.state.usernameError ? "filedError" : ""].join(" ")}
                             defaultValue="react-reddit"
                             variant="filled"
-                            type="text"
-                            value={user.userEmail}
-                            name="userEmail"
+                            type="password"
+                            value={oldPassword}
+                            name="oldPassword"
+                            id="reddit-input"
+                            style={{marginBottom: 20}}
+                            color="textSecondary"
+                        />
+
+                        <RedditTextField
+                            label="Nuova Password"
+                            onChange={this.handleChange}
+                            className={[classes.fieldText, this.state.usernameError ? "filedError" : ""].join(" ")}
+                            defaultValue="react-reddit"
+                            variant="filled"
+                            type="password"
+                            value={newPassword}
+                            name="newPassword"
+                            id="reddit-input"
+                            style={{marginBottom: 10}}
+                            color="textSecondary"
+                        />
+                        <RedditTextField
+                            label="Ripeti nuova Password"
+                            onChange={this.handleChange}
+                            className={[classes.fieldText, this.state.usernameError ? "filedError" : ""].join(" ")}
+                            defaultValue="react-reddit"
+                            variant="filled"
+                            type="password"
+                            value={repeatPassword}
+                            name="repeatPassword"
                             id="reddit-input"
 
                             color="textSecondary"
                         />
-                        <Button variant="contained" color="secondary" className={classes.saveButton} disableElevation>Aggiorna</Button>
-                    </div>
 
-                    <Typography variant="h6" component="div" color="textSecondary">
-                        Numero di telefono cellulare
-                    </Typography>
 
-                    <div style={{maxWidth: 424, marginBottom: 50}}>
-                        <Typography variant="caption" style={{marginBottom: 10,maxWidth: 424, marginTop: 16}} >
-                            <div className={classes.boxF} style={{marginBottom: 10}}>
-                                <div>
-                                    <InfoOutlinedIcon style={{fontSize: '.955rem'}} /> 
-                                </div>
-                                <div style={{marginLeft: 10, color: '#6a6f85'}}>
-                                    Per modificare il tuo numero di telefono, contatta il nostro team di assistenza.
-                                </div>
-                            </div>
-                        </Typography>
-
-                        <div style={{textAlign: 'left', display: 'block', padding: 10,borderRadius: 3, paddingBottom: 5}} className={["MuiFormControl-root MuiTextField-root MuiInputBase-root MuiFilledInput-root MuiInputBase-formControl", classes.fieldText, this.state.usernameError ? "filedError" : ""].join(" ")}>
-                            <InputLabel htmlFor="formatted-text-mask-input" style={{transform: 'scale(0.75)'}}>Telefono cellulare</InputLabel>
-                            <Input
-                                value={3271129388}
-                                //onChange={}
-                                id="formatted-text-mask-input"
-                                inputComponent={RedditMaskedInput}
-                                style={{border: 'none', width: '100%'}}
-                                disabled
-                            />
-                        </div>
-                    </div>
-
-                    <Typography variant="h6" component="div" color="textSecondary">
-                        Informazioni personali
-                    </Typography>
-
-                    <div style={{maxWidth: 424, marginTop: 15}}>
-                        <Grid container  spacing={3}>
-                            <Grid item xs={6}>
-
-                                <ThemeProvider theme={theme}> 
-                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                
-                                        <KeyboardDatePicker
-                                            disableToolbar
-                                            variant="inline"
-                                            format="dd/mm/yyyy"
-                                            margin="normal"
-                                            id="date-picker-inline"
-                                            label="Data di nascita"
-                                            color="secondary"
-                                            className={[classes.fieldText , "makeStyle-input"].join(" ")}
-                                            value={this.state.age}
-                                            inputVariant="filled"
-                                            style={{marginTop: 0}}
-                                            onChange={this.handleDateChange}
-                                            maxDate={new Date().setFullYear(2020 - 18)}
-                                            invalidDateMessage="Formato data errato!"
-                                            maxDateMessage="Devi avere minimo 18 anni"
-                                            autoOk
-                                            KeyboardButtonProps={{
-                                                'aria-label': 'change date',
-                                            }}
-                                        />
-                                    </MuiPickersUtilsProvider>                            
-                                </ThemeProvider>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <RedditTextField
-                                    label="Città di nascita"
-                                    onChange={this.handleChange}
-                                    className={[classes.fieldText, this.state.usernameError ? "filedError" : ""].join(" ")}
-                                    defaultValue="react-reddit"
-                                    variant="filled"
-                                    type="text"
-                                    value={""}
-                                    name="username"
-                                    id="reddit-input"
-                                    color="textSecondary"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControl variant="filled" className={[classes.fieldText, 'makeStyle-input', 'makeStyle-input-h', this.state.usernameError ? "filedError" : ""].join(" ")}>
-                                    <InputLabel htmlFor="filled-age-native-simple">Genere</InputLabel>
-                                    <Select
-                                        native
-                                        value={this.state.typeU}
-                                        onChange={this.typeChange}
-                                        inputProps={{
-                                            name: 'type',
-                                            id: 'filled-age-native-simple',
-                                        }}
-                                    >
-                                        <option value="" />
-                                        <option value={1}>Uomo</option>
-                                        <option value={2}>Donna</option>
-                                        <option value={3}>Altro</option>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                        </Grid>
+                        <Button variant="contained" disabled={newPassword === repeatPassword && conferme} color="secondary" className={classes.saveButton} disableElevation>Aggiorna</Button>
                     </div>
 
 
@@ -440,10 +356,10 @@ class Settings extends Component{
 }
 
 
-Settings.propTypes = {
+Security.propTypes = {
     container: PropTypes.instanceOf(typeof Element === 'undefined' ? Object : Element),
     inputRef: PropTypes.func.isRequired,
 
 };
 
-export default withStyles(styles)(Settings);
+export default withStyles(styles)(Security);

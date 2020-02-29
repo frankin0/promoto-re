@@ -97,22 +97,23 @@ class Home extends Component{
         })
         .catch((e) => console.error(e));
 
-
-        User.postUser(localStorage.getItem('user'))
-        .then((data) => { 
-            
-            if(typeof data.data.status === "object"){            
-                this.setState({
-                    user: data.data.status
-                });
-                localStorage.setItem("user_info", JSON.stringify(data.data.status));
-            }else{
-                localStorage.removeItem("user");
-                localStorage.removeItem("user_info");
-                //window.location.reload();
-            }
-        })
-        .catch((e) => console.log(e));
+        if(localStorage.getItem('user') !== null){
+            User.postUser(localStorage.getItem('user'))
+            .then((data) => { 
+                
+                if(typeof data.data.status === "object"){            
+                    this.setState({
+                        user: data.data.status
+                    });
+                    localStorage.setItem("user_info", JSON.stringify(data.data.status));
+                }else{
+                    localStorage.removeItem("user");
+                    localStorage.removeItem("user_info");
+                    //window.location.reload();
+                }
+            })
+            .catch((e) => console.log(e));
+        }
 
     }
 

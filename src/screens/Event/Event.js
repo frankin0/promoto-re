@@ -22,6 +22,7 @@ import ThisEvent from '../../services/Events/GetEvent';
 import GetEventLists from '../../services/Events/GetAllEvents';
 import {Configuration} from '../../constants/Configuration';
 import GetAllTickets from '../../components/Dialogs/GetAllTickets';
+import User from '../../services/User/User';
 
 
 
@@ -97,7 +98,8 @@ class Event extends Component{
             gallery: Array(),
             mostEvents: [],
             ticketShow: false,
-            imageG: 0
+            imageG: 0,
+            user: {}
         }
     }
 
@@ -150,6 +152,24 @@ class Event extends Component{
             .catch(e => {
                 console.log(e);
             });
+
+        if(localStorage.getItem('user') !== null){
+            User.postUser(localStorage.getItem('user'))
+            .then((data) => { 
+                
+                if(typeof data.data.status === "object"){            
+                    this.setState({
+                        user: data.data.status
+                    });
+                    localStorage.setItem("user_info", JSON.stringify(data.data.status));
+                }else{
+                    localStorage.removeItem("user");
+                    localStorage.removeItem("user_info");
+                    //window.location.reload();
+                }
+            })
+            .catch((e) => console.log(e));
+        }
     }
 
     componentWillUnmount(){
