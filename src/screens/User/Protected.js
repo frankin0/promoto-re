@@ -10,6 +10,10 @@ import PropTypes from 'prop-types';
 import ListSettings from '../../components/ListSettings/ListSettings';
 import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import { withSnackbar } from 'notistack';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import User from '../../services/User/User';
 
   const theme = createMuiTheme({
     palette: {
@@ -197,182 +201,95 @@ class Protected extends Component{
 
         this.state = {
             mobileOpen: false,
-            personalExpansionPanel: false,
-            personal: [
-                {
-                    title: 'Commercial Spy',
-                    subTitle: 'Ricevi una notifica per ogni annuncio simile al tuo',
-                    container: 0,
-                    checkedMail: true,
-                    checkedApp: false,
-                },
-                {
-                    title: 'Promoto',
-                    subTitle: 'Ricevi aggiornamenti da Promoto',
-                    container: 0,
-                    checkedMail: true,
-                    checkedApp: false,
-                },
-                {
-                    title: 'Ticket venduto',
-                    subTitle: 'Ricevi una notifica per ogni biglietto venduto',
-                    container: 2,
-                    checkedMail: true,
-                    checkedApp: true,
-                },
-                {
-                    title: 'Pagamento ricevuto',
-                    subTitle: 'Ricevi una notifica per la conferma di pagamento',
-                    container: 1,
-                    checkedMail: true,
-                    checkedApp: true,
-                },
-                {
-                    title: 'Informazioni Generali',
-                    subTitle: 'Ricevi una notifica riguardo le problematiche del tuo conto pay',
-                    container: 1,
-                    checkedMail: true,
-                    checkedApp: false,
-                },
-                {
-                    title: 'Feedback ricevuti',
-                    subTitle: 'Ricevi una notifica per ogni feedback ricevuto',
-                    container: 2,
-                    checkedMail: false,
-                    checkedApp: true,
-                }
-            ],
-            team: [
-                {
-                    id: 0,
-                    name: "Marco Rossi",
-                    color: 'yellow',
-                    expansionPanel: false,
-                    privacy: {
-                        login: {
-                            0: false,
-                            1: true
-                        },
-                        monitoring: {
-                            0: true,
-                            1: true
-                        }
-                    }
-                },
-                {
-                    id: 1,
-                    name: "Giacomo Leopardi",
-                    color: 'secondary',
-                    expansionPanel: false,
-                    privacy: {
-                        login: {
-                            0: false,
-                            1: true
-                        },
-                        monitoring: {
-                            0: true,
-                            1: true
-                        }
-                    }
-                }
-            ]
+            user_info: JSON.parse(localStorage.getItem("user_info")),
+            realname: "",
+            realsurname: "",
+            paypal: "",
+            paypalError: false
         }
     }
 
     componentDidMount(){
         document.body.classList.add("__settings");
+
+        if(this.state.user_info){
+            this.setState({
+                realname: this.state.user_info.UserRealName,
+                realsurname: this.state.user_info.UserRealSurname,
+                paypal: this.state.user_info.UserEmailPayPal ?  this.state.user_info.UserEmailPayPal : "",
+            });
+        }
     }
 
     componentWillUnmount(){
         document.body.classList.remove("__settings");
     }
 
-    handleDrawerToggle = () => {
-        this.setState({
-            mobileOpen: !this.state.mobileOpen
-        });
-    };
+    handleChange = (e) => {
 
-    personalExpansionPanel = (event, boolean) =>{
-        this.setState({
-            personalExpansionPanel: !this.state.personalExpansionPanel
-        })
-    }
+        let res = this.state;
+        res[e.currentTarget.name] = e.currentTarget.value;
 
-    teamExpansionPanel = (e, t, i) =>{ 
-        let item = this.state.team[i];
-        item.expansionPanel = !item.expansionPanel;
-        this.setState({
-            item
-        })
-    }    
-
-    handleTeamCheckbox = (event, container, id, type, teamIndex,t ) => {
-/**
- * privacy: {
-                        login: {
-                            0: false,
-                            1: true
-                        },
-                        monitoring: {
-                            0: true,
-                            1: true
-                        }
-                    }
- */// !this.state.team[teamIndex].privacy[id][type]
-
-        let item = this.state.team[teamIndex];
-        item.privacy[id][type] = !this.state.team[teamIndex].privacy[id][type];
-        this.setState({
-            item
-        });
-    }
-
-    handlePersonalCheck = (e, index, val, device) => {
-        let item = this.state.personal[index];
-        item[device] = !item[device];
-        this.setState({
-            item
-        });
-    }
-
-    handleCheckPersonalAll = (e) => { 
-        let items = this.state.personal;
-
+        if(e.currentTarget.name == "paypal"){
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         
-        for(let i = 0; i < items.length; i++){
-            items[i].checkedMail = e.target.checked;
-            items[i].checkedApp = e.target.checked;
             this.setState({
-                items,
-                personalExpansionPanel:e.target.checked
-            })
+                paypalError: (re.test(String(e.currentTarget.value).toLowerCase()) ? false : true)
+            });
         }
-    
-    }
 
-    handleCheckAllTeam = (e, teamIndex, id) => { 
-        let item = this.state.team[teamIndex];
-
-
-        item.privacy.login[0] = e.target.checked;
-        item.privacy.login[1] = e.target.checked;
-
-        item.privacy.monitoring[0] = e.target.checked;
-        item.privacy.monitoring[1] = e.target.checked;
-        
-        item.expansionPanel = e.target.checked;
         this.setState({
-            item
+            res
         });
-    
     }
-    
+
+    handleClick = (e) => {
+        const { realname, realsurname, paypal, paypalError, user_info } = this.state; 
+        
+        if(realname.length < 1){
+            this.props.enqueueSnackbar("Inserisci il tuo nome", { 
+                variant: 'error',
+            });
+            return;
+        }else if(realsurname.length < 1){
+            this.props.enqueueSnackbar("Inserisci il tuo cognome", { 
+                variant: 'error',
+            });
+            return;
+        }else if(paypal.length < 6){
+            this.props.enqueueSnackbar("Inserisci il account paypal", { 
+                variant: 'error',
+            });
+            return;
+        }
+
+        User.UpdatePaymentInfo(localStorage.getItem('user'), realname, realsurname, paypal, "paypal")
+            .then((data) => { 
+                if(data.data._SUCCESS_ == true){
+                    this.props.enqueueSnackbar("Password Modificata correttamente!",{ 
+                        variant: 'success'
+                    });
+                    user_info.UserRealName = realname;
+                    user_info.UserRealSurname = realsurname;
+                    user_info.UserEmailPayPal = paypal;
+
+                    localStorage.setItem("user_info", JSON.stringify(user_info));
+                }else{
+                    this.props.enqueueSnackbar(data.data._ERROR_,{ 
+                        variant: 'error'
+                    });
+                }
+            })
+            .catch((e) => console.log(e));
+
+    }
+
+
     render(){
         
         const {classes, container } = this.props;
-        const { team } = this.state; 
-        
+        const { realname, realsurname, paypal, paypalError } = this.state; 
+
         return (
             <div className={classes.root}>
                 <CssBaseline />
@@ -424,6 +341,39 @@ class Protected extends Component{
                                         Account Paypal
                                     </Typography>
                                     
+                                    <div style={{maxWidth: 424, marginBottom: 10, marginTop: 30}}>
+                                        
+                                        <RedditTextField
+                                            label="Nome completo"
+                                            onChange={this.handleChange}
+                                            className={[classes.fieldText, this.state.usernameError ? "filedError" : ""].join(" ")}
+                                            defaultValue="react-reddit"
+                                            variant="filled"
+                                            type="text"
+                                            value={realname}
+                                            name="realname"
+                                            id="reddit-input"
+
+                                            color="textSecondary"
+                                        />
+                                    </div>
+                                    <div style={{maxWidth: 424, marginBottom: 10}}>
+                                        
+                                        <RedditTextField
+                                            label="Cognome"
+                                            onChange={this.handleChange}
+                                            className={[classes.fieldText, this.state.usernameError ? "filedError" : ""].join(" ")}
+                                            defaultValue="react-reddit"
+                                            variant="filled"
+                                            type="text"
+                                            value={realsurname}
+                                            name="realsurname"
+                                            id="reddit-input"
+
+                                            color="textSecondary"
+                                        />
+                                    </div>
+                                   
                                     <div style={{maxWidth: 424, marginBottom: 50}}>
                                         <Typography variant="caption" component="p" style={{marginBottom: 10,maxWidth: 424, marginTop: 16}} >
                                             <div className={classes.boxF} style={{marginBottom: 10}}>
@@ -435,21 +385,21 @@ class Protected extends Component{
                                                 </div>
                                             </div>
                                         </Typography>
-
+                                        
                                         <RedditTextField
                                             label="Paypal Account"
                                             onChange={this.handleChange}
-                                            className={[classes.fieldText, this.state.usernameError ? "filedError" : ""].join(" ")}
+                                            className={[classes.fieldText, this.state.paypalError ? "filedError" : ""].join(" ")}
                                             defaultValue="react-reddit"
                                             variant="filled"
                                             type="text"
-                                            value={""}
-                                            name="username"
+                                            value={paypal}
+                                            name="paypal"
                                             id="reddit-input"
 
                                             color="textSecondary"
                                         />
-                                        <Button variant="contained" color="secondary" className={classes.saveButton} disableElevation>Aggiorna</Button>
+                                        <Button variant="contained" color="secondary" onClick={this.handleClick} disabled={!(realname.length > 1 && realsurname.length > 1 && paypal.length > 8 && paypalError == false)} className={classes.saveButton} disableElevation>Aggiorna</Button>
                                     </div>
 
                                 </Grid>
@@ -475,4 +425,6 @@ Protected.propTypes = {
 
 };
 
-export default withStyles(styles)(Protected);
+export default withStyles(styles)(
+    withSnackbar(Protected)
+);

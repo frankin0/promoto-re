@@ -37,6 +37,7 @@
     "lg-video": "^1.2.2",
     "lg-zoom": "^1.1.0",
     "lightgallery": "^1.6.12",
+    "mobile-detect": "^1.4.4",
     "notistack": "^0.9.7",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
@@ -47,7 +48,7 @@
     "react-lightgallery": "^0.5.1",
     "react-multi-lang": "^1.0.7",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.3.0",
+    "react-scripts": "^3.4.0",
     "react-text-mask": "^5.4.3",
     "superagent": "^5.1.1"
   },

@@ -11,6 +11,11 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import MaskedInput from 'react-text-mask';
 import DateFnsUtils from '@date-io/date-fns';
 import ListSettings from '../../components/ListSettings/ListSettings';
+import User from '../../services/User/User';
+import { withSnackbar } from 'notistack';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+
 import {
     MuiPickersUtilsProvider,
     KeyboardTimePicker,
@@ -184,6 +189,7 @@ function RedditMaskedInput(props) {
         />;
 }
 
+
 class Security extends Component{
 
     constructor(props){
@@ -203,8 +209,6 @@ class Security extends Component{
 
     componentDidMount(){
         document.body.classList.add("__settings");
-
-        
     }
 
 
@@ -224,7 +228,7 @@ class Security extends Component{
         });
     }
 
-    typeChange = e =>{ console.log(e.currentTarget.value)
+    typeChange = e =>{ 
         this.setState({
             typeU: e.currentTarget.value
         });
@@ -236,8 +240,66 @@ class Security extends Component{
         res[e.currentTarget.name] = e.currentTarget.value;
 
         this.setState({
-            res
+            res,
+            [e.currentTarget.name]: e.currentTarget.value
         });
+    }
+
+    logout = () => {
+        localStorage.removeItem("user");
+        localStorage.removeItem("UserInfoLog");
+        localStorage.removeItem("user_info");
+        localStorage.removeItem("__paypal_storage__");
+        window.location.reload(); 
+    }
+
+    handleSendData = (e) => {
+        const {oldPassword, newPassword, repeatPassword} = this.state;
+        
+        // customized
+        const action = key => (
+            <React.Fragment>
+                <Button onClick={() => this.logout()}>
+                    Scollega Account
+                </Button>
+                <IconButton size="small" aria-label="close" color="inherit" onClick={() => { this.props.closeSnackbar(key) }}>
+                    <CloseIcon fontSize="small" />
+                </IconButton>
+            </React.Fragment>
+        );
+
+        if(newPassword != repeatPassword && newPassword.length < 6){
+            console.log("Error");
+            return;
+        }else if(oldPassword.length < 6){
+            console.log("Error");
+            return;
+        }
+
+        User.postNewPassword(localStorage.getItem('user'), oldPassword, repeatPassword)
+            .then((data) => { 
+                if(data.data.status._SUCCESS_UPDATED_ == "false"){
+                    this.props.enqueueSnackbar(data.data.status._MESSAGE_, { 
+                        variant: 'error',
+                    });
+                }else if(data.data.status._SUCCESS_UPDATED_ == "true"){
+                    
+                    this.props.enqueueSnackbar("Password Modificata correttamente!",{ 
+                        variant: 'success',
+                        action
+                    });
+
+                    this.setState({
+                        oldPassword: '',
+                        newPassword: '',
+                        repeatPassword: '',
+                    });
+                }else{
+                    this.props.enqueueSnackbar("Error: Try another second!");
+                }
+            })
+            .catch((e) => console.log(e));
+
     }
 
     render(){
@@ -245,7 +307,7 @@ class Security extends Component{
         const {classes, container } = this.props;
         const { oldPassword, newPassword, repeatPassword, conferme } = this.state;
 
-        
+
         return (
             <div className={classes.root}>
                 <CssBaseline />
@@ -343,7 +405,7 @@ class Security extends Component{
                         />
 
 
-                        <Button variant="contained" disabled={newPassword === repeatPassword && conferme} color="secondary" className={classes.saveButton} disableElevation>Aggiorna</Button>
+                        <Button variant="contained" onClick={this.handleSendData} disabled={!(newPassword.length >=6 && newPassword == repeatPassword && conferme && oldPassword.length >= 6)} color="secondary" className={classes.saveButton} disableElevation>Aggiorna</Button>
                     </div>
 
 
@@ -359,7 +421,8 @@ class Security extends Component{
 Security.propTypes = {
     container: PropTypes.instanceOf(typeof Element === 'undefined' ? Object : Element),
     inputRef: PropTypes.func.isRequired,
-
 };
 
-export default withStyles(styles)(Security);
+export default withStyles(styles)(
+    withSnackbar(Security)
+);

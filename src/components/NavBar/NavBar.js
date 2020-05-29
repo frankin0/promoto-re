@@ -68,7 +68,6 @@ class MenuAppBar extends Component {
                 auth: true,
                 userInfo: JSON.parse(localStorage.getItem("user_info"))
             });
-            
         }
     }
 

@@ -17,7 +17,7 @@ import {
     KeyboardDatePicker,
   } from '@material-ui/pickers';
 
-  const theme = createMuiTheme({
+const theme = createMuiTheme({
     palette: {
         type: 'dark',
         primary: { 

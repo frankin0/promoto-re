@@ -236,8 +236,8 @@ class Login extends Component{
                     passwordError: false
                 });
 
-                if(response.data.status != "_false_"){
-                    localStorage.setItem("user", response.data.status.token);
+                if(response.data.status == "true"){
+                    localStorage.setItem("user", response.data.token);
                     window.location.reload();
                 }else{
                     this.setState({

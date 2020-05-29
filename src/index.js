@@ -35,6 +35,10 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import User from './services/User/User'
 import grey from '@material-ui/core/colors/grey';
 import red from '@material-ui/core/colors/red';
+
+import PrivateRoute from './components/PrivateRoute';
+import PublicRoute from './components/PublicRoute'; 
+
 setDefaultTranslations({it})
 setDefaultLanguage('it')
 /*
@@ -94,17 +98,17 @@ function App(){
             <SnackbarProvider maxSnack={3}>
                 <Router >
                     <Switch>
-                        <Route exact path="/" name="Home" component={Home} />
-                        <Route path="/Event/:id" name="Event" component={Event} />
-                        <Route exact path="/Settings" name="Settings" component={Settings} />
-                        <Route exact path="/Settings/Notifics" name="Notifics" component={Notifics} />
-                        <Route exact path="/Settings/Security" name="Security" component={Security} />
-                        <Route exact path="/Settings/Privacy" name="Privacy" component={Settings} />
-                        <Route exact path="/Settings/Devices" name="Devices" component={Devices} />
-                        <Route exact path="/Settings/Paycard" name="Protected" component={Protected} />
-                        <Route exact path="/Settings/Partners" name="Partners" component={Partners} />
-                        <Route exact path="/Settings/Partners/Add" name="Add Partner" component={AddPartner} />
-                        <Route path="*" component={Home} />
+                        <PublicRoute restricted={false} component={Home} path="/" exact />
+                        <PublicRoute restricted={false} component={Event} path="/Event/:id" />
+                        <PrivateRoute exact path="/Settings" name="Settings" component={Settings} />
+                        <PrivateRoute exact path="/Settings/Notifics" name="Notifics" component={Notifics} />
+                        <PrivateRoute exact path="/Settings/Security" name="Security" component={Security} />
+                        <PrivateRoute exact path="/Settings/Privacy" name="Privacy" component={Settings} />
+                        <PrivateRoute exact path="/Settings/Devices" name="Devices" component={Devices} />
+                        <PrivateRoute exact path="/Settings/Paycard" name="Protected" component={Protected} />
+                        <PrivateRoute exact path="/Settings/Partners" name="Partners" component={Partners} />
+                        <PrivateRoute exact path="/Settings/Partners/Add" name="Add Partner" component={AddPartner} />
+                        <PublicRoute restricted={false} path="*" component={Home} />
                     </Switch>
                 </Router>
             </SnackbarProvider>

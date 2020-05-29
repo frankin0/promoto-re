@@ -9,8 +9,13 @@ import { Drawer, CssBaseline,  Button, Hidden, Card, CardActionArea,  Grid, Card
 import PropTypes from 'prop-types';
 import ListSettings from '../../components/ListSettings/ListSettings';
 import CheckCircleRoundedIcon from '@material-ui/icons/CheckCircleRounded';
+import User from '../../services/User/User';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { blue } from '@material-ui/core/colors';
+import clsx from 'clsx';
 
-  const theme = createMuiTheme({
+
+const theme = createMuiTheme({
     palette: {
         type: 'dark',
         primary: { 
@@ -27,18 +32,70 @@ import CheckCircleRoundedIcon from '@material-ui/icons/CheckCircleRounded';
     }
 });
 
-function generate(element) {
-    return [0, 1, 2].map(value =>
-      React.cloneElement(element, {
-        key: value,
-      }),
-    );
+function time_ago(time) {
+
+    switch (typeof time) {
+      case 'number':
+        break;
+      case 'string':
+        time = +new Date(time);
+        break;
+      case 'object':
+        if (time.constructor === Date) time = time.getTime();
+        break;
+      default:
+        time = +new Date();
+    }
+    var time_formats = [
+      [60, 'secondi', 1], // 60
+      [120, '1 minuto fa', '1 minito da ora'], // 60*2
+      [3600, 'minuti', 60], // 60*60, 60
+      [7200, '1 ora fa', '1 ora dopo'], // 60*60*2
+      [86400, 'ore', 3600], // 60*60*24, 60*60
+      [172800, 'Ieri', 'Oggi'], // 60*60*24*2
+      [604800, 'giorni', 86400], // 60*60*24*7, 60*60*24
+      [1209600, 'La scorsa settimana', 'La prossima settimana'], // 60*60*24*7*4*2
+      [2419200, 'settimane', 604800], // 60*60*24*7*4, 60*60*24*7
+      [4838400, 'Lo scorso mese', 'Il mese prossimo'], // 60*60*24*7*4*2
+      [29030400, 'mese', 2419200], // 60*60*24*7*4*12, 60*60*24*7*4
+      [58060800, "Lo scorso anno", "L'anno prossimo"], // 60*60*24*7*4*12*2
+      [2903040000, 'anno', 29030400], // 60*60*24*7*4*12*100, 60*60*24*7*4*12
+      [5806080000, 'Qualche secolo fa', 'Il prossimo secolo'], // 60*60*24*7*4*12*100*2
+      [58060800000, 'secoli', 2903040000] // 60*60*24*7*4*12*100*20, 60*60*24*7*4*12*100
+    ];
+    var seconds = (+new Date() - time) / 1000,
+      token = 'ago',
+      list_choice = 1;
+  
+    if (seconds == 0) {
+      return 'Just now'
+    }
+    if (seconds < 0) {
+      seconds = Math.abs(seconds);
+      token = 'from now';
+      list_choice = 2;
+    }
+    var i = 0,
+      format;
+    while (format = time_formats[i++])
+      if (seconds < format[0]) {
+        if (typeof format[2] == 'string')
+          return format[list_choice];
+        else
+          return Math.floor(seconds / format[2]) + ' ' + format[1] + ' ' + token;
+      }
+    return time;
   }
+  
 
 const styles = theme => ({
 
     root: {
         display: 'flex',
+      },
+      wrapper: {
+        margin: theme.spacing(1),
+        position: 'relative',
       },
       drawer: {
         [theme.breakpoints.up('sm')]: {
@@ -160,6 +217,19 @@ const styles = theme => ({
         margin: '15px auto',
         width: 72,
         height: 72
+    },
+    buttonProgress: {
+        color: blue[800],
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -12,
+        marginLeft: -12,
+    },
+    hiddenCard:{
+        transition: ".3s",
+        opacity: 0,
+        visibility: 'hidden'
     }
 });
 
@@ -171,90 +241,53 @@ class Devices extends Component{
 
         this.state = {
             mobileOpen: false,
-            personalExpansionPanel: false,
-            personal: [
-                {
-                    title: 'Commercial Spy',
-                    subTitle: 'Ricevi una notifica per ogni annuncio simile al tuo',
-                    container: 0,
-                    checkedMail: true,
-                    checkedApp: false,
-                },
-                {
-                    title: 'Promoto',
-                    subTitle: 'Ricevi aggiornamenti da Promoto',
-                    container: 0,
-                    checkedMail: true,
-                    checkedApp: false,
-                },
-                {
-                    title: 'Ticket venduto',
-                    subTitle: 'Ricevi una notifica per ogni biglietto venduto',
-                    container: 2,
-                    checkedMail: true,
-                    checkedApp: true,
-                },
-                {
-                    title: 'Pagamento ricevuto',
-                    subTitle: 'Ricevi una notifica per la conferma di pagamento',
-                    container: 1,
-                    checkedMail: true,
-                    checkedApp: true,
-                },
-                {
-                    title: 'Informazioni Generali',
-                    subTitle: 'Ricevi una notifica riguardo le problematiche del tuo conto pay',
-                    container: 1,
-                    checkedMail: true,
-                    checkedApp: false,
-                },
-                {
-                    title: 'Feedback ricevuti',
-                    subTitle: 'Ricevi una notifica per ogni feedback ricevuto',
-                    container: 2,
-                    checkedMail: false,
-                    checkedApp: true,
-                }
-            ],
-            team: [
-                {
-                    id: 0,
-                    name: "Marco Rossi",
-                    color: 'yellow',
-                    expansionPanel: false,
-                    privacy: {
-                        login: {
-                            0: false,
-                            1: true
-                        },
-                        monitoring: {
-                            0: true,
-                            1: true
-                        }
-                    }
-                },
-                {
-                    id: 1,
-                    name: "Giacomo Leopardi",
-                    color: 'secondary',
-                    expansionPanel: false,
-                    privacy: {
-                        login: {
-                            0: false,
-                            1: true
-                        },
-                        monitoring: {
-                            0: true,
-                            1: true
-                        }
-                    }
-                }
-            ]
+            devices: [],
+            loadingDevices: [],
+            successDevices: [],
+            removeDevices: []
         }
     }
 
     componentDidMount(){
         document.body.classList.add("__settings");
+
+        User.UserListDevicesConnected(localStorage.getItem('user'))
+            .then((data) => { 
+
+                Object.values(data.data.status).map((val, index) =>{
+                    User.getIp(val.UserIP)
+                        .then((data2) => { 
+                            var dt = data.data.status;
+                            dt[index].country =  data2.data.country;
+                            dt[index].city =  data2.data.city;
+                            dt[index].regionName = data2.data.regionName;
+                            
+                            this.setState({
+                                devices: dt
+                            });
+                            this.setState((prevState) => ({
+                                ...prevState,
+                                loadingDevices: {
+                                    ...prevState.loadingDevices,
+                                        [index]: false
+                                },
+                                successDevices: {
+                                    ...prevState.successDevices,
+                                        [index]: false
+                                },
+                                removeDevices: {
+                                    ...prevState.removeDevices,
+                                        [index]: false
+                                }})
+                            );
+                        })
+                        .catch((e) => console.log(e));
+                });
+
+                
+
+            })
+            .catch((e) => console.log(e)); 
     }
 
     componentWillUnmount(){
@@ -267,86 +300,50 @@ class Devices extends Component{
         });
     };
 
-    personalExpansionPanel = (event, boolean) =>{
-        this.setState({
-            personalExpansionPanel: !this.state.personalExpansionPanel
-        })
-    }
+    handleClick = (id, index) => { 
 
-    teamExpansionPanel = (e, t, i) =>{ 
-        let item = this.state.team[i];
-        item.expansionPanel = !item.expansionPanel;
-        this.setState({
-            item
-        })
-    }    
-
-    handleTeamCheckbox = (event, container, id, type, teamIndex,t ) => {
-/**
- * privacy: {
-                        login: {
-                            0: false,
-                            1: true
-                        },
-                        monitoring: {
-                            0: true,
-                            1: true
-                        }
-                    }
- */// !this.state.team[teamIndex].privacy[id][type]
-
-        let item = this.state.team[teamIndex];
-        item.privacy[id][type] = !this.state.team[teamIndex].privacy[id][type];
-        this.setState({
-            item
-        });
-    }
-
-    handlePersonalCheck = (e, index, val, device) => {
-        let item = this.state.personal[index];
-        item[device] = !item[device];
-        this.setState({
-            item
-        });
-    }
-
-    handleCheckPersonalAll = (e) => { 
-        let items = this.state.personal;
-
-        
-        for(let i = 0; i < items.length; i++){
-            items[i].checkedMail = e.target.checked;
-            items[i].checkedApp = e.target.checked;
-            this.setState({
-                items,
-                personalExpansionPanel:e.target.checked
+        if (!this.state.loadingDevices[index]) {
+            this.setState((prevState) => ({
+                ...prevState,
+                loadingDevices: {
+                    ...prevState.loadingDevices,
+                        [index]: true
+                },
+                successDevices: {
+                    ...prevState.successDevices,
+                        [index]: false
+                }})
+            );
+          }
+       
+        User.DeconnectDevice(localStorage.getItem('user'), id)
+            .then((data) => { 
+                console.log(data);
+                this.setState((prevState) => ({
+                    ...prevState,
+                    loadingDevices: {
+                        ...prevState.loadingDevices,
+                            [index]: false
+                    },
+                    successDevices: {
+                        ...prevState.successDevices,
+                            [index]: true
+                    },
+                    removeDevices: {
+                        ...prevState.removeDevices,
+                            [index]: true
+                    }})
+                );
             })
-        }
-    
-    }
-
-    handleCheckAllTeam = (e, teamIndex, id) => { 
-        let item = this.state.team[teamIndex];
-
-
-        item.privacy.login[0] = e.target.checked;
-        item.privacy.login[1] = e.target.checked;
-
-        item.privacy.monitoring[0] = e.target.checked;
-        item.privacy.monitoring[1] = e.target.checked;
-        
-        item.expansionPanel = e.target.checked;
-        this.setState({
-            item
-        });
-    
+            .catch((e) => console.log(e));
     }
     
     render(){
         
         const {classes, container } = this.props;
-        const { team } = this.state; 
-        
+        const { devices, loadingDevices, successDevices, removeDevices } = this.state; 
+
+
         return (
             <div className={classes.root}>
                 <CssBaseline />
@@ -393,159 +390,136 @@ class Devices extends Component{
 
                         <div >
                             <Grid container spacing={3}>
-                                <Grid item xs={3}>
-                                    <Card variant="outlined">
-                                        <CardActionArea>
-                                            <CardContent>
-                                                <Typography gutterBottom component="div" className={classes.mediaImage}></Typography>
-                                                <Typography gutterBottom variant="h5" component="h2" style={{marginBottom: 0}}>
-                                                    Windows 10
-                                                </Typography>
-                                                <Typography variant="overline" color="textSecondary" component="p">
-                                                    DESKTOP-936ER6U
-                                                </Typography>
-                                                <Typography variant="body2" color="textSecondary" component="p">
-                                                    Bari BA, Italy <br />
-                                                    <CheckCircleRoundedIcon style={{color: '#1a73e8', fontSize: '1rem', position: 'relative', top: '3px'}} /> Questo dispositivo
-                                                </Typography>
-                                            </CardContent>
-                                        </CardActionArea>
-                                        <CardActions>
-                                            <Button size="small" fullWidth={true} color="primary">
-                                                Altro
-                                            </Button>
-                                        </CardActions>
-                                    </Card>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <Card variant="outlined">
-                                        <CardActionArea>
-                                            <CardContent>
-                                                <Typography gutterBottom component="div" className={classes.mediaImage} style={{backgroundPosition: '0 -1095px'}}></Typography>
-                                                <Typography gutterBottom variant="h5" component="h2" style={{marginBottom: 0}}>
-                                                    Iphone XI
-                                                </Typography>
-                                                <Typography variant="overline" color="textSecondary" component="p">
-                                                    Italia
-                                                </Typography>
-                                                <Typography variant="body2" color="textSecondary" component="p">
-                                                    57 minuti fa <br />
-                                                    <br />
-                                                </Typography>
-                                            </CardContent>
-                                        </CardActionArea>
-                                        <CardActions>
-                                            <Button size="small" fullWidth={true} color="primary">
-                                                Altro
-                                            </Button>
-                                            <Button size="small" fullWidth={true} color="primary">
-                                                Disconnetti
-                                            </Button>
-                                        </CardActions>
-                                    </Card>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <Card variant="outlined">
-                                        <CardActionArea>
-                                            <CardContent>
-                                                <Typography gutterBottom component="div" className={classes.mediaImage}></Typography>
-                                                <Typography gutterBottom variant="h5" component="h2" style={{marginBottom: 0}}>
-                                                    Windows 10
-                                                </Typography>
-                                                <Typography variant="overline" color="textSecondary" component="p">
-                                                    DESKTOP-936ER6U
-                                                </Typography>
-                                                <Typography variant="body2" color="textSecondary" component="p">
-                                                    Bari BA, Italy <br />
-                                                    <CheckCircleRoundedIcon style={{color: '#1a73e8', fontSize: '1rem', position: 'relative', top: '3px'}} /> Questo dispositivo
-                                                </Typography>
-                                            </CardContent>
-                                        </CardActionArea>
-                                        <CardActions>
-                                            <Button size="small" fullWidth={true} color="primary">
-                                                Altro
-                                            </Button>
-                                        </CardActions>
-                                    </Card>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <Card variant="outlined">
-                                        <CardActionArea>
-                                            <CardContent>
-                                                <Typography gutterBottom component="div" className={classes.mediaImage} style={{backgroundPosition: '0 -1095px'}}></Typography>
-                                                <Typography gutterBottom variant="h5" component="h2" style={{marginBottom: 0}}>
-                                                    Iphone XI
-                                                </Typography>
-                                                <Typography variant="overline" color="textSecondary" component="p">
-                                                    Italia
-                                                </Typography>
-                                                <Typography variant="body2" color="textSecondary" component="p">
-                                                    57 minuti fa <br />
-                                                    <br />
-                                                </Typography>
-                                            </CardContent>
-                                        </CardActionArea>
-                                        <CardActions>
-                                            <Button size="small" fullWidth={true} color="primary">
-                                                Altro
-                                            </Button>
-                                            <Button size="small" fullWidth={true} color="primary">
-                                                Disconnetti
-                                            </Button>
-                                        </CardActions>
-                                    </Card>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <Card variant="outlined">
-                                        <CardActionArea>
-                                            <CardContent>
-                                                <Typography gutterBottom component="div" className={classes.mediaImage}></Typography>
-                                                <Typography gutterBottom variant="h5" component="h2" style={{marginBottom: 0}}>
-                                                    Windows 10
-                                                </Typography>
-                                                <Typography variant="overline" color="textSecondary" component="p">
-                                                    DESKTOP-936ER6U
-                                                </Typography>
-                                                <Typography variant="body2" color="textSecondary" component="p">
-                                                    Bari BA, Italy <br />
-                                                    <CheckCircleRoundedIcon style={{color: '#1a73e8', fontSize: '1rem', position: 'relative', top: '3px'}} /> Questo dispositivo
-                                                </Typography>
-                                            </CardContent>
-                                        </CardActionArea>
-                                        <CardActions>
-                                            <Button size="small" fullWidth={true} color="primary">
-                                                Altro
-                                            </Button>
-                                        </CardActions>
-                                    </Card>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <Card variant="outlined">
-                                        <CardActionArea>
-                                            <CardContent>
-                                                <Typography gutterBottom component="div" className={classes.mediaImage} style={{backgroundPosition: '0 -1095px'}}></Typography>
-                                                <Typography gutterBottom variant="h5" component="h2" style={{marginBottom: 0}}>
-                                                    Iphone XI
-                                                </Typography>
-                                                <Typography variant="overline" color="textSecondary" component="p">
-                                                    Italia
-                                                </Typography>
-                                                <Typography variant="body2" color="textSecondary" component="p">
-                                                    57 minuti fa <br />
-                                                    <br />
-                                                </Typography>
-                                            </CardContent>
-                                        </CardActionArea>
-                                        <CardActions>
-                                            <Button size="small" fullWidth={true} color="primary">
-                                                Altro
-                                            </Button>
-                                            <Button size="small" fullWidth={true} color="primary">
-                                                Disconnetti
-                                            </Button>
-                                        </CardActions>
-                                    </Card>
-                                </Grid>
+                                {
+                                    Object.values(devices).map((val, index) => {
+                                       
+                                        const userAgent = window.navigator.userAgent.toLowerCase();
+                                        var MobileDetect = require('mobile-detect'),
+                                        md= new MobileDetect(val.UserInfo);
+
+                                        var os = "", style="";
+                                        /**
+                                         * User devices
+                                         */
+                                        if(md.os() == "AndroidOS"){
+                                            os = "Android";
+                                            style = {backgroundPosition: '0px -730px'};
+                                        }else if(md.os() == "BlackBerryOS"){
+                                            os = "BlackBerry";
+                                            style = {backgroundPosition: '0 -436px'};
+                                        }else if(md.os() == "PalmOS"){
+                                            os = "Palms";
+                                            style = {backgroundPosition: '0 -655px'};
+                                        }else if(md.os() == "SymbianOS"){
+                                            os = "Symbian";
+                                            style = {backgroundPosition: '0 -655px'};
+                                        }else if(md.os() == "WindowsMobileOS"){
+                                            os = "Windows Mobile";
+                                            style = {backgroundPosition: '0 -655px'};
+                                        }else if(md.os() == "WindowsPhoneOS"){
+                                            os = "Windows Phone";
+                                            style = {backgroundPosition: '0 -655px'};
+                                        }else if(md.os() == "iOS"){
+                                            os = "iOS";
+                                            style = {backgroundPosition: '0 -1091px'};
+                                        }else if(md.os() == "iPadOS"){
+                                            os = "iPad";
+                                            style = {backgroundPosition: '0 -364px'};
+                                        }else if(md.os() == "MeeGoOS"){
+                                            os = "MeeGo";
+                                            style = {backgroundPosition: '0 -655px'};
+                                        }else if(md.os() == "MaemoOS"){
+                                            os = "Maemo";
+                                            style = {backgroundPosition: '0 -655px'};
+                                        }else if(md.os() == "JavaOS"){
+                                            os = "JavaOS";
+                                            style = {backgroundPosition: '0 -655px'};
+                                        }else if(md.os() == "webOS"){
+                                            os = "WebOS";
+                                            style = {backgroundPosition: '0 -655px'};
+                                        }else if(md.os() == "badaOS"){
+                                            os = "Bada";
+                                            style = {backgroundPosition: '0 -655px'};
+                                        }else if(md.os() == "BREWOS"){
+                                            os = "BREWOS";
+                                            style = {backgroundPosition: '0 -655px'};
+                                        }else{
+                                            os = "";
+                                            style = {};
+                                            if(val.UserDevice.toLowerCase().indexOf("windows") == 0){
+                                                style = {backgroundPosition: '0 -220px'};
+                                            }else if(val.UserDevice.toLowerCase().indexOf("linux") == 0){
+                                                style = {backgroundPosition: '0 -800px'};
+                                            }else if(val.UserDevice.toLowerCase().indexOf("mac") == 0){
+                                                style = {backgroundPosition: '0 -507px'};
+                                            }else if(val.UserDevice.toLowerCase().indexOf("android") == 0){
+                                                style = {backgroundPosition: '0px -730px'};
+                                            }else if(val.UserDevice.toLowerCase().indexOf("ios") == 0){
+                                                style = {backgroundPosition: '0 -1091px'};
+                                            }else if(val.UserDevice.toLowerCase().indexOf("chrome") == 0){
+                                                style = {backgroundPosition: '0 -75px'};
+                                            }else{
+                                                style = {backgroundPosition: '0 -950px'};
+                                            } 
+                                        }
+
+                                        var aDay = 24*60*60, datum = Date.parse(val.UserStartSession);
+                                        
+                                        const buttonClassname = clsx({
+                                            [classes.buttonSuccess]: successDevices[index],
+                                        });
+
+
+                                        
+                                        return (
+                                            <Grid item md={3} xs={12} key={index} className={removeDevices[index] ? classes.hiddenCard : ""}>
+                                                <Card variant="outlined">
+                                                    <CardActionArea>
+                                                        <CardContent>
+                                                            <Typography gutterBottom component="div" className={classes.mediaImage} style={style}></Typography>
+                                                            <Typography gutterBottom variant="h5" component="h2" style={{marginBottom: 0}}>
+                                                                {val.UserDevice}
+                                                            </Typography>
+                                                            <Typography  color="textSecondary" component="p">
+                                                                {md.userAgent() == null ? val.UserInfo.substr(0, val.UserInfo.indexOf('/')) : md.userAgent() + " on "+ os}
+                                                            </Typography>
+                                                            <Typography variant="body2" color="textSecondary" component="p">
+                                                                {val.city ? val.city + " " + val.regionName + ", " + val.country : "Attendi..."} <br />
+                                                                {
+                                                                    val.UserInfo.toLowerCase() == userAgent ? (
+                                                                        <span>
+                                                                            <CheckCircleRoundedIcon style={{color: '#1a73e8', fontSize: '1rem', position: 'relative', top: '3px'}} /> Questo dispositivo
+                                                                        </span>
+                                                                    ) : (
+                                                                        <Typography variant="body2" color="textSecondary" component="p">
+                                                                            {time_ago(new Date((datum)-aDay))} <br />
+                                                                        </Typography>
+                                                                    )
+                                                                }
+                                                            </Typography>
+                                                        </CardContent>
+                                                    </CardActionArea>
+                                                    {
+                                                        val.UserInfo.toLowerCase() == userAgent ? (
+                                                            <CardActions>
+                                                                <Button size="small" disabled fullWidth={true} color="primary">
+                                                                    &nbsp;
+                                                                </Button>
+                                                            </CardActions>
+                                                        ) : (
+                                                            <CardActions>
+                                                                <Button size="small" fullWidth={true} color="primary" disabled={loadingDevices[index]} className={buttonClassname} onClick={() =>this.handleClick(val.UserDeviceID, index)}>
+                                                                    {loadingDevices[index] ? <CircularProgress size={24} className={classes.buttonProgress} /> : "Disconnetti"} <div style={{padding: 13}} />
+                                                                </Button>
+                                                            </CardActions>
+                                                        )
+                                                    }
+                                                </Card>
+                                            </Grid>
+                                        );
+                                    })
+                                }
+                               
                             </Grid>
                                 
                         </div>
