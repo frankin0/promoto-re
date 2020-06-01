@@ -159,9 +159,9 @@ class Event extends Component{
                 
                 if(typeof data.data.status === "object"){            
                     this.setState({
-                        user: data.data.status
+                        user: data.data
                     });
-                    localStorage.setItem("user_info", JSON.stringify(data.data.status));
+                    localStorage.setItem("user_info", JSON.stringify(data.data));
                 }else{
                     localStorage.removeItem("user");
                     localStorage.removeItem("user_info");

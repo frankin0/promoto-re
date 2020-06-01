@@ -101,11 +101,11 @@ class Home extends Component{
             User.postUser(localStorage.getItem('user'))
             .then((data) => { 
                 
-                if(typeof data.data.status === "object"){            
+                if(typeof data.data === "object"){            
                     this.setState({
-                        user: data.data.status
+                        user: data.data
                     });
-                    localStorage.setItem("user_info", JSON.stringify(data.data.status));
+                    localStorage.setItem("user_info", JSON.stringify(data.data));
                 }else{
                     localStorage.removeItem("user");
                     localStorage.removeItem("user_info");
@@ -234,13 +234,14 @@ class Home extends Component{
                             <Typography variant="body1" component="div" className={classes.catname} color="textSecondary">Altro</Typography>
                         </Grid>
                         {
+                            this.state.allEvents ? 
                             Object.values(this.state.allEvents).map((item, index) =>{
                                 return (
                                     <Grid item key={index} md={4} xs={12}>
                                         <CardEvents key={index} id={item.ticketPublicID} type={"default"} copertine={item.ticketCopertine} title={item.ticketSimple} dateStart={item.ticketDateStart} ticket={item.ticket} style={{height: 400,  width: '100%', marginRight: 10}} />
                                     </Grid>
                                 )
-                            })
+                            }) : ""
                         }
                     </Grid>
                 </Container>

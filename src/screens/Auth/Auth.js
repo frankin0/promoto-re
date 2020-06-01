@@ -78,7 +78,8 @@ const styles = theme => ({
         right: 0,
         maxWidth: 'calc(100% - 27.5em)',
         width: '55em',
-        background: '#ffffff',
+        //background: '#ffffff',
+        backgroundColor: '#424242',
         height: '100%',
         top: 0,
         margin: 0,
@@ -168,6 +169,10 @@ const styles = theme => ({
             width: 550
         },
         width: '100%'
+    },
+    paper:{
+        marginTop: 10,
+        borderRadius: 0    
     }
 });
 

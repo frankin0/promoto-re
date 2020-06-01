@@ -26,11 +26,11 @@ class ListSettings extends Component{
             User.postUser(localStorage.getItem('user'))
             .then((data) => { 
                 
-                if(typeof data.data.status === "object"){            
+                if(typeof data.data === "object"){            
                     this.setState({
-                        userInfo: data.data.status
+                        userInfo: data.data
                     });
-                    localStorage.setItem("user_info", JSON.stringify(data.data.status));
+                    localStorage.setItem("user_info", JSON.stringify(data.data));
                 }else{
                     localStorage.removeItem("user");
                     localStorage.removeItem("user_info");

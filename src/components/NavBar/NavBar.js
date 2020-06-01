@@ -72,9 +72,7 @@ class MenuAppBar extends Component {
     }
 
     handleChange = event => {
-        this.setState({
-            auth: !this.state.auth
-        });
+        
     };
 
     handleMenu = (event) => { 
@@ -96,6 +94,7 @@ class MenuAppBar extends Component {
 
     logout = () => {
         localStorage.removeItem("user");
+        localStorage.removeItem("user_info");
         window.location.reload();
     }
 

@@ -300,7 +300,7 @@ class Devices extends Component{
         });
     };
 
-    handleClick = (id, index) => { 
+    handleClick = (id, index, me = 0) => { 
 
         if (!this.state.loadingDevices[index]) {
             this.setState((prevState) => ({
@@ -314,6 +314,11 @@ class Devices extends Component{
                         [index]: false
                 }})
             );
+            if(me == 1){
+                localStorage.removeItem("user");
+                localStorage.removeItem("user_info");
+                window.location.reload();
+            }
           }
        
         User.DeconnectDevice(localStorage.getItem('user'), id)
@@ -502,8 +507,8 @@ class Devices extends Component{
                                                     {
                                                         val.UserInfo.toLowerCase() == userAgent ? (
                                                             <CardActions>
-                                                                <Button size="small" disabled fullWidth={true} color="primary">
-                                                                    &nbsp;
+                                                                <Button size="small" fullWidth={true} color="primary" disabled={loadingDevices[index]} className={buttonClassname} onClick={() =>this.handleClick(val.UserDeviceID, index, 1)}>
+                                                                    {loadingDevices[index] ? <CircularProgress size={24} className={classes.buttonProgress} /> : "Disconnetti"} <div style={{padding: 13}} />
                                                                 </Button>
                                                             </CardActions>
                                                         ) : (
