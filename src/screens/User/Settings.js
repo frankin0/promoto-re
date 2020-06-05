@@ -11,6 +11,9 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import MaskedInput from 'react-text-mask';
 import DateFnsUtils from '@date-io/date-fns';
 import ListSettings from '../../components/ListSettings/ListSettings';
+import User from '../../services/User/User';
+import { withSnackbar } from 'notistack';
+import { Base64 } from 'js-base64';
 import {
     MuiPickersUtilsProvider,
     KeyboardTimePicker,
@@ -140,7 +143,11 @@ const styles = theme => ({
         marginTop: 15,
         backgroundColor: red[400],
         color: theme.palette.getContrastText(red[400]),
-    }
+    },
+    hiddenInput:{
+        display: 'none'
+    },
+   
 });
 
 
@@ -193,16 +200,20 @@ class Settings extends Component{
             mobileOpen: false,
             age: 1,//new Date(),
             typeU: '',
+            profilePic: null,
             user: JSON.parse(localStorage.getItem('user_info'))
         }
+
     }
 
     componentDidMount(){
         document.body.classList.add("__settings");
 
-        
+        this.setState({
+            age: new Date(this.state.user.UserBirthday+"T21:11:54"),
+            typeU: this.state.user.UserGender
+        });
     }
-
 
     componentWillUnmount(){
         document.body.classList.remove("__settings");
@@ -213,21 +224,24 @@ class Settings extends Component{
             mobileOpen: !this.state.mobileOpen
         });
     };
-    handleDateChange = e => {
 
-        this.setState({
-            age: e
-        });
-    }
-
-    typeChange = e =>{ console.log(e.currentTarget.value)
-        this.setState({
-            typeU: e.currentTarget.value
-        });
+    typeChange = e =>{ 
+        if(e.currentTarget == undefined){
+            this.setState({
+                age: e
+            });
+        }else{
+            let name = e.currentTarget.name; 
+            let value = e.currentTarget.value;
+    
+            this.setState({
+                [name]: value
+            });
+        }
+    
     }
 
     handleChange = (e) => {
-
         let res = this.state.user;
         res[e.currentTarget.name] = e.currentTarget.value;
 
@@ -236,11 +250,102 @@ class Settings extends Component{
         });
     }
 
+    fileClick = () => {
+        document.getElementById('profilepic').click();
+    }
+
+    checkImage = (event) =>{
+        let files = event.target.files;
+        let reader = new FileReader();
+        reader.readAsDataURL(files[0]);
+
+        reader.onload = (e) => {
+            
+            this.setState({
+                profilePic: e.target.result,
+            })
+            
+            //Get a web
+            User.UploadImage(localStorage.getItem('user'),  e.target.result)
+                .then((data) => { 
+                    console.log(data);
+                    if(data.data._SUCCESS_ == true){
+                        console.log(data.data._RESULT_);
+                    }else if(data.data._SUCCESS_ == false){
+                        this.props.enqueueSnackbar(data.data._ERROR_, { 
+                            variant: 'error',
+                        });
+                    }else{
+                        this.props.enqueueSnackbar("Show error in console", { 
+                            variant: 'error',
+                        });
+                    }
+                })
+                .catch((e) => console.log(e));
+        }
+    }
+
+    handleClickMail = () => {
+        const { user } = this.state;
+
+        if(user.userEmail == null){
+            return;
+        }
+        
+        User.UpdateUserInfo(localStorage.getItem('user'), user)
+        .then((data) => { 
+            if(data.data._SUCCESS_ == true){
+                this.props.enqueueSnackbar("Informazioni aggiornate", { 
+                    variant: 'default',
+                });
+
+
+                localStorage.setItem('user_info', JSON.stringify(user))
+
+            }else if(data.data._SUCCESS_ == false){
+                this.props.enqueueSnackbar(data.data._ERROR_, { 
+                    variant: 'error',
+                });
+            }else{
+                this.props.enqueueSnackbar("Show error in console", { 
+                    variant: 'error',
+                });
+            }
+        })
+        .catch((e) => console.log(e));
+    }
+
+    handleClickUserIndo = () => {
+        const { user, typeU } = this.state;
+
+        user.UserGender = typeU;
+
+        User.UpdateUserInfo(localStorage.getItem('user'), user)
+        .then((data) => { 
+            if(data.data._SUCCESS_ == true){
+                this.props.enqueueSnackbar("Informazioni aggiornate", { 
+                    variant: 'default',
+                });
+
+                localStorage.setItem('user_info', JSON.stringify(user))
+
+            }else if(data.data._SUCCESS_ == false){
+                this.props.enqueueSnackbar(data.data._ERROR_, { 
+                    variant: 'error',
+                });
+            }else{
+                this.props.enqueueSnackbar("Show error in console", { 
+                    variant: 'error',
+                });
+            }
+        })
+        .catch((e) => console.log(e));
+    }
+
     render(){
 
         const {classes, container } = this.props;
-        const { user } = this.state;
-
+        const { user, typeU } = this.state;
         
         return (
             <div className={classes.root}>
@@ -283,12 +388,17 @@ class Settings extends Component{
 
                     <div className={classes.boxF}>
                         <div>
-                            <Avatar variant="rounded" className={classes.rounded}>
-                                {user.UserRealName.toUpperCase().substr(0,1)}{user.UserRealSurname.toUpperCase().substr(0,1)}
-                            </Avatar>
+                            {
+                                this.state.profilePic == null ? 
+                                    <Avatar variant="rounded" className={classes.rounded} >
+                                        {user.UserRealName != null ? user.UserRealName.toUpperCase().substr(0,1) : ""}{user.UserRealSurname != null ? user.UserRealSurname.toUpperCase().substr(0,1) : "NS"}
+                                    </Avatar>
+                                : <Avatar alt="Remy Sharp"  className={classes.rounded} src={this.state.profilePic} />
+                            }
                         </div>
                         <div style={{marginLeft: 15}}>
-                            <Button variant="contained" className={classes.btnCnt} disableElevation>Carica un'immagine</Button>
+                            <input type="file" name="profilepic" id="profilepic" onChange={this.checkImage} className={classes.hiddenInput} />
+                            <Button variant="contained" className={classes.btnCnt} onClick={this.fileClick} disableElevation>Carica un'immagine</Button>
                             <Button variant="contained" color="secondary" disableElevation className={classes.buttonTrush}><DeleteForeverRoundedIcon /></Button>
 
                             <Typography variant="caption"color="textSecondary" component="p" style={{marginBottom: 10}}>
@@ -327,7 +437,7 @@ class Settings extends Component{
 
                             color="textSecondary"
                         />
-                        <Button variant="contained" color="secondary" className={classes.saveButton} disableElevation>Aggiorna</Button>
+                        <Button variant="contained" color="secondary" className={classes.saveButton} disableElevation disabled={!user.userEmail} onClick={this.handleClickMail}>Aggiorna</Button>
                     </div>
 
                     <Typography variant="h6" component="div" color="textSecondary">
@@ -341,7 +451,7 @@ class Settings extends Component{
                                     <InfoOutlinedIcon style={{fontSize: '.955rem'}} /> 
                                 </div>
                                 <div style={{marginLeft: 10, color: '#6a6f85'}}>
-                                    Per modificare il tuo numero di telefono, contatta il nostro team di assistenza.
+                                    Recapito telefonico, queste informazioni non verranno divulgate fuori questo portale.
                                 </div>
                             </div>
                         </Typography>
@@ -349,14 +459,47 @@ class Settings extends Component{
                         <div style={{textAlign: 'left', display: 'block', padding: 10,borderRadius: 3, paddingBottom: 5}} className={["MuiFormControl-root MuiTextField-root MuiInputBase-root MuiFilledInput-root MuiInputBase-formControl", classes.fieldText, this.state.usernameError ? "filedError" : ""].join(" ")}>
                             <InputLabel htmlFor="formatted-text-mask-input" style={{transform: 'scale(0.75)'}}>Telefono cellulare</InputLabel>
                             <Input
-                                value={3271129388}
+                                value={user.UserPhone}
                                 //onChange={}
                                 id="formatted-text-mask-input"
+                                name="UserPhone"
                                 inputComponent={RedditMaskedInput}
+                                onChange={this.handleChange}
                                 style={{border: 'none', width: '100%'}}
-                                disabled
                             />
                         </div>
+                    </div>
+
+                    <Typography variant="h6" component="div" color="textSecondary">
+                        Codice fiscale o P.IVA
+                    </Typography>
+
+                    <div style={{maxWidth: 424, marginBottom: 50}}>
+                        <Typography variant="caption" style={{marginBottom: 10,maxWidth: 424, marginTop: 16}} >
+                            <div className={classes.boxF} style={{marginBottom: 10}}>
+                                <div>
+                                    <InfoOutlinedIcon style={{fontSize: '.955rem'}} /> 
+                                </div>
+                                <div style={{marginLeft: 10, color: '#6a6f85'}}>
+                                    Il campo accetta il codice fiscale oppure la partita iva della tua attività
+                                </div>
+                            </div>
+                        </Typography>
+
+                        <Grid item xs={12}>
+                            <RedditTextField
+                                    label="Codice fiscale o P.iva"
+                                    onChange={this.handleChange}
+                                    className={[classes.fieldText, this.state.usernameError ? "filedError" : ""].join(" ")}
+                                    defaultValue="react-reddit"
+                                    variant="filled"
+                                    type="text"
+                                    value={user.UserPIVA == null ? "" : user.UserPIVA}
+                                    name="UserPIVA"
+                                    id="reddit-input"
+                                    color="textSecondary"
+                                />
+                        </Grid>
                     </div>
 
                     <Typography variant="h6" component="div" color="textSecondary">
@@ -381,8 +524,9 @@ class Settings extends Component{
                                             className={[classes.fieldText , "makeStyle-input"].join(" ")}
                                             value={this.state.age}
                                             inputVariant="filled"
+                                            name="age"
                                             style={{marginTop: 0}}
-                                            onChange={this.handleDateChange}
+                                            onChange={this.typeChange}
                                             maxDate={new Date().setFullYear(2020 - 18)}
                                             invalidDateMessage="Formato data errato!"
                                             maxDateMessage="Devi avere minimo 18 anni"
@@ -396,14 +540,14 @@ class Settings extends Component{
                             </Grid>
                             <Grid item xs={6}>
                                 <RedditTextField
-                                    label="Città di nascita"
+                                    label="Città di residenza"
                                     onChange={this.handleChange}
                                     className={[classes.fieldText, this.state.usernameError ? "filedError" : ""].join(" ")}
                                     defaultValue="react-reddit"
                                     variant="filled"
                                     type="text"
-                                    value={""}
-                                    name="username"
+                                    value={user.UserCity}
+                                    name="UserCity"
                                     id="reddit-input"
                                     color="textSecondary"
                                 />
@@ -413,21 +557,22 @@ class Settings extends Component{
                                     <InputLabel htmlFor="filled-age-native-simple">Genere</InputLabel>
                                     <Select
                                         native
-                                        value={this.state.typeU}
+                                        value={typeU}
                                         onChange={this.typeChange}
                                         inputProps={{
-                                            name: 'type',
+                                            name: 'typeU',
                                             id: 'filled-age-native-simple',
                                         }}
                                     >
                                         <option value="" />
-                                        <option value={1}>Uomo</option>
-                                        <option value={2}>Donna</option>
-                                        <option value={3}>Altro</option>
+                                        <option value={'m'}>Uomo</option>
+                                        <option value={'f'}>Donna</option>
+                                        <option value={'o'}>Altro</option>
                                     </Select>
                                 </FormControl>
                             </Grid>
                         </Grid>
+                        <Button variant="contained" color="secondary" className={classes.saveButton} disableElevation disabled={!user.UserPhone || !user.UserBirthday || !user.UserCity || user.UserGender == "" } onClick={this.handleClickUserIndo}>Aggiorna</Button>
                     </div>
 
 
@@ -446,4 +591,6 @@ Settings.propTypes = {
 
 };
 
-export default withStyles(styles)(Settings);
+export default withStyles(styles)(
+    withSnackbar(Settings)
+);

@@ -57,7 +57,7 @@ class ListSettings extends Component{
                             <ListItemAvatar style={{minWidth: 32}}>
                                 <Avatar alt="Remy Sharp" style={{width: "24px", height: 24}} src={this.state.userInfo.UserProfilePic} />
                             </ListItemAvatar>
-                            <ListItemText className={classes.listMFont} color="textSecondary" primary={userInfo.UserRealName.charAt(0).toUpperCase() + userInfo.UserRealName.slice(1) + " " + userInfo.UserRealSurname.charAt(0).toUpperCase() + userInfo.UserRealSurname.slice(1)} />
+                            <ListItemText className={classes.listMFont} color="textSecondary" primary={userInfo.UserRealName != null && userInfo.UserRealSurname != null ? userInfo.UserRealName.charAt(0).toUpperCase() + userInfo.UserRealName.slice(1) + " " + userInfo.UserRealSurname.charAt(0).toUpperCase() + userInfo.UserRealSurname.slice(1) : "NS"} />
                         </ListItem>
                     </Link>
                     {

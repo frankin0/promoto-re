@@ -32,6 +32,28 @@ function UpdatePaymentInfo(token, name, surname, paypal, update_payment){
     });
 }
 
+function UploadImage(token, image){
+    return axios.post('/user/UploadImage', {
+        token: token,
+        image: image,
+    });
+}
+
+function UpdateUserInfo(token, user){
+    return axios.post('/user/UpdateUserInfo', {
+        token: token,
+        userEmail: user.userEmail,
+        UserRealName: user.UserRealName,
+        UserRealSurname: user.UserRealSurname,
+        UserPIVA: user.UserPIVA,
+        UserPhone: user.UserPhone.replace(/[&\/\\#,+()$~%.'":*?<>{}-]/g, '').replace(/\s/g,''),
+        UserBirthday: user.UserBirthday,
+        UserCity: user.UserCity,
+        UserGender: user.UserGender,
+        type : "info_update"
+    });
+}
+
 function UserListDevicesConnected(token){
     return axios.post('/user/GetDevicesConnected', {
         token: token
@@ -53,6 +75,8 @@ const User = {
     postUser,
     postNewPassword,
     UpdatePaymentInfo,
+    UploadImage,
+    UpdateUserInfo,
     UserListDevicesConnected,
     getIp,
     DeconnectDevice
