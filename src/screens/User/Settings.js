@@ -14,6 +14,9 @@ import ListSettings from '../../components/ListSettings/ListSettings';
 import User from '../../services/User/User';
 import { withSnackbar } from 'notistack';
 import { Base64 } from 'js-base64';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Tooltip from '@material-ui/core/Tooltip';
+
 import {
     MuiPickersUtilsProvider,
     KeyboardTimePicker,
@@ -147,7 +150,9 @@ const styles = theme => ({
     hiddenInput:{
         display: 'none'
     },
-   
+    fabProgress:{
+        position: "absolute"
+    }
 });
 
 
@@ -201,7 +206,9 @@ class Settings extends Component{
             age: 1,//new Date(),
             typeU: '',
             profilePic: null,
-            user: JSON.parse(localStorage.getItem('user_info'))
+            user: JSON.parse(localStorage.getItem('user_info')),
+            loadImage: false,
+            removeImage: false
         }
 
     }
@@ -211,7 +218,8 @@ class Settings extends Component{
 
         this.setState({
             age: new Date(this.state.user.UserBirthday+"T21:11:54"),
-            typeU: this.state.user.UserGender
+            typeU: this.state.user.UserGender,
+            profilePic: this.state.user.UserProfilePic,
         });
     }
 
@@ -250,8 +258,58 @@ class Settings extends Component{
         });
     }
 
+    removeProfilePic = () => {
+        const {user} = this.state;
+
+        this.setState({
+            removeImage: true
+        });
+        User.RemoveImage(localStorage.getItem('user'))
+            .then((data) => { 
+                this.setState({
+                    removeImage: false
+                });
+
+                if(data.data._SUCCESS_ == true){
+                    this.props.enqueueSnackbar("Immagine eliminata", { 
+                        variant: 'default',
+                    });
+
+                    user.UserProfilePic = null;
+                    localStorage.setItem('user_info', JSON.stringify(user));
+                }else if(data.data._SUCCESS_ == false){
+                    this.props.enqueueSnackbar(data.data._ERROR_, { 
+                        variant: 'error',
+                    });
+                }else{
+                    this.props.enqueueSnackbar("Show error in console", { 
+                        variant: 'error',
+                    });
+                }
+            })
+            .catch((e) => console.log(e));
+    }
+
     fileClick = () => {
+       
+        const me = this;
         document.getElementById('profilepic').click();
+        document.body.onfocus = function () {
+            setTimeout(function(){
+                if(document.getElementById('profilepic').value.length <= 0){
+                    me.setState({
+                        loadImage: false
+                    });
+                }else{
+                    me.setState({
+                        loadImage: true
+                    });
+                }
+
+                document.body.onfocus = null;
+            }, 100); 
+        };
+       
     }
 
     checkImage = (event) =>{
@@ -260,7 +318,8 @@ class Settings extends Component{
         reader.readAsDataURL(files[0]);
 
         reader.onload = (e) => {
-            
+            const { user } = this.state;
+
             this.setState({
                 profilePic: e.target.result,
             })
@@ -269,8 +328,17 @@ class Settings extends Component{
             User.UploadImage(localStorage.getItem('user'),  e.target.result)
                 .then((data) => { 
                     console.log(data);
+                    this.setState({
+                        loadImage: false
+                    });
+
                     if(data.data._SUCCESS_ == true){
-                        console.log(data.data._RESULT_);
+                        this.props.enqueueSnackbar("Informazioni aggiornate", { 
+                            variant: 'default',
+                        });
+
+                        user.UserProfilePic = data.data._RESULT_;
+                        localStorage.setItem('user_info', JSON.stringify(user))
                     }else if(data.data._SUCCESS_ == false){
                         this.props.enqueueSnackbar(data.data._ERROR_, { 
                             variant: 'error',
@@ -345,7 +413,7 @@ class Settings extends Component{
     render(){
 
         const {classes, container } = this.props;
-        const { user, typeU } = this.state;
+        const { user, typeU, loadImage, profilePic } = this.state;
         
         return (
             <div className={classes.root}>
@@ -398,11 +466,14 @@ class Settings extends Component{
                         </div>
                         <div style={{marginLeft: 15}}>
                             <input type="file" name="profilepic" id="profilepic" onChange={this.checkImage} className={classes.hiddenInput} />
-                            <Button variant="contained" className={classes.btnCnt} onClick={this.fileClick} disableElevation>Carica un'immagine</Button>
-                            <Button variant="contained" color="secondary" disableElevation className={classes.buttonTrush}><DeleteForeverRoundedIcon /></Button>
+                            <Button variant="contained" className={classes.btnCnt} onClick={this.fileClick} disableElevation disabled={loadImage}>{loadImage ? <CircularProgress color="secondary"  size={15} className={classes.fabProgress} /> : ""} Carica un'immagine</Button>
+                            <Tooltip title="Rimuovi immagine" placement="top">
+                                <Button variant="contained" color="secondary" onClick={this.removeProfilePic} disableElevation className={classes.buttonTrush} disabled={!profilePic}><DeleteForeverRoundedIcon /></Button>
+                            </Tooltip>
 
                             <Typography variant="caption"color="textSecondary" component="p" style={{marginBottom: 10}}>
-                                Accettiamo i file in formato PDF, JPG, PNG e GIF, fino a 5 MB
+                                Accettiamo i file in formato JPG, PNG e GIF, fino a 5 MB.<br />
+                                Sistema di auto upload
                             </Typography>
                         </div>
                     </div>

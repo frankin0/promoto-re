@@ -55,7 +55,7 @@ class ListSettings extends Component{
                     <Link className={"MuiTypography-colorTextSecondary"} style={{textDecoration: 'none'}} to="/Settings">
                         <ListItem button className={[classes.listM, (match.path.replace('/','') == "Settings" ? 'active' : '')].join(" ")} button color="textSecondary">
                             <ListItemAvatar style={{minWidth: 32}}>
-                                <Avatar alt="Remy Sharp" style={{width: "24px", height: 24}} src={this.state.userInfo.UserProfilePic} />
+                                <Avatar alt={userInfo.UserRealName != null && userInfo.UserRealSurname != null ? userInfo.UserRealName.charAt(0).toUpperCase() + userInfo.UserRealName.slice(1) + " " + userInfo.UserRealSurname.charAt(0).toUpperCase() + userInfo.UserRealSurname.slice(1) : "NS"} style={{width: "24px", height: 24}} src={this.state.userInfo.UserProfilePic} />
                             </ListItemAvatar>
                             <ListItemText className={classes.listMFont} color="textSecondary" primary={userInfo.UserRealName != null && userInfo.UserRealSurname != null ? userInfo.UserRealName.charAt(0).toUpperCase() + userInfo.UserRealName.slice(1) + " " + userInfo.UserRealSurname.charAt(0).toUpperCase() + userInfo.UserRealSurname.slice(1) : "NS"} />
                         </ListItem>

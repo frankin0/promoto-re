@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import ListSettings from '../../components/ListSettings/ListSettings';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import SearchIcon from '@material-ui/icons/Search';
+import AddPartner from '../../components/Dialogs/AddPartner';
 
   const theme = createMuiTheme({
     palette: {
@@ -252,6 +253,7 @@ class Partners extends Component{
 
         this.state = {
             mobileOpen: false,
+            heandlerAddPartner: false
         }
     }
 
@@ -263,11 +265,22 @@ class Partners extends Component{
         document.body.classList.remove("__settings");
     }
 
+    addPartner = () =>{
+        this.setState({
+            heandlerAddPartner: true
+        })
+    }
+
+    closeModal = () =>{
+        this.setState({
+            heandlerAddPartner: false
+        })
+    }
     
     render(){
         
         const {classes, container } = this.props;
-        const { team } = this.state; 
+        const { team, heandlerAddPartner } = this.state; 
         
         return (
             <div className={classes.root}>
@@ -305,6 +318,8 @@ class Partners extends Component{
                 </nav>
                 <main className={classes.content}>
                     <div style={{marginTop: 0, maxWidth: 'auto'}}>
+                        
+                        <AddPartner open={heandlerAddPartner} closeModal={this.closeModal} />
 
                         <div className={classes.grow}>
                             <AppBar position="static" color="transparent" style={{backgroundColor: 'transparent', border: 'none', boxShadow: 'none'}}>
@@ -324,7 +339,7 @@ class Partners extends Component{
                                         />
                                         
                                     </div>
-                                    <Button variant="contained" color="secondary" style={{marginLeft: 20, width: 300}}>Aggiungi partner</Button>
+                                    <Button variant="contained" color="secondary" style={{marginLeft: 20, width: 300}} onClick={this.addPartner} disabled={heandlerAddPartner}>Aggiungi partner</Button>
                                     <div className={classes.grow} />
                                 </Toolbar>
                             </AppBar>

@@ -39,6 +39,12 @@ function UploadImage(token, image){
     });
 }
 
+function RemoveImage(token){
+    return axios.post('/user/RemoveImage', {
+        token: token
+    });
+}
+
 function UpdateUserInfo(token, user){
     return axios.post('/user/UpdateUserInfo', {
         token: token,
@@ -76,6 +82,7 @@ const User = {
     postNewPassword,
     UpdatePaymentInfo,
     UploadImage,
+    RemoveImage,
     UpdateUserInfo,
     UserListDevicesConnected,
     getIp,
