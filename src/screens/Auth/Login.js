@@ -235,9 +235,11 @@ class Login extends Component{
                     usernameError: false,
                     passwordError: false
                 });
-
-                if(response.data.status == "true"){
+                console.log(response.data.status);
+                if(response.data.status === true){
+                    
                     localStorage.setItem("user", response.data.token);
+                    localStorage.setItem("user_info", JSON.stringify(response.data.user));
                     window.location.reload();
                 }else{
                     this.setState({

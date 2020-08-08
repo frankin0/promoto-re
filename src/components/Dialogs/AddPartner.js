@@ -9,6 +9,11 @@ import red from '@material-ui/core/colors/red';
 import yellow from '@material-ui/core/colors/yellow';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { createMuiTheme, fade, makeStyles } from '@material-ui/core/styles';
+import Partner from '../../services/Partners/Partner';
+import { withSnackbar } from 'notistack';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+
 
 const styles = theme => ({
     root: {
@@ -136,7 +141,11 @@ class AddPartner extends Component{
         super(pros);
 
         this.state = {
-            email: null
+            email: null,
+            username: null,
+            password: null,
+            expire: null,
+            status: 1
         }
     }
 
@@ -145,12 +154,81 @@ class AddPartner extends Component{
     }
 
     handleClose = () =>{
+        this.setState({
+            email: null,
+            username: null,
+            password: null,
+            expire: null,
+            status: 1
+        });
         this.props.closeModal(false);
+    }
+
+    switchChange = (e) => {
+        e.preventDefault(); 
+
+        this.setState({status: e.target.checked});
+    }
+
+    handleChange = (e) => {
+        e.preventDefault();
+        let name = e.currentTarget.name;
+        let val = e.currentTarget.value;
+
+        this.setState({[name]: val});
+    }
+
+    handleSave = () => {
+        const { email, username, password, expire, status } = this.state;
+
+        if(username == null)
+            this.props.enqueueSnackbar("Inserisci un username!", { 
+                variant: 'error',
+            });
+
+        if(password == null)
+            this.props.enqueueSnackbar("Inserisci una password lunga minimo 6 caratteri!", { 
+                variant: 'error',
+            });
+
+        Partner.addPartner(localStorage.getItem('user'), email, username, password, expire, status)
+            .then((response) => {
+                if(response.data._SUCCESS_){
+                    this.props.enqueueSnackbar("Account partner creato!", { 
+                        variant: 'default',
+                    });
+                    this.handleClose();
+                    let acc = {
+                        id: response.data.id,
+                        prtUsername: username,
+                        prtPartnerAccount: {},
+                        prtExpiration: expire,
+                        prtLogPass: null,
+                        prtStatus: status,
+                        prtEmail: email
+                    };
+                    this.props.addPartner(acc);
+                }else if(response.data._SUCCESS_ == false){
+                    this.props.enqueueSnackbar(response.data._ERROR_ , { 
+                        variant: 'error',
+                    });
+                }else{
+                    this.props.enqueueSnackbar(response.data , { 
+                        variant: 'error',
+                    });
+                }
+
+                
+            })
+            .catch((err) => {
+                console.log("ErrorPartner: " + err);
+            });
     }
 
     render(){
 
         const {classes } = this.props;
+        const { email, username, password, expire, status } = this.state;
 
         return (
             <div>
@@ -183,10 +261,9 @@ class AddPartner extends Component{
                                     label="UserName"
                                     onChange={this.handleChange}
                                     className={[classes.fieldText, this.state.email ? "filedError" : ""].join(" ")}
-                                    defaultValue="react-reddit"
                                     variant="filled"
                                     type="text"
-                                    value={""}
+                                    value={username}
                                     name="username"
                                     id="reddit-input"
 
@@ -207,7 +284,7 @@ class AddPartner extends Component{
                                             <InfoOutlinedIcon style={{fontSize: '.955rem'}} /> 
                                         </div>
                                         <div style={{marginLeft: 10, color: '#6a6f85'}}>
-                                            Puoi inserire un'email di contatto (scelta opzionale)
+                                            Puoi inserire un'email di contatto (scelta opzionale), per poter notificare al tuo partner i dati di questo account.
                                         </div>
                                     </div>
                                 </Typography>
@@ -216,10 +293,9 @@ class AddPartner extends Component{
                                     label="Email"
                                     onChange={this.handleChange}
                                     className={[classes.fieldText, this.state.usernameError ? "filedError" : ""].join(" ")}
-                                    defaultValue="react-reddit"
                                     variant="filled"
                                     type="email"
-                                    value={""}
+                                    value={email}
                                     name="email"
                                     id="reddit-input"
 
@@ -228,6 +304,32 @@ class AddPartner extends Component{
                             </div>
 
                         </div>
+
+                        <div className={classes.bodySecondWRK} style={{marginTop: 20, marginBottom: 0}}>
+                            <Typography variant="h6" component="div" color="textSecondary">
+                                Stato del partner
+                            </Typography>
+
+                            <div style={{maxWidth: 424, marginBottom: 0}}>
+                                <Typography variant="caption" component="p" style={{marginBottom: 10,maxWidth: 424, marginTop: 16}} >
+                                    <div className={classes.boxF} style={{marginBottom: 10}}>
+                                        <div>
+                                            <InfoOutlinedIcon style={{fontSize: '.955rem'}} /> 
+                                        </div>
+                                        <div style={{marginLeft: 10, color: '#6a6f85'}}>
+                                            Se lo stato del partner è impostato su OFF, non potrà essere utilizzato.<br />
+                                            Impostare il typo du True.
+                                        </div>
+                                    </div>
+                                </Typography>
+
+                                <FormControlLabel
+                                    control={<Switch color="primary" checked={status} onChange={this.switchChange} />}
+                                    label="Attiva questo partner"
+                                />
+                            </div>
+                        </div>
+
                         <div className={classes.bodySecondWRK} style={{marginTop: 0}}>
                             <Typography variant="h6" component="div" color="textSecondary">
                                 Password
@@ -249,10 +351,9 @@ class AddPartner extends Component{
                                     label="Password"
                                     onChange={this.handleChange}
                                     className={[classes.fieldText, this.state.usernameError ? "filedError" : ""].join(" ")}
-                                    defaultValue="react-reddit"
                                     variant="filled"
                                     type="password"
-                                    value={""}
+                                    value={password}
                                     name="password"
                                     id="reddit-input"
 
@@ -266,7 +367,7 @@ class AddPartner extends Component{
                         <Button onClick={this.handleClose} color="primary">
                             Chiudi
                         </Button>
-                        <Button onClick={this.handleClose} color="primary">
+                        <Button onClick={this.handleSave} color="primary">
                             Aggiungi
                         </Button>
                     </DialogActions>
@@ -277,4 +378,4 @@ class AddPartner extends Component{
 
 }
 
-export default withStyles(styles)(AddPartner);
+export default withStyles(styles)(withSnackbar(AddPartner));

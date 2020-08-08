@@ -5,14 +5,18 @@ import { ThemeProvider } from '@material-ui/styles';
 import grey from '@material-ui/core/colors/grey';
 import red from '@material-ui/core/colors/red';
 import yellow from '@material-ui/core/colors/yellow';
-import { Drawer, CssBaseline,  Button, Hidden, List, ListItem, ListItemAvatar, ListItemText, ListItemSecondaryAction, AppBar, TextField, Avatar, Toolbar, InputBase ,ListSubheader,  Typography, Grid } from '@material-ui/core';
+import deepOrange from '@material-ui/core/colors/orange';
+import deepPurple from '@material-ui/core/colors/purple';
+import { Badge, Drawer, CssBaseline,  Button, Hidden, List, ListItem, ListItemAvatar, ListItemText, ListItemSecondaryAction, AppBar, TextField, Avatar, Toolbar, InputBase ,ListSubheader,  Typography, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import ListSettings from '../../components/ListSettings/ListSettings';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import SearchIcon from '@material-ui/icons/Search';
 import AddPartner from '../../components/Dialogs/AddPartner';
+import Partner from '../../services/Partners/Partner';
+import PartnerUpdateInfo from '../../components/PartnersPage/PartnerUpdateInfo';
 
-  const theme = createMuiTheme({
+const theme = createMuiTheme({
     palette: {
         type: 'dark',
         primary: { 
@@ -29,6 +33,34 @@ import AddPartner from '../../components/Dialogs/AddPartner';
     }
 });
 
+const StyledBadge = withStyles((theme) => ({
+    badge: {
+      backgroundColor: '#44b700',
+      color: '#44b700',
+      boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+      '&::after': {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        borderRadius: '50%',
+        animation: '$ripple 1.2s infinite ease-in-out',
+        border: '1px solid currentColor',
+        content: '""',
+      },
+    },
+    '@keyframes ripple': {
+      '0%': {
+        transform: 'scale(.8)',
+        opacity: 1,
+      },
+      '100%': {
+        transform: 'scale(2.4)',
+        opacity: 0,
+      },
+    },
+}))(Badge);
 
 const styles = theme => ({
     root: {
@@ -149,7 +181,14 @@ const styles = theme => ({
         color: theme.palette.getContrastText(yellow[400]),
         backgroundColor: yellow[400],
     },
-   
+    orange: {
+        color: theme.palette.getContrastText(deepOrange[500]),
+        backgroundColor: deepOrange[500],
+    },
+    purple: {
+        color: theme.palette.getContrastText(deepPurple[500]),
+        backgroundColor: deepPurple[500],
+    },
     menuButton: {
         marginRight: theme.spacing(2),
     },
@@ -158,6 +197,9 @@ const styles = theme => ({
         [theme.breakpoints.up('sm')]: {
         display: 'block',
         },
+    },
+    textCenter:{
+        textAlign: 'center'
     },
     search: {
         position: 'relative',
@@ -212,7 +254,6 @@ const styles = theme => ({
     }
 });
 
-
 const useStylesReddit = makeStyles(theme => ({
     root: {
       border: '1px solid #e2e2e1',
@@ -230,21 +271,7 @@ const useStylesReddit = makeStyles(theme => ({
       },
     },
     focused: {},
-  }));
-
-function RedditTextField(props) {
-    const classes = useStylesReddit();
-  
-    return <TextField InputProps={{ classes, disableUnderline: true }} {...props} />;
-}
-
-function generate(element) {
-    return [0, 1, 2].map(value =>
-      React.cloneElement(element, {
-        key: value,
-      }),
-    );
-  }
+}));
 
 class Partners extends Component{
 
@@ -253,12 +280,23 @@ class Partners extends Component{
 
         this.state = {
             mobileOpen: false,
-            heandlerAddPartner: false
+            heandlerAddPartner: false,
+            partnerLists: [],
+            selectedUser: null
         }
     }
 
     componentDidMount(){
         document.body.classList.add("__settings");
+
+        Partner.getPartnerLists(localStorage.getItem('user'))
+            .then(result => {
+                this.setState({
+                    partnerLists: result.data.lists
+                });
+            })
+            .catch((e) => console.log(e));
+
     }
 
     componentWillUnmount(){
@@ -276,14 +314,42 @@ class Partners extends Component{
             heandlerAddPartner: false
         })
     }
+
+    handleSelect = (acc, userIndex) => {
+        this.setState({
+            selectedUser: acc,
+            userIndex: userIndex
+        });
+    }
+
+    removeId = (id, index_) => {
+
+        var array = [...this.state.partnerLists]; // make a separate copy of the array
+        delete array[index_];
+        this.setState({partnerLists: array});
+    }
     
+    changeAccount = (acc, index) => {
+
+        var array = [...this.state.partnerLists]; // make a separate copy of the array
+        array[index] = acc;
+        this.setState({partnerLists: array});
+    }
+
+    addPartnerC = (acc) => {
+        var array = [...this.state.partnerLists]; // make a separate copy of the array
+        array[array.length +1] = acc;
+        this.setState({partnerLists: array});
+    }
+
     render(){
         
         const {classes, container } = this.props;
-        const { team, heandlerAddPartner } = this.state; 
+        const { team, heandlerAddPartner, partnerLists, selectedUser, userIndex } = this.state; 
         
+
         return (
-            <div className={classes.root}>
+            <div className={classes.root}> 
                 <CssBaseline />
                 <nav className={classes.drawer} aria-label="mailbox folders">
                     {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
@@ -319,7 +385,7 @@ class Partners extends Component{
                 <main className={classes.content}>
                     <div style={{marginTop: 0, maxWidth: 'auto'}}>
                         
-                        <AddPartner open={heandlerAddPartner} closeModal={this.closeModal} />
+                        <AddPartner open={heandlerAddPartner} closeModal={this.closeModal} addPartner={this.addPartnerC} />
 
                         <div className={classes.grow}>
                             <AppBar position="static" color="transparent" style={{backgroundColor: 'transparent', border: 'none', boxShadow: 'none'}}>
@@ -354,137 +420,49 @@ class Partners extends Component{
                                         </ListSubheader>
                                     }
                                   >
-                                    {generate(
-                                        <ListItem button style={{borderRadius: 3}}>
-                                            <ListItemAvatar>
-                                                <Avatar className={classes.yellow}>N</Avatar>
-                                            </ListItemAvatar>
-                                            <ListItemText
-                                                primary={"Nome Cognome"}
-                                                secondary={'Secondary text'}
-                                            />
-                                        </ListItem>,
-                                    )}
+                                    {partnerLists.map((res, index) => {
+                                        const rand = 1; //Math.floor((Math.random() * 3) + 1);
+
+                                        if(res)
+                                            return (
+                                                <ListItem button style={{borderRadius: 3}} key={index} onClick={() => this.handleSelect(res, index)}>
+                                                    <ListItemAvatar>
+                                                        <StyledBadge
+                                                            overlap="circle"
+                                                            anchorOrigin={{
+                                                                vertical: 'bottom',
+                                                                horizontal: 'right',
+                                                            }}
+                                                            variant={res.prtStatus == 1 ? "dot": ""}
+                                                        >
+                                                            <Avatar title={res.prtStatus == 1 ? "Attivo": "Disattivato"} className={rand == 0 ? classes.yellow : rand == 1 ? classes.orange : rand == 2 ? classes.purple : classes.secondary}>{res.prtUsername.charAt(0).toUpperCase()}</Avatar>
+                                                        </StyledBadge>
+                                                    </ListItemAvatar>
+                                                    <ListItemText
+                                                        primary={res.prtUsername}
+                                                        secondary={res.prtEmail ? res.prtEmail : ""}
+                                                    />
+                                                </ListItem>
+                                            )
+                                    })}
                                 </List>
                             </Grid>
                             <Grid item md={8}>
-                                <div className={classes.bodySecondWRK}>
-                                    <List dense={true} style={{ borderBottom: '1px solid #4f4f4f'}}>
-                                        <ListItem>
-                                            <ListItemAvatar>
-                                                <Avatar className={classes.yellow}>N</Avatar>
-                                            </ListItemAvatar>
-                                            <ListItemText
-                                                primary={<Typography component="h3" variant="h6">Nome Cognome</Typography>}
-                                                secondary={<Typography component="div" variant="subtitle2">mail@mail.it</Typography>}
-                                            />
-                                            <ListItemSecondaryAction>
-                                                <Button color="primary" disabled>Salva</Button>
-                                                <Button color="secondary">Elimina</Button>
-                                            </ListItemSecondaryAction>
-                                        </ListItem>
-                                    </List>
-                                </div>
-
-                                <div className={classes.bodySecondWRK} style={{marginTop: 20}}>
-                                    <Typography variant="h6" component="div" color="textSecondary">
-                                        Nome utente
-                                    </Typography>
-
-                                    <div style={{maxWidth: 424, marginBottom: 20}}>
-                                        <Typography variant="caption" component="p" style={{marginBottom: 10,maxWidth: 424, marginTop: 16}} >
-                                            <div className={classes.boxF} style={{marginBottom: 10}}>
-                                                <div>
-                                                    <InfoOutlinedIcon style={{fontSize: '.955rem'}} /> 
-                                                </div>
-                                                <div style={{marginLeft: 10, color: '#6a6f85'}}>
-                                                    Verrà utilizzato per l'accesso al portale.
-                                                </div>
-                                            </div>
-                                        </Typography>
-
-                                        <RedditTextField
-                                            label="UserName"
-                                            onChange={this.handleChange}
-                                            className={[classes.fieldText, this.state.usernameError ? "filedError" : ""].join(" ")}
-                                            defaultValue="react-reddit"
-                                            variant="filled"
-                                            type="text"
-                                            value={""}
-                                            name="username"
-                                            id="reddit-input"
-
-                                            color="textSecondary"
-                                        />
-                                    </div>
-
-                                </div>
-                                <div className={classes.bodySecondWRK} style={{marginTop: 20}}>
-                                    <Typography variant="h6" component="div" color="textSecondary">
-                                        Email (Optional)
-                                    </Typography>
-
-                                    <div style={{maxWidth: 424, marginBottom: 20}}>
-                                        <Typography variant="caption" component="p" style={{marginBottom: 10,maxWidth: 424, marginTop: 16}} >
-                                            <div className={classes.boxF} style={{marginBottom: 10}}>
-                                                <div>
-                                                    <InfoOutlinedIcon style={{fontSize: '.955rem'}} /> 
-                                                </div>
-                                                <div style={{marginLeft: 10, color: '#6a6f85'}}>
-                                                    Puoi inserire un'email di contatto (scelta opzionale)
-                                                </div>
-                                            </div>
-                                        </Typography>
-
-                                        <RedditTextField
-                                            label="Email"
-                                            onChange={this.handleChange}
-                                            className={[classes.fieldText, this.state.usernameError ? "filedError" : ""].join(" ")}
-                                            defaultValue="react-reddit"
-                                            variant="filled"
-                                            type="email"
-                                            value={""}
-                                            name="email"
-                                            id="reddit-input"
-
-                                            color="textSecondary"
-                                        />
-                                    </div>
-
-                                </div>
-                                <div className={classes.bodySecondWRK} style={{marginTop: 20}}>
-                                    <Typography variant="h6" component="div" color="textSecondary">
-                                        Password
-                                    </Typography>
-
-                                    <div style={{maxWidth: 424, marginBottom: 50}}>
-                                        <Typography variant="caption" component="p" style={{marginBottom: 10,maxWidth: 424, marginTop: 16}} >
-                                            <div className={classes.boxF} style={{marginBottom: 10}}>
-                                                <div>
-                                                    <InfoOutlinedIcon style={{fontSize: '.955rem'}} /> 
-                                                </div>
-                                                <div style={{marginLeft: 10, color: '#6a6f85'}}>
-                                                    Inserisci una password minimo 6 caratteri alfanumerici per l'accesso al portale gestionale.
-                                                </div>
-                                            </div>
-                                        </Typography>
-
-                                        <RedditTextField
-                                            label="Password"
-                                            onChange={this.handleChange}
-                                            className={[classes.fieldText, this.state.usernameError ? "filedError" : ""].join(" ")}
-                                            defaultValue="react-reddit"
-                                            variant="filled"
-                                            type="password"
-                                            value={""}
-                                            name="password"
-                                            id="reddit-input"
-
-                                            color="textSecondary"
-                                        />
-                                    </div>
-
-                                </div>
+                                {/*Pafrtner Info */}
+                                {
+                                    selectedUser != null ?
+                                        <PartnerUpdateInfo account={selectedUser} index={userIndex} removeId={this.removeId} changeAccount={this.changeAccount} />
+                                    : 
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justify="center"
+                                        alignItems="center"
+                                        style={{height: '100%'}}
+                                    >
+                                        <Typography variant="body2" gutterBottom className={classes.textCenter}>Seleziona un account</Typography>
+                                    </Grid>
+                                }
                             </Grid>
                         </Grid>
                     </div>
