@@ -5,8 +5,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { Drawer, Dialog, CssBaseline,  Button, Hidden, List, ListItem, ListItemAvatar, ListItemText, ListItemSecondaryAction, AppBar, TextField, Avatar, Toolbar, InputBase ,ListSubheader,  Typography, Grid } from '@material-ui/core';
 import withStyles from '@material-ui/core/styles/withStyles'; 
-import red from '@material-ui/core/colors/red';
-import yellow from '@material-ui/core/colors/yellow';
+import { lightBlue, grey, red, yellow } from '@material-ui/core/colors';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { createMuiTheme, fade, makeStyles } from '@material-ui/core/styles';
 import Partner from '../../services/Partners/Partner';
@@ -70,8 +69,8 @@ const styles = theme => ({
         fontSize: '.9rem'
       },
       rounded:{
-        color: theme.palette.getContrastText(red[400]),
-        backgroundColor: red[400],
+        color: theme.palette.getContrastText(lightBlue[200]),
+        backgroundColor: lightBlue[200],
         border: '1px solid #e9eaf0',
         height: '6.5rem',
         width: '6.5rem',
@@ -96,8 +95,8 @@ const styles = theme => ({
           minWidth: 'auto',
           marginLeft: 15,
           marginBottom: 10,
-          backgroundColor: red[400],
-          color: theme.palette.getContrastText(red[400]),
+          backgroundColor: lightBlue[200],
+          color: theme.palette.getContrastText(lightBlue[200]),
       },
       fieldText:{
         marginRight: 10,
@@ -324,7 +323,7 @@ class AddPartner extends Component{
                                 </Typography>
 
                                 <FormControlLabel
-                                    control={<Switch color="primary" checked={status} onChange={this.switchChange} />}
+                                    control={<Switch color="secondary" checked={status} onChange={this.switchChange} />}
                                     label="Attiva questo partner"
                                 />
                             </div>

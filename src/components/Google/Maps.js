@@ -34,7 +34,7 @@ class SimpleMap extends Component {
   }
 
   componentDidMount(){
-    provider.search({ query: this.props.query }).then(res => { 
+    provider.search({ query: this.props.query }).then(res => {
       if(res.length > 1){
         this.props.enqueueSnackbar('Attenzione l\'indirizzo potrebbe essere incompleto');
 
@@ -46,6 +46,8 @@ class SimpleMap extends Component {
         bounds: res[0].bounds,
         raw: res[0].raw,
       });
+    }).catch(() => {
+      this.props.enqueueSnackbar('Errore nell\'elaborazione dell\'indirizzo!');
     });
 
   }

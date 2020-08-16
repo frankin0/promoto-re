@@ -127,7 +127,7 @@ class Event extends Component{
                 if(data.data.event.gallery.length > 0){
                     var n = 1;
                     data.data.event.gallery.forEach(element => {
-                        console.log(element);
+                        
                         this.setState({ 
                             gallery: this.state.gallery.concat([
                                 (element.GalleryImage.indexOf("http://") == 0 || element.GalleryImage.indexOf("https://") == 0 ? element.GalleryImage : Configuration.FILES + element.GalleryImage)

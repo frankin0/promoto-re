@@ -463,7 +463,7 @@ class PartnerUpdateInfo extends Component{
                         </Typography>
 
                         <FormControlLabel
-                            control={<Switch color="primary" checked={account.prtStatus} onChange={this.switchChange} />}
+                            control={<Switch color="secondary" checked={account.prtStatus} onChange={this.switchChange} />}
                             label="Attiva questo partner"
                         />
                     </div>

@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import withStyles from '@material-ui/core/styles/withStyles'; 
 import { createMuiTheme, fade, makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-import grey from '@material-ui/core/colors/grey';
-import red from '@material-ui/core/colors/red';
 import { Drawer, ListItemAvatar, Avatar, FormControl, Link, Select, CssBaseline,  Button, List, InputLabel, ListItem, ListItemText, Grid, Hidden, Fade, Input, TextField, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
@@ -15,29 +13,7 @@ import User from '../../services/User/User';
 import { withSnackbar } from 'notistack';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-
-import {
-    MuiPickersUtilsProvider,
-    KeyboardTimePicker,
-    KeyboardDatePicker,
-  } from '@material-ui/pickers';
-
-  const theme = createMuiTheme({
-    palette: {
-        type: 'dark',
-        primary: { 
-            main: grey[600]
-        },
-        secondary: { main: red[400] },
-        textPrimary: '#262a3e'
-    },
-    typography: {
-        fontFamily: [
-            '"Montserrat"', 'sans-serif'
-        ].join(","),
-        color: '#262a3e'
-    }
-});
+import { lightBlue, grey, red } from '@material-ui/core/colors';
 
 
 
@@ -96,8 +72,8 @@ const styles = theme => ({
         fontSize: '.9rem'
       },
       rounded:{
-        color: theme.palette.getContrastText(red[400]),
-        backgroundColor: red[400],
+        color: theme.palette.getContrastText(lightBlue[200]),
+        backgroundColor: lightBlue[200],
         border: '1px solid #e9eaf0',
         height: '6.5rem',
         width: '6.5rem',
@@ -122,8 +98,8 @@ const styles = theme => ({
           minWidth: 'auto',
           marginLeft: 15,
           marginBottom: 10,
-          backgroundColor: red[400],
-          color: theme.palette.getContrastText(red[400]),
+          backgroundColor: lightBlue[200],
+          color: theme.palette.getContrastText(lightBlue[200]),
       },
       fieldText:{
         marginRight: 10,
@@ -143,8 +119,8 @@ const styles = theme => ({
         minWidth: 'auto',
         marginBottom: 10,
         marginTop: 15,
-        backgroundColor: red[400],
-        color: theme.palette.getContrastText(red[400]),
+        backgroundColor: lightBlue[200],
+        color: theme.palette.getContrastText(lightBlue[200]),
     }
 });
 

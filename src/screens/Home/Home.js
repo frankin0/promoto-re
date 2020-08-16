@@ -194,7 +194,7 @@ class Home extends Component{
 
                         <Grid item xs={12}>
                             <Typography variant="body1" component="div" className={classes.catname} color="textSecondary">
-                                <Link href="#/" style={{color: 'red', fontWeight: 600}}>Mostra Altro</Link>    
+                                <Link href="#/" color="secondary" style={{ fontWeight: 600}}>Mostra Altro</Link>    
                             </Typography>
                         </Grid>
                     </Grid>
@@ -222,7 +222,7 @@ class Home extends Component{
                         
                         <Grid item xs={12}>
                             <Typography variant="body1" component="div" className={classes.catname} color="textSecondary">
-                                <Link href="#/" style={{color: 'red', fontWeight: 600}}>Mostra Altro</Link>    
+                                <Link href="#/" color="secondary" style={{ fontWeight: 600}}>Mostra Altro</Link>    
                             </Typography>
                         </Grid>
                     </Grid>

@@ -2,29 +2,12 @@ import React, { Component } from 'react';
 import withStyles from '@material-ui/core/styles/withStyles'; 
 import { createMuiTheme, fade, makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-import grey from '@material-ui/core/colors/grey';
-import red from '@material-ui/core/colors/red';
-import yellow from '@material-ui/core/colors/yellow';
+import { lightBlue, grey, red, yellow } from '@material-ui/core/colors';
 import { Drawer, CssBaseline,  Button, Hidden, TextField, CardActionArea,  Grid, CardContent, CardActions, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import ListSettings from '../../components/ListSettings/ListSettings';
 
-  const theme = createMuiTheme({
-    palette: {
-        type: 'dark',
-        primary: { 
-            main: grey[600]
-        },
-        secondary: { main: red[400] },
-        textPrimary: '#262a3e'
-    },
-    typography: {
-        fontFamily: [
-            '"Montserrat"', 'sans-serif'
-        ].join(","),
-        color: '#262a3e'
-    }
-});
+
 
 function generate(element) {
     return [0, 1, 2].map(value =>
@@ -89,8 +72,8 @@ const styles = theme => ({
         fontSize: '.9rem'
       },
       rounded:{
-        color: theme.palette.getContrastText(red[400]),
-        backgroundColor: red[400],
+        color: theme.palette.getContrastText(lightBlue[200]),
+        backgroundColor: lightBlue[200],
         border: '1px solid #e9eaf0',
         height: '6.5rem',
         width: '6.5rem',
@@ -115,8 +98,8 @@ const styles = theme => ({
           minWidth: 'auto',
           marginLeft: 15,
           marginBottom: 10,
-          backgroundColor: red[400],
-          color: theme.palette.getContrastText(red[400]),
+          backgroundColor: lightBlue[200],
+          color: theme.palette.getContrastText(lightBlue[200]),
       },
       fieldText:{
         marginRight: 10,
@@ -136,8 +119,8 @@ const styles = theme => ({
         minWidth: 'auto',
         marginBottom: 10,
         marginTop: 15,
-        backgroundColor: red[400],
-        color: theme.palette.getContrastText(red[400]),
+        backgroundColor: lightBlue[200],
+        color: theme.palette.getContrastText(lightBlue[200]),
     },
     iconR1:{
         float: 'right',
@@ -146,8 +129,8 @@ const styles = theme => ({
         right: 8    
     },
     secondary:{
-        color: theme.palette.getContrastText(red[400]),
-        backgroundColor: red[400],
+        color: theme.palette.getContrastText(lightBlue[200]),
+        backgroundColor: lightBlue[200],
     },
     yellow:{
         color: theme.palette.getContrastText(yellow[400]),

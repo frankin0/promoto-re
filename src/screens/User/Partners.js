@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import withStyles from '@material-ui/core/styles/withStyles'; 
 import { createMuiTheme, fade, makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-import grey from '@material-ui/core/colors/grey';
-import red from '@material-ui/core/colors/red';
+import { lightBlue, grey, red } from '@material-ui/core/colors';
 import yellow from '@material-ui/core/colors/yellow';
 import deepOrange from '@material-ui/core/colors/orange';
 import deepPurple from '@material-ui/core/colors/purple';
@@ -12,6 +11,7 @@ import PropTypes from 'prop-types';
 import ListSettings from '../../components/ListSettings/ListSettings';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import SearchIcon from '@material-ui/icons/Search';
+import CloseIcon from '@material-ui/icons/Close';
 import AddPartner from '../../components/Dialogs/AddPartner';
 import Partner from '../../services/Partners/Partner';
 import PartnerUpdateInfo from '../../components/PartnersPage/PartnerUpdateInfo';
@@ -22,7 +22,7 @@ const theme = createMuiTheme({
         primary: { 
             main: grey[600]
         },
-        secondary: { main: red[400] },
+        secondary: { main: lightBlue[200] },
         textPrimary: '#262a3e'
     },
     typography: {
@@ -117,8 +117,8 @@ const styles = theme => ({
         fontSize: '.9rem'
       },
       rounded:{
-        color: theme.palette.getContrastText(red[400]),
-        backgroundColor: red[400],
+        color: theme.palette.getContrastText(lightBlue[200]),
+        backgroundColor: lightBlue[200],
         border: '1px solid #e9eaf0',
         height: '6.5rem',
         width: '6.5rem',
@@ -143,8 +143,8 @@ const styles = theme => ({
           minWidth: 'auto',
           marginLeft: 15,
           marginBottom: 10,
-          backgroundColor: red[400],
-          color: theme.palette.getContrastText(red[400]),
+          backgroundColor: lightBlue[200],
+          color: theme.palette.getContrastText(lightBlue[200]),
       },
       fieldText:{
         marginRight: 10,
@@ -164,8 +164,8 @@ const styles = theme => ({
         minWidth: 'auto',
         marginBottom: 10,
         marginTop: 15,
-        backgroundColor: red[400],
-        color: theme.palette.getContrastText(red[400]),
+        backgroundColor: lightBlue[200],
+        color: theme.palette.getContrastText(lightBlue[200]),
     },
     iconR1:{
         float: 'right',
@@ -174,8 +174,8 @@ const styles = theme => ({
         right: 8    
     },
     secondary:{
-        color: theme.palette.getContrastText(red[400]),
-        backgroundColor: red[400],
+        color: theme.palette.getContrastText(lightBlue[200]),
+        backgroundColor: lightBlue[200],
     },
     yellow:{
         color: theme.palette.getContrastText(yellow[400]),
@@ -251,6 +251,21 @@ const styles = theme => ({
     bodySecondWRK:{
         paddingRight:  theme.spacing(3),
         paddingLeft:  theme.spacing(3),
+    },
+    closeFilter: {
+        top: 0, 
+        right: 0, 
+        visibility: 'hidden', 
+        opacity: 0 
+    },
+    openFilter: {
+        top: 0, 
+        right: 0, 
+        visibility: 'visible', 
+        opacity: 1,
+        transition: ".3s",
+        cursor: 'pointer',
+        pointerEvents: 'auto'
     }
 });
 
@@ -282,7 +297,8 @@ class Partners extends Component{
             mobileOpen: false,
             heandlerAddPartner: false,
             partnerLists: [],
-            selectedUser: null
+            selectedUser: null,
+            filterName: ''
         }
     }
 
@@ -342,10 +358,24 @@ class Partners extends Component{
         this.setState({partnerLists: array});
     }
 
+    handleChange = e => {
+        let val = e.currentTarget.value;
+
+        this.setState({
+            filterName: val
+        });
+    }
+
+    removeFilter = () => {
+        this.setState({
+            filterName: ""
+        });
+    }
+
     render(){
         
         const {classes, container } = this.props;
-        const { team, heandlerAddPartner, partnerLists, selectedUser, userIndex } = this.state; 
+        const { team, heandlerAddPartner, partnerLists, selectedUser, userIndex, filterName } = this.state; 
         
 
         return (
@@ -401,8 +431,13 @@ class Partners extends Component{
                                                 root: classes.inputRoot,
                                                 input: classes.inputInput,
                                             }}
+                                            onChange={this.handleChange}
                                             inputProps={{ 'aria-label': 'search' }}
+                                            value={filterName}
                                         />
+                                        <div onClick={this.removeFilter} className={[classes.searchIcon, filterName.length == 0 ? classes.closeFilter : classes.openFilter].join(" ")}>
+                                            <CloseIcon />
+                                        </div>
                                         
                                     </div>
                                     <Button variant="contained" color="secondary" style={{marginLeft: 20, width: 300}} onClick={this.addPartner} disabled={heandlerAddPartner}>Aggiungi partner</Button>
@@ -420,7 +455,8 @@ class Partners extends Component{
                                         </ListSubheader>
                                     }
                                   >
-                                    {partnerLists.map((res, index) => {
+
+                                    {partnerLists.filter(itm => itm.prtUsername.toLowerCase().includes(this.state.filterName.toLowerCase()) ).map((res, index) => {
                                         const rand = 1; //Math.floor((Math.random() * 3) + 1);
 
                                         if(res)

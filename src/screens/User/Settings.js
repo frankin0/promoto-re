@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import withStyles from '@material-ui/core/styles/withStyles'; 
 import { createMuiTheme, fade, makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-import grey from '@material-ui/core/colors/grey';
-import red from '@material-ui/core/colors/red';
 import { Drawer, ListItemAvatar, Avatar, FormControl, Link, Select, CssBaseline,  Button, List, InputLabel, ListItem, ListItemText, Grid, Hidden, Fade, Input, TextField, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
@@ -16,20 +14,24 @@ import { withSnackbar } from 'notistack';
 import { Base64 } from 'js-base64';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Tooltip from '@material-ui/core/Tooltip';
+import { lightBlue, grey, red } from '@material-ui/core/colors';
 
 import {
     MuiPickersUtilsProvider,
     KeyboardTimePicker,
     KeyboardDatePicker,
-  } from '@material-ui/pickers';
+  
+} from '@material-ui/pickers';
 
+
+/*
 const theme = createMuiTheme({
     palette: {
         type: 'dark',
         primary: { 
             main: grey[600]
         },
-        secondary: { main: red[400] },
+        secondary: { main: lightBlue[200] },
         textPrimary: '#262a3e'
     },
     typography: {
@@ -39,7 +41,7 @@ const theme = createMuiTheme({
         color: '#262a3e'
     }
 });
-
+*/
 
 
 const styles = theme => ({
@@ -97,8 +99,8 @@ const styles = theme => ({
         fontSize: '.9rem'
       },
       rounded:{
-        color: theme.palette.getContrastText(red[400]),
-        backgroundColor: red[400],
+        color: theme.palette.getContrastText(lightBlue[200]),
+        backgroundColor: lightBlue[200],
         border: '1px solid #e9eaf0',
         height: '6.5rem',
         width: '6.5rem',
@@ -123,8 +125,8 @@ const styles = theme => ({
           minWidth: 'auto',
           marginLeft: 15,
           marginBottom: 10,
-          backgroundColor: red[400],
-          color: theme.palette.getContrastText(red[400]),
+          backgroundColor: lightBlue[200],
+          color: theme.palette.getContrastText(lightBlue[200]),
       },
       fieldText:{
         marginRight: 10,
@@ -144,8 +146,8 @@ const styles = theme => ({
         minWidth: 'auto',
         marginBottom: 10,
         marginTop: 15,
-        backgroundColor: red[400],
-        color: theme.palette.getContrastText(red[400]),
+        backgroundColor: lightBlue[200],
+        color: theme.palette.getContrastText(lightBlue[200]),
     },
     hiddenInput:{
         display: 'none'
@@ -581,33 +583,31 @@ class Settings extends Component{
                         <Grid container  spacing={3}>
                             <Grid item xs={6}>
 
-                                <ThemeProvider theme={theme}> 
-                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                
-                                        <KeyboardDatePicker
-                                            disableToolbar
-                                            variant="inline"
-                                            format="dd/mm/yyyy"
-                                            margin="normal"
-                                            id="date-picker-inline"
-                                            label="Data di nascita"
-                                            color="secondary"
-                                            className={[classes.fieldText , "makeStyle-input"].join(" ")}
-                                            value={this.state.age}
-                                            inputVariant="filled"
-                                            name="age"
-                                            style={{marginTop: 0}}
-                                            onChange={this.typeChange}
-                                            maxDate={new Date().setFullYear(2020 - 18)}
-                                            invalidDateMessage="Formato data errato!"
-                                            maxDateMessage="Devi avere minimo 18 anni"
-                                            autoOk
-                                            KeyboardButtonProps={{
-                                                'aria-label': 'change date',
-                                            }}
-                                        />
-                                    </MuiPickersUtilsProvider>                            
-                                </ThemeProvider>
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            
+                                    <KeyboardDatePicker
+                                        disableToolbar
+                                        variant="inline"
+                                        format="dd/mm/yyyy"
+                                        margin="normal"
+                                        id="date-picker-inline"
+                                        label="Data di nascita"
+                                        color="secondary"
+                                        className={[classes.fieldText , "makeStyle-input"].join(" ")}
+                                        value={this.state.age}
+                                        inputVariant="filled"
+                                        name="age"
+                                        style={{marginTop: 0}}
+                                        onChange={this.typeChange}
+                                        maxDate={new Date().setFullYear(2020 - 18)}
+                                        invalidDateMessage="Formato data errato!"
+                                        maxDateMessage="Devi avere minimo 18 anni"
+                                        autoOk
+                                        KeyboardButtonProps={{
+                                            'aria-label': 'change date',
+                                        }}
+                                    />
+                                </MuiPickersUtilsProvider>
                             </Grid>
                             <Grid item xs={6}>
                                 <RedditTextField

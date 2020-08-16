@@ -32,12 +32,11 @@ import Security from './screens/User/Security';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import User from './services/User/User'
-import grey from '@material-ui/core/colors/grey';
-import red from '@material-ui/core/colors/red';
+import User from './services/User/User';
 
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute'; 
+import { lightBlue, grey, red } from '@material-ui/core/colors';
 
 setDefaultTranslations({it})
 setDefaultLanguage('it')
@@ -55,7 +54,7 @@ if(cookies.get('lang') === null || cookies.get('lang') === undefined){
 } */
 
 
-console.log("%cPromoto version 1.2", "color: #fefefe; font-size: 1.3rem;");
+console.log("%cPromoto version 1.2.5", "color: #fefefe; font-size: 1.3rem;");
 
 
 /**
@@ -83,7 +82,7 @@ function App(){
                 main: grey[600],
             },
             secondary: { 
-                main: red[400] ,
+                main: lightBlue[200] ,
             },
         },
         typography: {
