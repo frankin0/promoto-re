@@ -16,23 +16,6 @@ import AddPartner from '../../components/Dialogs/AddPartner';
 import Partner from '../../services/Partners/Partner';
 import PartnerUpdateInfo from '../../components/PartnersPage/PartnerUpdateInfo';
 
-const theme = createMuiTheme({
-    palette: {
-        type: 'dark',
-        primary: { 
-            main: grey[600]
-        },
-        secondary: { main: lightBlue[200] },
-        textPrimary: '#262a3e'
-    },
-    typography: {
-        fontFamily: [
-            '"Montserrat"', 'sans-serif'
-        ].join(","),
-        color: '#262a3e'
-    }
-});
-
 const StyledBadge = withStyles((theme) => ({
     badge: {
       backgroundColor: '#44b700',

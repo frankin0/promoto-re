@@ -15,31 +15,8 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import Partner from '../../services/Partners/Partner';
 
-  const theme = createMuiTheme({
-    palette: {
-        type: 'dark',
-        primary: { 
-            main: grey[600]
-        },
-        secondary: { main: lightBlue[200] },
-        textPrimary: '#262a3e'
-    },
-    typography: {
-        fontFamily: [
-            '"Montserrat"', 'sans-serif'
-        ].join(","),
-        color: '#262a3e'
-    }
-});
-
-function generate(element) {
-    return [0, 1, 2].map(value =>
-      React.cloneElement(element, {
-        key: value,
-      }),
-    );
-  }
 
 const styles = theme => ({
 
@@ -215,6 +192,7 @@ class Notifics extends Component{
                     checkedApp: true,
                 }
             ],
+            partnerLists: [],
             team: [
                 {
                     id: 0,
@@ -254,6 +232,14 @@ class Notifics extends Component{
 
     componentDidMount(){
         document.body.classList.add("__settings");
+
+        Partner.getPartnerLists(localStorage.getItem('user'))
+        .then(result => {
+            this.setState({
+                partnerLists: result.data.lists
+            });
+        })
+        .catch((e) => console.log(e));
     }
 
     componentWillUnmount(){
@@ -344,7 +330,8 @@ class Notifics extends Component{
     render(){
         
         const {classes, container } = this.props;
-        const { team } = this.state; 
+        const { team, partnerLists } = this.state; 
+        console.log(partnerLists);
         
         return (
             <div className={classes.root}>
