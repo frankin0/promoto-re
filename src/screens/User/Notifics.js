@@ -16,6 +16,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import Partner from '../../services/Partners/Partner';
+import ServiceNoty from '../../services/Notifics/Index';
 
 
 const styles = theme => ({
@@ -146,52 +147,10 @@ class Notifics extends Component{
         super(props);
 
         this.state = {
+            userInfo: JSON.parse(localStorage.getItem('user_info')),
             mobileOpen: false,
             personalExpansionPanel: false,
-            personal: [
-                {
-                    title: 'Commercial Spy',
-                    subTitle: 'Ricevi una notifica per ogni annuncio simile al tuo',
-                    container: 0,
-                    checkedMail: true,
-                    checkedApp: false,
-                },
-                {
-                    title: 'Promoto',
-                    subTitle: 'Ricevi aggiornamenti da Promoto',
-                    container: 0,
-                    checkedMail: true,
-                    checkedApp: false,
-                },
-                {
-                    title: 'Ticket venduto',
-                    subTitle: 'Ricevi una notifica per ogni biglietto venduto',
-                    container: 2,
-                    checkedMail: true,
-                    checkedApp: true,
-                },
-                {
-                    title: 'Pagamento ricevuto',
-                    subTitle: 'Ricevi una notifica per la conferma di pagamento',
-                    container: 1,
-                    checkedMail: true,
-                    checkedApp: true,
-                },
-                {
-                    title: 'Informazioni Generali',
-                    subTitle: 'Ricevi una notifica riguardo le problematiche del tuo conto pay',
-                    container: 1,
-                    checkedMail: true,
-                    checkedApp: false,
-                },
-                {
-                    title: 'Feedback ricevuti',
-                    subTitle: 'Ricevi una notifica per ogni feedback ricevuto',
-                    container: 2,
-                    checkedMail: false,
-                    checkedApp: true,
-                }
-            ],
+            personal: [],
             partnerLists: [],
             team: [
                 {
@@ -240,6 +199,15 @@ class Notifics extends Component{
             });
         })
         .catch((e) => console.log(e));
+
+        ServiceNoty.getUserNotifics(localStorage.getItem('user'))
+        .then(result => { 
+            this.setState({
+                personal: result.data
+            });
+        })
+        .catch((e) => console.log(e));
+
     }
 
     componentWillUnmount(){
@@ -326,13 +294,12 @@ class Notifics extends Component{
         });
     
     }
-    
+
     render(){
         
         const {classes, container } = this.props;
-        const { team, partnerLists } = this.state; 
-        console.log(partnerLists);
-        
+        const { team, partnerLists, userInfo, personal } = this.state; 
+
         return (
             <div className={classes.root}>
                 <CssBaseline />
@@ -385,7 +352,9 @@ class Notifics extends Component{
                                     id="panel1a-header"
                                     style={{padding: 0, minHeight: 'auto'}}
                                 >
-                                    <Typography className={classes.heading} style={{display: 'flex', lineHeight: 2.3}}><Avatar style={{transform: 'scale(.6)'}} src="https://material-ui.com/static/images/avatar/1.jpg"></Avatar> Nome Cognome</Typography>
+                                    <Typography className={classes.heading} style={{display: 'flex', lineHeight: 2.3}}>
+                                        <Avatar alt={userInfo.UserRealName != null && userInfo.UserRealSurname != null ? userInfo.UserRealName.charAt(0).toUpperCase() + userInfo.UserRealName.slice(1) + " " + userInfo.UserRealSurname.charAt(0).toUpperCase() + userInfo.UserRealSurname.slice(1) : "NS"} style={{transform: 'scale(.6)'}} src={this.state.userInfo.UserProfilePic} />  {userInfo.UserRealName} {userInfo.UserRealSurname} 
+                                    </Typography>
                                     <FormControlLabel
                                         aria-label="Acknowledge"
                                         onClick={event => event.stopPropagation()}
@@ -395,61 +364,141 @@ class Notifics extends Component{
                                     />
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails style={{display: 'block', padding: 0}}>
-                                    
                                     {
-                                        ["Generale", "Conto", "Richieste"].map((val2, index2) => (
-                                            <React.Fragment key={index2}>
-                                                <Divider />
-                                                <ListSubheader style={{paddingLeft: 0, paddingRight: 0}}>
-                                                    {val2}
-                                                    <EmailTwoToneIcon className={classes.iconR1} />
-                                                    <PhoneIphoneTwoToneIcon className={classes.iconR1} style={{marginRight: 18}} />
-                                                </ListSubheader>
-                                                <Divider />
+                                        personal['Generale'] != undefined ? 
+                                            Object.keys(personal).map((name, index) => {
 
-                                                <List dense={true} style={{padding: 0}}>
-                                                    {
-                                                        this.state.personal.map((val, index) => {
-
-                                                            if(val.container === index2){
-                                                                return (
-                                                                    <React.Fragment>
-                                                                        <ListItem key={index} style={{paddingLeft: 0,paddingRight: 0}}>
-                                                                            <ListItemText
-                                                                                primary={<span style={{fontWeight: 500}}>{val.title}</span>}
-                                                                                secondary={val.subTitle}
-                                                                            />
-                                                                            <ListItemSecondaryAction style={{right: 0}}>
-                                                                                <Checkbox
-                                                                                    checked={val.checkedApp}
-                                                                                    onChange={(event) => this.handlePersonalCheck(event, index, val, 'checkedApp')}
-                                                                                    value="secondary"
-                                                                                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                                                return (
+                                                    <React.Fragment key={index}>
+                                                        <Divider />
+                                                        <ListSubheader style={{paddingLeft: 0, paddingRight: 0}}>
+                                                            {name}
+                                                            <EmailTwoToneIcon className={classes.iconR1} />
+                                                            <PhoneIphoneTwoToneIcon className={classes.iconR1} style={{marginRight: 18}} />
+                                                        </ListSubheader>
+                                                        <Divider />
+                                                        <List dense={true} style={{padding: 0}}>
+                                                            {
+                                                                personal[name].map((val, index2) => { 
+                                                                    return (
+                                                                        <React.Fragment>
+                                                                            <ListItem key={index2} style={{paddingLeft: 0,paddingRight: 0}}>
+                                                                                <ListItemText
+                                                                                    primary={<span style={{fontWeight: 500}}>{val.title}</span>}
+                                                                                    secondary={val.subTitle}
                                                                                 />
-                                                                                <Checkbox
-                                                                                    checked={val.checkedMail}
-                                                                                    onChange={(event) => this.handlePersonalCheck(event, index, val, 'checkedMail')}
-                                                                                    value="secondary"
-                                                                                    inputProps={{ 'aria-label': 'primary checkbox' }}
-                                                                                />
-                                                                            </ListItemSecondaryAction>
-                                                                        </ListItem>
-                                                                        <Divider />
-                                                                    </React.Fragment>
-                                                                )
+                                                                                <ListItemSecondaryAction style={{right: 0}}>
+                                                                                    <Checkbox
+                                                                                        checked={val.checkedApp}
+                                                                                        onChange={(event) => this.handlePersonalCheck(event, index, val, 'checkedApp')}
+                                                                                        value="secondary"
+                                                                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                                                                    />
+                                                                                    <Checkbox
+                                                                                        checked={val.checkedMail}
+                                                                                        onChange={(event) => this.handlePersonalCheck(event, index, val, 'checkedMail')}
+                                                                                        value="secondary"
+                                                                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                                                                    />
+                                                                                </ListItemSecondaryAction>
+                                                                            </ListItem>
+                                                                            <Divider />
+                                                                        </React.Fragment>
+                                                                    )
+                                                                })
                                                             }
-                                                        })
-                                                        
-                                                    }
-                                                </List>
-                                            </React.Fragment>
-                                        ))
+                                                        </List>
+                                                    </React.Fragment>
+                                                );
+                                            })
+                                        : ""
                                     }
-
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>
-                            
+
                             {
+                                partnerLists.length > 0 ? 
+                                    partnerLists.map((t, i) => {
+                                        return (
+                                            <ExpansionPanel color={"transparent"} expanded={t.expansionPanel} onChange={(event) => this.teamExpansionPanel(event, t, i)}  style={{boxShadow: 'none',backgroundColor: 'transparent'}}>
+                                                <ExpansionPanelSummary
+                                                    expandIcon={<ExpandMoreIcon />}
+                                                    aria-controls="panel1a-content"
+                                                    id="panel1a-header"
+                                                    style={{padding: 0, minHeight: 'auto'}}
+                                                >
+                                                    <Typography className={classes.heading} style={{display: 'flex', lineHeight: 2.3}}><Avatar className={classes["secondary"]} style={{transform: 'scale(.6)'}}>{t.prtUsername.substr(0,1)}</Avatar> {t.prtUsername}</Typography>
+                                                    <FormControlLabel
+                                                        aria-label="Acknowledge"
+                                                        onClick={event => event.stopPropagation()}
+                                                        onFocus={event => event.stopPropagation()}
+                                                        control={<Switch onClick={(event) => this.handleCheckAllTeam(event, i, t)} />}
+                                                        style={{position: 'absolute',right: 10, marginTop: 1}}
+                                                    />
+                                                </ExpansionPanelSummary>
+                                                <ExpansionPanelDetails style={{display: 'block', padding: 0}}>
+                                                {
+                                                    Object.keys(t.notifics).map((name, index) => {
+
+                                                        return (
+                                                            <React.Fragment key={index}>
+                                                                <Divider />
+                                                                <ListSubheader style={{paddingLeft: 0, paddingRight: 0}}>
+                                                                    {name}
+                                                                    <EmailTwoToneIcon className={classes.iconR1} />
+                                                                    <PhoneIphoneTwoToneIcon className={classes.iconR1} style={{marginRight: 18}} />
+                                                                </ListSubheader>
+                                                                <Divider />
+                                                                <List dense={true} style={{padding: 0}}>
+                                                                    {
+                                                                        t.notifics[name].map((val, index2) => { 
+                                                                            return (
+                                                                                <React.Fragment>
+                                                                                    <ListItem key={index2} style={{paddingLeft: 0,paddingRight: 0}}>
+                                                                                        <ListItemText
+                                                                                            primary={<span style={{fontWeight: 500}}>{val.title}</span>}
+                                                                                            secondary={val.subTitle.split("<br>").map(function(item, idx) {
+                                                                                                return (
+                                                                                                    <span key={idx}>
+                                                                                                        {item}
+                                                                                                        <br/>
+                                                                                                    </span>
+                                                                                                 )
+                                                                                            })}
+                                                                                        />
+                                                                                        <ListItemSecondaryAction style={{right: 0}}>
+                                                                                            <Checkbox
+                                                                                                checked={val.checkedApp}
+                                                                                                onChange={(event) => this.handlePersonalCheck(event, index, val, 'checkedApp')}
+                                                                                                value="secondary"
+                                                                                                inputProps={{ 'aria-label': 'primary checkbox' }}
+                                                                                            />
+                                                                                            <Checkbox
+                                                                                                checked={val.checkedMail}
+                                                                                                onChange={(event) => this.handlePersonalCheck(event, index, val, 'checkedMail')}
+                                                                                                value="secondary"
+                                                                                                inputProps={{ 'aria-label': 'primary checkbox' }}
+                                                                                            />
+                                                                                        </ListItemSecondaryAction>
+                                                                                    </ListItem>
+                                                                                    <Divider />
+                                                                                </React.Fragment>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                </List>
+                                                            </React.Fragment>
+                                                        );
+                                                    })
+                                                }
+                                                </ExpansionPanelDetails>
+                                            </ExpansionPanel>
+                                        );
+                                    })
+                                : ""
+                            }
+                            
+                            {/*
                                 team ? 
                                     team.map((t, i) => {
                                         return (
@@ -461,7 +510,7 @@ class Notifics extends Component{
                                                     id="panel1a-header"
                                                     style={{padding: 0, minHeight: 'auto'}}
                                                 >
-                                                    <Typography className={classes.heading} style={{display: 'flex', lineHeight: 2.3}}><Avatar className={classes[t.color]} style={{transform: 'scale(.6)'}}>{t.name.substr(0,1)}</Avatar> {t.name}</Typography>
+                                                    <Typography className={classes.heading} style={{display: 'flex', lineHeight: 2.3}}><Avatar className={classes[t.color]} style={{transform: 'scale(.6)'}}>{t.prtUsername.substr(0,1)}</Avatar> {t.prtUsername}</Typography>
                                                     <FormControlLabel
                                                         aria-label="Acknowledge"
                                                         onClick={event => event.stopPropagation()}
@@ -545,7 +594,7 @@ class Notifics extends Component{
                                         )
                                     })
                                 : ""
-                            }
+                                */ }
                             
                         </div>
                         

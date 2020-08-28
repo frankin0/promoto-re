@@ -30,6 +30,13 @@ module.exports = function(app){
     );
 
     app.use(
+        proxy("/user/**", {
+            target: "https://www.promo-to.it/v2",
+            changeOrigin: true
+        })
+    );
+
+    app.use(
         proxy("/dashboard/**", {
             target: "https://www.promo-to.it/v2",
             changeOrigin: true
