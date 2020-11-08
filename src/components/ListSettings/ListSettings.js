@@ -3,10 +3,11 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import { createMuiTheme, fade, makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import grey from '@material-ui/core/colors/grey';
-import red from '@material-ui/core/colors/red';import { ListItemAvatar, Avatar, FormControl, Select, CssBaseline,  Button, List, InputLabel, ListItem, ListItemText, Grid, Hidden, Fade, Input, TextField, Typography } from '@material-ui/core';
+import red from '@material-ui/core/colors/red';import { ListItemAvatar, Avatar, IconButton,  Button, List, Box, ListItem, ListItemText, Grid, Hidden, Fade, Input, TextField, Typography } from '@material-ui/core';
 import ArrowRightAltRoundedIcon from '@material-ui/icons/ArrowRightAltRounded';
 import {Link} from 'react-router-dom';
 import User from '../../services/User/User';
+import CloseIcon from '@material-ui/icons/CloseRounded';
 
 import {
     useParams
@@ -41,6 +42,10 @@ class ListSettings extends Component{
         }
     }
 
+    heandleCloseMenu = () => {
+        this.props.closeMenu();
+    }
+
     render(){
 
         const {classes, match} = this.props;
@@ -48,7 +53,12 @@ class ListSettings extends Component{
 
         return (
             <div style={{padding: '40px 32px'}}>
-                <Button href="/" startIcon={<ArrowRightAltRoundedIcon style={{ transform: 'rotate(180deg)'}} />} style={{textTransform: 'none', fontWeight: 400, marginBottom: 30}}>Indietro</Button>
+                <Box component="span" style={{display: 'block', position: 'relative'}}>
+                    <Button href="/" startIcon={<ArrowRightAltRoundedIcon style={{ transform: 'rotate(180deg)'}} />} style={{textTransform: 'none', fontWeight: 400, marginBottom: 30}}>Indietro</Button>
+                    <IconButton onClick={this.heandleCloseMenu} className="noDesk" aria-label="delete" style={{marginTop: -6, float: 'right'}}>
+                        <CloseIcon />
+                    </IconButton>
+                </Box>
 
                 <Typography variant="caption" display="block" color="textSecondary" className={classes.subtitle} gutterBottom>Impostazioni personali</Typography>
                 <List>
@@ -98,7 +108,7 @@ class ListSettings extends Component{
                 </List>
 
                 {
-                    userInfo.UserPIVA ?
+                    userInfo.UserPIVA != "*" ?
                         <React.Fragment>
                             <Typography variant="caption" color="textSecondary" display="block" className={classes.subtitle} style={{marginTop: 20}} gutterBottom>Affiliati & Partners</Typography>
                             <List>

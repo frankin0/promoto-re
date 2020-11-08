@@ -12,6 +12,7 @@ import { withSnackbar } from 'notistack';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import User from '../../services/User/User';
+import KeyboardTabIcon from '@material-ui/icons/KeyboardTabRounded';
 
   const theme = createMuiTheme({
     palette: {
@@ -281,7 +282,11 @@ class Protected extends Component{
             .catch((e) => console.log(e));
 
     }
-
+    handleDrawerToggle = () => {
+        this.setState({
+            mobileOpen: !this.state.mobileOpen
+        });
+    };
 
     render(){
         
@@ -300,6 +305,7 @@ class Protected extends Component{
                             anchor={'left'}
                             open={this.state.mobileOpen}
                             onClose={this.handleDrawerToggle}
+                            
                             classes={{
                                 paper: classes.drawerPaper,
                             }}
@@ -307,7 +313,7 @@ class Protected extends Component{
                                 keepMounted: true, // Better open performance on mobile.
                             }}
                         >
-                            {<ListSettings classes={classes} {...this.props} />}
+                            {<ListSettings classes={classes} {...this.props} closeMenu={this.handleDrawerToggle} />}
                         </Drawer>
                     </Hidden>
                     <Hidden xsDown implementation="css">
@@ -323,6 +329,10 @@ class Protected extends Component{
                     </Hidden>
                 </nav>
                 <main className={classes.content}>
+                    <Button onClick={this.handleDrawerToggle} className="noDesk" startIcon={
+                                                    <KeyboardTabIcon style={{marginTop: 5}} />
+                                                } style={{fontSize: '1rem', textTransform: 'none', fontWeight: 400, marginBottom: 30}}> Apri menu</Button>
+
                     <Typography variant="h5" component="h2" color="textSecondary" style={{marginBottom: 10}}>
                         <b>I tuoi conti</b>
                     </Typography>

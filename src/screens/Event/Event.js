@@ -25,7 +25,6 @@ import GetAllTickets from '../../components/Dialogs/GetAllTickets';
 import User from '../../services/User/User';
 
 
-
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -248,9 +247,9 @@ class Event extends Component{
         });
     }
 
-    render(){
+    render(){ 
         const {classes } = this.props;
-        const {event, gallery} = this.state;
+        const {event, gallery, user} = this.state;
 
         const PhotoItem = ({ image, group }) => {
             const imageonerror = (ev) => {
@@ -278,6 +277,7 @@ class Event extends Component{
 
         const center = { lat: 0, lng: 0 };
         const options = {'month': 'long', 'day': '2-digit', 'year' : 'numeric'};
+
 
         return (
             <React.Fragment>
@@ -351,8 +351,8 @@ class Event extends Component{
                                     <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg" className={classes.avatar} />
                                     <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg" className={classes.avatar} />
                                     <Avatar className={classes.avatarlpb}>9+</Avatar>
-                                    <Fab variant="contained" color="secondary" className={classes.button} onClick={ this.handleModalTicketSow}>Get Tickets</Fab>
-                                    <GetAllTickets copertine={GROUP2[0]} title={event.ticketSimple} date={new Date(event.ticketDateStart).toLocaleString('it-IT', options) + " - " + new Date(event.ticketDateEnd).toLocaleString('it-IT', options)} show={this.state.ticketShow} closeModal={this.closeModal} />
+                                    <Fab variant="contained" color="secondary" disabled={user.length === 0} className={classes.button} onClick={ this.handleModalTicketSow} >Get Tickets</Fab>
+                                    <GetAllTickets theme={this.props.theme} copertine={GROUP2[0]} title={event.ticketSimple} date={new Date(event.ticketDateStart).toLocaleString('it-IT', options) + " - " + new Date(event.ticketDateEnd).toLocaleString('it-IT', options)} show={this.state.ticketShow} closeModal={this.closeModal} />
                                 </Grid>
                             </Grid>
                             <Grid item xs={12} >

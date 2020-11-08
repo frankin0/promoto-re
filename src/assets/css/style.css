@@ -404,3 +404,35 @@ h1, h2, h3, h4, h5 ,h6, p, a, i{
 #panel1a-header .MuiExpansionPanelSummary-content{
     margin: 0 !important;
 }
+
+.noDesk{
+    display: none !important;
+}
+
+@media (max-width: 600px){
+    .noDesk{
+        display: flex !important;
+    }
+}
+
+
+/* width */
+::-webkit-scrollbar {
+    border-radius: 100%;
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: rgb(241 241 241 / .1); 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #262626; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}

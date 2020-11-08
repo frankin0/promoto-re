@@ -14,6 +14,7 @@ import { withSnackbar } from 'notistack';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { lightBlue, grey, red } from '@material-ui/core/colors';
+import KeyboardTabIcon from '@material-ui/icons/KeyboardTabRounded';
 
 
 
@@ -296,6 +297,7 @@ class Security extends Component{
                             anchor={'left'}
                             open={this.state.mobileOpen}
                             onClose={this.handleDrawerToggle}
+                            
                             classes={{
                                 paper: classes.drawerPaper,
                             }}
@@ -303,7 +305,7 @@ class Security extends Component{
                                 keepMounted: true, // Better open performance on mobile.
                             }}
                         >
-                            {<ListSettings classes={classes} {...this.props} />}
+                            {<ListSettings classes={classes} {...this.props} closeMenu={this.handleDrawerToggle} />}
                         </Drawer>
                     </Hidden>
                     <Hidden xsDown implementation="css">
@@ -319,6 +321,10 @@ class Security extends Component{
                     </Hidden>
                 </nav>
                 <main className={classes.content}>
+                    <Button onClick={this.handleDrawerToggle} className="noDesk" startIcon={
+                                                    <KeyboardTabIcon style={{marginTop: 5}} />
+                                                } style={{fontSize: '1rem', textTransform: 'none', fontWeight: 400, marginBottom: 30}}> Apri menu</Button>
+
                     <Typography variant="h5" component="h2" color="textSecondary" style={{marginBottom: 10}}>
                         <b>Sicurezza</b>
                     </Typography>

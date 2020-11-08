@@ -15,6 +15,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import AddPartner from '../../components/Dialogs/AddPartner';
 import Partner from '../../services/Partners/Partner';
 import PartnerUpdateInfo from '../../components/PartnersPage/PartnerUpdateInfo';
+import KeyboardTabIcon from '@material-ui/icons/KeyboardTabRounded';
 
 const StyledBadge = withStyles((theme) => ({
     badge: {
@@ -355,6 +356,12 @@ class Partners extends Component{
         });
     }
 
+    handleDrawerToggle = () => {
+        this.setState({
+            mobileOpen: !this.state.mobileOpen
+        });
+    };
+
     render(){
         
         const {classes, container } = this.props;
@@ -373,6 +380,7 @@ class Partners extends Component{
                             anchor={'left'}
                             open={this.state.mobileOpen}
                             onClose={this.handleDrawerToggle}
+                            
                             classes={{
                                 paper: classes.drawerPaper,
                             }}
@@ -380,7 +388,7 @@ class Partners extends Component{
                                 keepMounted: true, // Better open performance on mobile.
                             }}
                         >
-                            {<ListSettings classes={classes} {...this.props} />}
+                            {<ListSettings classes={classes} {...this.props} closeMenu={this.handleDrawerToggle} />}
                         </Drawer>
                     </Hidden>
                     <Hidden xsDown implementation="css">
@@ -396,6 +404,10 @@ class Partners extends Component{
                     </Hidden>
                 </nav>
                 <main className={classes.content}>
+                    <Button onClick={this.handleDrawerToggle} className="noDesk" startIcon={
+                                                    <KeyboardTabIcon style={{marginTop: 5}} />
+                                                } style={{fontSize: '1rem', textTransform: 'none', fontWeight: 400, marginBottom: 30}}> Apri menu</Button>
+
                     <div style={{marginTop: 0, maxWidth: 'auto'}}>
                         
                         <AddPartner open={heandlerAddPartner} closeModal={this.closeModal} addPartner={this.addPartnerC} />
@@ -430,7 +442,7 @@ class Partners extends Component{
                         </div>
 
                         <Grid container direction="row" style={{marginTop: 20,borderTop: '1px solid #4f4f4f'}}>
-                            <Grid item md={4} style={{paddingRight: 10, borderRight: '1px solid #4f4f4f', minHeight: 'calc(100vh - 105px)'}}>
+                            <Grid item md={4} xs={12} style={{paddingRight: 10, borderRight: '1px solid #4f4f4f', minHeight: 'calc(100vh - 105px)'}}>
                                 <List dense={true}
                                     subheader={
                                         <ListSubheader component="div" id="nested-list-subheader">
@@ -466,7 +478,7 @@ class Partners extends Component{
                                     })}
                                 </List>
                             </Grid>
-                            <Grid item md={8}>
+                            <Grid item md={8} xs={12}>
                                 {/*Pafrtner Info */}
                                 {
                                     selectedUser != null ?

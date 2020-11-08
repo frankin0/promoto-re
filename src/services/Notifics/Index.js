@@ -20,11 +20,30 @@ function getPartnerNotific(token, id){
     });
 }
 
+function setNotific(token, key, value){
+    return axios.post('/user/SetNotific', {
+        token: token,
+        key: key,
+        value: value
+    });
+}
+
+function setPartnerNotific(token, key, value, id){
+    return axios.post('/user/SetPartnerNotific', {
+        token: token,
+        key: key,
+        value: value,
+        id: id
+    });
+}
+
 
 
 const Notifics = {
     getUserNotifics,
-    getPartnerNotific
+    getPartnerNotific,
+    setNotific,
+    setPartnerNotific
 }
 
 export default Notifics;

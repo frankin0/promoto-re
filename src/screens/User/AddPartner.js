@@ -6,6 +6,7 @@ import { lightBlue, grey, red, yellow } from '@material-ui/core/colors';
 import { Drawer, CssBaseline,  Button, Hidden, TextField, CardActionArea,  Grid, CardContent, CardActions, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import ListSettings from '../../components/ListSettings/ListSettings';
+import KeyboardTabIcon from '@material-ui/icons/KeyboardTabRounded';
 
 
 
@@ -341,6 +342,7 @@ class AddPartner extends Component{
                             anchor={'left'}
                             open={this.state.mobileOpen}
                             onClose={this.handleDrawerToggle}
+                            
                             classes={{
                                 paper: classes.drawerPaper,
                             }}
@@ -348,7 +350,7 @@ class AddPartner extends Component{
                                 keepMounted: true, // Better open performance on mobile.
                             }}
                         >
-                            {<ListSettings classes={classes} {...this.props} />}
+                            {<ListSettings classes={classes} {...this.props} closeMenu={this.handleDrawerToggle} />}
                         </Drawer>
                     </Hidden>
                     <Hidden xsDown implementation="css">
@@ -364,6 +366,10 @@ class AddPartner extends Component{
                     </Hidden>
                 </nav>
                 <main className={classes.content}>
+                    <Button onClick={this.handleDrawerToggle} className="noDesk" startIcon={
+                                                    <KeyboardTabIcon style={{marginTop: 5}} />
+                                                } style={{fontSize: '1rem', textTransform: 'none', fontWeight: 400, marginBottom: 30}}> Apri menu</Button>
+
                     <div style={{marginTop: 35, maxWidth: 'auto'}}>
 
                         <div >

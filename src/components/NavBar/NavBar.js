@@ -48,6 +48,15 @@ const styles = theme => ({
        /* boxShadow: '0 5px 25px 0 rgba(0,0,0,.1)',
         border: '1px solid rgba(0,0,0,.1)',*/
     },
+    list:{
+        paddingLeft: 0,
+        paddingRight: 0  
+    },
+    link:{
+        paddingLeft: 16,
+        paddingRight: 16,
+        width: '100%'
+    }
 });
 
 class MenuAppBar extends Component {
@@ -101,7 +110,7 @@ class MenuAppBar extends Component {
     render (){
 
         const { classes } = this.props; 
-        const { anchorEl } = this.state;
+        const { anchorEl, userInfo } = this.state;
         const isMenuOpen = Boolean(anchorEl);
 
         return (
@@ -119,9 +128,11 @@ class MenuAppBar extends Component {
     
                         {this.state.auth ? (
                             <span style={{display: 'contents'}}>
-                                <Tooltip title="Crea evento" aria-label="add">
-                                    <Button size="small" color="primary" className={classes.margin} onClick={this.handleChange}>Crea</Button>
-                                </Tooltip>
+                                {userInfo.UserPIVA != null && userInfo.UserPIVA != "*" ? 
+                                    <Tooltip title="Crea evento" aria-label="add">
+                                        <Button size="small" color="primary" className={classes.margin} onClick={this.handleChange}>Crea</Button>
+                                    </Tooltip>
+                                : ""}
     
                                 <Tooltip title="Storico eventi" aria-label="add">
                                     <IconButton aria-label="delete"  color="primary" className={classes.margin}>
@@ -162,10 +173,10 @@ class MenuAppBar extends Component {
                                     onClose={this.handleClose}
                                     className={classes.menu}
                                 >
-                                    <MenuItem onClick={this.handleClose} color="textSecondary"><Link className={"MuiTypography-colorTextSecondary"} style={{ textDecoration: 'none'}} to="/Settings">Profilo</Link></MenuItem>
-                                    <MenuItem onClick={this.handleClose}><Link className={"MuiTypography-colorTextSecondary"} style={{ textDecoration: 'none'}} to="/Settings">Impostazioni</Link></MenuItem>
+                                    <MenuItem onClick={this.handleClose} color="textSecondary" className={classes.list}><Link className={["MuiTypography-colorTextSecondary", classes.link].join(" ")} style={{ textDecoration: 'none'}} to="/Settings">Profilo</Link></MenuItem>
+                                    <MenuItem onClick={this.handleClose}  className={classes.list}><Link className={["MuiTypography-colorTextSecondary", classes.link].join(" ")} style={{ textDecoration: 'none'}} to="/Settings">Impostazioni</Link></MenuItem>
                                     <MenuItem disabled><hr className={classes.hrDivide} /></MenuItem>
-                                    <MenuItem ><Link className={"MuiTypography-colorTextSecondary"} onClick={this.logout} style={{ textDecoration: 'none'}} to="/">Esci</Link></MenuItem>
+                                    <MenuItem  className={classes.list}><Link className={["MuiTypography-colorTextSecondary", classes.link].join(" ")} onClick={this.logout} style={{ textDecoration: 'none'}} to="/">Esci</Link></MenuItem>
                                 </Menu>
                             </span>
                         ) : (

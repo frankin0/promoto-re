@@ -98,7 +98,7 @@ function App(){
                 <Router >
                     <Switch>
                         <PublicRoute restricted={false} component={Home} path="/" exact />
-                        <PublicRoute restricted={false} component={Event} path="/Event/:id" />
+                        <PublicRoute restricted={false} component={Event} path="/Event/:id" theme={prefersDarkMode} />
                         <PrivateRoute exact path="/Settings" name="Settings" component={Settings} />
                         <PrivateRoute exact path="/Settings/Notifics" name="Notifics" component={Notifics} />
                         <PrivateRoute exact path="/Settings/Security" name="Security" component={Security} />

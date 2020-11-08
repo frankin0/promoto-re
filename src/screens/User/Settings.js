@@ -15,6 +15,8 @@ import { Base64 } from 'js-base64';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Tooltip from '@material-ui/core/Tooltip';
 import { lightBlue, grey, red } from '@material-ui/core/colors';
+import KeyboardTabIcon from '@material-ui/icons/KeyboardTabRounded';
+
 
 import {
     MuiPickersUtilsProvider,
@@ -429,6 +431,7 @@ class Settings extends Component{
                             anchor={'left'}
                             open={this.state.mobileOpen}
                             onClose={this.handleDrawerToggle}
+                            
                             classes={{
                                 paper: classes.drawerPaper,
                             }}
@@ -436,7 +439,7 @@ class Settings extends Component{
                                 keepMounted: true, // Better open performance on mobile.
                             }}
                         >
-                            {<ListSettings classes={classes} {...this.props} />}
+                            {<ListSettings classes={classes} {...this.props} closeMenu={this.handleDrawerToggle} />}
                         </Drawer>
                     </Hidden>
                     <Hidden xsDown implementation="css">
@@ -452,6 +455,10 @@ class Settings extends Component{
                     </Hidden>
                 </nav>
                 <main className={classes.content}>
+                    <Button onClick={this.handleDrawerToggle} className="noDesk" startIcon={
+                                                    <KeyboardTabIcon style={{marginTop: 5}} />
+                                                } style={{fontSize: '1rem', textTransform: 'none', fontWeight: 400, marginBottom: 30}}> Apri menu</Button>
+
                     <Typography variant="h5" component="h2" color="textSecondary" style={{marginBottom: 10}}>
                         <b>Il mio profilo</b>
                     </Typography>
@@ -468,7 +475,7 @@ class Settings extends Component{
                         </div>
                         <div style={{marginLeft: 15}}>
                             <input type="file" name="profilepic" id="profilepic" onChange={this.checkImage} className={classes.hiddenInput} />
-                            <Button variant="contained" className={classes.btnCnt} onClick={this.fileClick} disableElevation disabled={loadImage}>{loadImage ? <CircularProgress color="secondary"  size={15} className={classes.fabProgress} /> : ""} Carica un'immagine</Button>
+                            <Button variant="contained" className={classes.btnCnt} onClick={this.fileClick} disableElevation disabled={loadImage}>{loadImage ? <CircularProgress color="secondary"  size={15} className={classes.fabProgress} /> : ""} Carica immagine</Button>
                             <Tooltip title="Rimuovi immagine" placement="top">
                                 <Button variant="contained" color="secondary" onClick={this.removeProfilePic} disableElevation className={classes.buttonTrush} disabled={!profilePic}><DeleteForeverRoundedIcon /></Button>
                             </Tooltip>
@@ -567,7 +574,7 @@ class Settings extends Component{
                                     defaultValue="react-reddit"
                                     variant="filled"
                                     type="text"
-                                    value={user.UserPIVA == null ? "" : user.UserPIVA}
+                                    value={user.UserPIVA == null || user.UserPIVA == "*" ? "" : user.UserPIVA}
                                     name="UserPIVA"
                                     id="reddit-input"
                                     color="textSecondary"

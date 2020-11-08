@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import withStyles from '@material-ui/core/styles/withStyles'; 
 import { createMuiTheme, fade, makeStyles } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/styles';
+import { withSnackbar } from 'notistack';
+
 import { lightBlue, grey, red, yellow } from '@material-ui/core/colors';
-import { Drawer, Avatar, Checkbox, ListSubheader, Switch, Divider, CssBaseline,  Button, List, FormControlLabel, ListItem, ListItemText, Grid, Hidden, Fade, Input, TextField, Typography } from '@material-ui/core';
+import { Drawer, Avatar, Checkbox, ListSubheader, Switch, Divider, CssBaseline,  Button, List, IconButton, ListItem, ListItemText, Grid, Hidden, Fade, Input, TextField, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import ListSettings from '../../components/ListSettings/ListSettings';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -17,6 +18,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import Partner from '../../services/Partners/Partner';
 import ServiceNoty from '../../services/Notifics/Index';
+
+import KeyboardTabIcon from '@material-ui/icons/KeyboardTabRounded';
 
 
 const styles = theme => ({
@@ -152,40 +155,7 @@ class Notifics extends Component{
             personalExpansionPanel: false,
             personal: [],
             partnerLists: [],
-            team: [
-                {
-                    id: 0,
-                    name: "Marco Rossi",
-                    color: 'yellow',
-                    expansionPanel: false,
-                    privacy: {
-                        login: {
-                            0: false,
-                            1: true
-                        },
-                        monitoring: {
-                            0: true,
-                            1: true
-                        }
-                    }
-                },
-                {
-                    id: 1,
-                    name: "Giacomo Leopardi",
-                    color: 'secondary',
-                    expansionPanel: false,
-                    privacy: {
-                        login: {
-                            0: false,
-                            1: true
-                        },
-                        monitoring: {
-                            0: true,
-                            1: true
-                        }
-                    }
-                }
-            ]
+            team: []
         }
     }
 
@@ -255,12 +225,20 @@ class Notifics extends Component{
         });
     }
 
-    handlePersonalCheck = (e, index, val, device) => {
-        let item = this.state.personal[index];
-        item[device] = !item[device];
+    handlePersonalCheck = (e, name, index, val, device) => { 
+        let item = this.state.personal[name][index]; 
+        item[device] = !item[device]; 
         this.setState({
             item
         });
+        
+        ServiceNoty.setNotific(localStorage.getItem('user'), item.string, [(item.checkedApp ? 1 : 0), (item.checkedMail ? 1: 0)])
+        .then(result => { 
+            this.props.enqueueSnackbar("Impostazioni aggiornate" ,{ 
+                variant: 'success'
+            });
+        })
+        .catch((e) => console.log(e));
     }
 
     handleCheckPersonalAll = (e) => { 
@@ -276,6 +254,26 @@ class Notifics extends Component{
             })
         }
     
+    }
+
+    handlePartnerCheck = (e, name, account, index, val, device) =>{
+        let item = this.state.partnerLists[account].notifics[name][index];
+        item[device] = !item[device]; 
+        this.setState({
+            item
+        });
+
+        ServiceNoty.setPartnerNotific(
+            localStorage.getItem('user'), 
+            item.string, 
+            [(item.checkedApp ? 1 : 0), (item.checkedMail ? 1: 0)], 
+            this.state.partnerLists[account].id
+        ).then(result => { 
+            this.props.enqueueSnackbar("Impostazioni aggiornate" ,{ 
+                variant: 'success'
+            });
+        })
+        .catch((e) => console.log(e));
     }
 
     handleCheckAllTeam = (e, teamIndex, id) => { 
@@ -295,6 +293,7 @@ class Notifics extends Component{
     
     }
 
+
     render(){
         
         const {classes, container } = this.props;
@@ -312,6 +311,7 @@ class Notifics extends Component{
                             anchor={'left'}
                             open={this.state.mobileOpen}
                             onClose={this.handleDrawerToggle}
+                            
                             classes={{
                                 paper: classes.drawerPaper,
                             }}
@@ -319,7 +319,7 @@ class Notifics extends Component{
                                 keepMounted: true, // Better open performance on mobile.
                             }}
                         >
-                            {<ListSettings classes={classes} {...this.props} />}
+                            {<ListSettings classes={classes} {...this.props} closeMenu={this.handleDrawerToggle} />}
                         </Drawer>
                     </Hidden>
                     <Hidden xsDown implementation="css">
@@ -335,6 +335,11 @@ class Notifics extends Component{
                     </Hidden>
                 </nav>
                 <main className={classes.content}>
+                    <Button onClick={this.handleDrawerToggle} className="noDesk" startIcon={
+                                                    <KeyboardTabIcon style={{marginTop: 5}} />
+                                                } style={{fontSize: '1rem', textTransform: 'none', fontWeight: 400, marginBottom: 30}}> Apri menu</Button>
+
+
                     <Typography variant="h5" component="h2" color="textSecondary" style={{marginBottom: 10}}>
                         <b>Impostazioni di notifica</b>
                     </Typography>
@@ -355,13 +360,13 @@ class Notifics extends Component{
                                     <Typography className={classes.heading} style={{display: 'flex', lineHeight: 2.3}}>
                                         <Avatar alt={userInfo.UserRealName != null && userInfo.UserRealSurname != null ? userInfo.UserRealName.charAt(0).toUpperCase() + userInfo.UserRealName.slice(1) + " " + userInfo.UserRealSurname.charAt(0).toUpperCase() + userInfo.UserRealSurname.slice(1) : "NS"} style={{transform: 'scale(.6)'}} src={this.state.userInfo.UserProfilePic} />  {userInfo.UserRealName} {userInfo.UserRealSurname} 
                                     </Typography>
-                                    <FormControlLabel
+                                    {/*<FormControlLabel
                                         aria-label="Acknowledge"
                                         onClick={event => event.stopPropagation()}
                                         onFocus={event => event.stopPropagation()}
                                         control={<Switch onClick={this.handleCheckPersonalAll} />}
                                         style={{position: 'absolute',right: 10, marginTop: 1}}
-                                    />
+                                    />*/}
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails style={{display: 'block', padding: 0}}>
                                     {
@@ -379,7 +384,7 @@ class Notifics extends Component{
                                                         <Divider />
                                                         <List dense={true} style={{padding: 0}}>
                                                             {
-                                                                personal[name].map((val, index2) => { 
+                                                                personal[name].map((val, index2) => {
                                                                     return (
                                                                         <React.Fragment>
                                                                             <ListItem key={index2} style={{paddingLeft: 0,paddingRight: 0}}>
@@ -390,14 +395,18 @@ class Notifics extends Component{
                                                                                 <ListItemSecondaryAction style={{right: 0}}>
                                                                                     <Checkbox
                                                                                         checked={val.checkedApp}
-                                                                                        onChange={(event) => this.handlePersonalCheck(event, index, val, 'checkedApp')}
-                                                                                        value="secondary"
+                                                                                        onChange={(event) => this.handlePersonalCheck(event, name, index2, val, 'checkedApp')}
+                                                                                        id={val.string+"checkedApp"}
+                                                                                        name={val.string+"checkedApp"}
+                                                                                        value={val.string+"checkedApp"}
                                                                                         inputProps={{ 'aria-label': 'primary checkbox' }}
                                                                                     />
                                                                                     <Checkbox
                                                                                         checked={val.checkedMail}
-                                                                                        onChange={(event) => this.handlePersonalCheck(event, index, val, 'checkedMail')}
-                                                                                        value="secondary"
+                                                                                        onChange={(event) => this.handlePersonalCheck(event, name, index2, val, 'checkedMail')}
+                                                                                        id={val.string+"checkedMail"}
+                                                                                        value={val.string+"checkedMail"}
+                                                                                        name={val.string+"checkedMail"}
                                                                                         inputProps={{ 'aria-label': 'primary checkbox' }}
                                                                                     />
                                                                                 </ListItemSecondaryAction>
@@ -428,13 +437,13 @@ class Notifics extends Component{
                                                     style={{padding: 0, minHeight: 'auto'}}
                                                 >
                                                     <Typography className={classes.heading} style={{display: 'flex', lineHeight: 2.3}}><Avatar className={classes["secondary"]} style={{transform: 'scale(.6)'}}>{t.prtUsername.substr(0,1)}</Avatar> {t.prtUsername}</Typography>
-                                                    <FormControlLabel
+                                                    {/*<FormControlLabel
                                                         aria-label="Acknowledge"
                                                         onClick={event => event.stopPropagation()}
                                                         onFocus={event => event.stopPropagation()}
                                                         control={<Switch onClick={(event) => this.handleCheckAllTeam(event, i, t)} />}
                                                         style={{position: 'absolute',right: 10, marginTop: 1}}
-                                                    />
+                                                    />*/}
                                                 </ExpansionPanelSummary>
                                                 <ExpansionPanelDetails style={{display: 'block', padding: 0}}>
                                                 {
@@ -469,13 +478,13 @@ class Notifics extends Component{
                                                                                         <ListItemSecondaryAction style={{right: 0}}>
                                                                                             <Checkbox
                                                                                                 checked={val.checkedApp}
-                                                                                                onChange={(event) => this.handlePersonalCheck(event, index, val, 'checkedApp')}
+                                                                                                onChange={(event) => this.handlePartnerCheck(event, name, i, index2, val, 'checkedApp')}
                                                                                                 value="secondary"
                                                                                                 inputProps={{ 'aria-label': 'primary checkbox' }}
                                                                                             />
                                                                                             <Checkbox
                                                                                                 checked={val.checkedMail}
-                                                                                                onChange={(event) => this.handlePersonalCheck(event, index, val, 'checkedMail')}
+                                                                                                onChange={(event) => this.handlePartnerCheck(event, name, i, index2, val,'checkedMail')}
                                                                                                 value="secondary"
                                                                                                 inputProps={{ 'aria-label': 'primary checkbox' }}
                                                                                             />
@@ -615,4 +624,6 @@ Notifics.propTypes = {
 
 };
 
-export default withStyles(styles)(Notifics);
+export default withStyles(styles)(
+    withSnackbar(Notifics)
+);
